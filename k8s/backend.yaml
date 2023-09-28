@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+# pod replica set 을 관리 ??
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          # 이미지를 넣어주세요.
+          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_dff4453e2ef1
+          env:
+            - name: TZ
+              value: Asia/Seoul
+            - name: DATABASE_URL
+              value: jdbc:mariadb://mariadb:3306/goorm
+          resources:
+            requests:
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 8080
