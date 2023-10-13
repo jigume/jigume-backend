@@ -1,6 +1,6 @@
 package com.jigume.repository;
 
-import com.jigume.entity.Member;
+import com.jigume.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

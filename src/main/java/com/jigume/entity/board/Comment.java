@@ -1,7 +1,7 @@
 package com.jigume.entity.board;
 
 import com.jigume.entity.BaseTimeEntity;
-import com.jigume.entity.Member;
+import com.jigume.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

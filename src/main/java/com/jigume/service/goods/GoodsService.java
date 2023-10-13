@@ -3,7 +3,7 @@ package com.jigume.service.goods;
 import com.jigume.dto.goods.GoodsBoardDto;
 import com.jigume.dto.goods.GoodsDto;
 import com.jigume.dto.goods.GoodsSaveDto;
-import com.jigume.entity.Member;
+import com.jigume.entity.member.Member;
 import com.jigume.entity.goods.Category;
 import com.jigume.entity.goods.Goods;
 import com.jigume.entity.goods.GoodsImages;

@@ -1,7 +1,7 @@
 package com.jigume.service.board;
 
 import com.jigume.dto.board.CommentDto;
-import com.jigume.entity.Member;
+import com.jigume.entity.member.Member;
 import com.jigume.entity.board.Board;
 import com.jigume.entity.board.Comment;
 import com.jigume.exception.global.exception.ResourceNotFoundException;

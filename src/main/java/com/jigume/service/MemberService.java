@@ -2,7 +2,7 @@ package com.jigume.service;
 
 import com.jigume.dto.member.JoinMemberDto;
 import com.jigume.dto.member.LoginMemberDto;
-import com.jigume.entity.Member;
+import com.jigume.entity.member.Member;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.exception.member.LoginMemberException;
 import com.jigume.repository.MemberRepository;

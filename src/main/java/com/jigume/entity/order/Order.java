@@ -1,7 +1,7 @@
 package com.jigume.entity.order;
 
 import com.jigume.entity.BaseTimeEntity;
-import com.jigume.entity.Member;
+import com.jigume.entity.member.Member;
 import com.jigume.entity.goods.Goods;
 import com.jigume.exception.order.OrderOverCountException;
 import jakarta.persistence.*;

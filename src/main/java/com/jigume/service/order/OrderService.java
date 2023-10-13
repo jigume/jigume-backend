@@ -3,7 +3,7 @@ package com.jigume.service.order;
 import com.jigume.dto.order.DoneDto;
 import com.jigume.dto.order.OrderDto;
 import com.jigume.dto.order.ProgressDto;
-import com.jigume.entity.Member;
+import com.jigume.entity.member.Member;
 import com.jigume.entity.board.Board;
 import com.jigume.entity.goods.Goods;
 import com.jigume.entity.order.Order;
