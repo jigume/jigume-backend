@@ -22,9 +22,9 @@ public class GoodsDto {
 
     private Integer deliveryFee;
 
-    private Integer mapX;
+    private Long mapX;
 
-    private Integer mapY;
+    private Long mapY;
 
     private Integer goodsLimitCount;
 

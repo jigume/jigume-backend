@@ -65,7 +65,7 @@ public class Goods extends BaseTimeEntity {
 
     @Builder
     public static Goods createGoods(String name, String introduction, String link, Integer goodsPrice,
-                                    Integer deliveryFee, Integer mapX, Integer mapY, Integer goodsLimitCount,
+                                    Integer deliveryFee, Long mapX, Long mapY, Integer goodsLimitCount,
                                     LocalDateTime goodsLimitTime, String hostNickname, Category category) {
         Goods goods = new Goods();
         goods.name = name;

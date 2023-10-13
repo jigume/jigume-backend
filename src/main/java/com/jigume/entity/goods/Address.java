@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Address {
 
-    private Integer mapX;
+    private Long mapX;
 
-    private Integer mapY;
+    private Long mapY;
 
 }
