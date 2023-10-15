@@ -13,6 +13,7 @@ public class KakaoTokenRequestDto {
     private String clientId;
     private String redirectUri;
     private String code;
+    private String clientSecretKey;
 
     public MultiValueMap<String, String> toMultiValueMap() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -20,6 +21,7 @@ public class KakaoTokenRequestDto {
         params.add("client_id", clientId);
         params.add("redirect_uri", redirectUri);
         params.add("code", code);
+        params.add("client_secret", clientSecretKey);
 
         return params;
     }

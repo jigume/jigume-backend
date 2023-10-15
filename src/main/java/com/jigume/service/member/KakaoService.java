@@ -25,10 +25,14 @@ public class KakaoService {
     private String kakaoRedirectUri;
 
     @Value("${KAKAO_TOKEN_REQUEST_URI}")
-    private String kakaoToeknRequestUri;
+    private String kakaoTokenRequestUri;
 
     @Value("${KAKAO_USERINFO_REQUEST_URI}")
     private String kakaoUserInfoRequestUri;
+
+    @Value("KAKAO_CLIENT_ID")
+    private String kakaoClientId;
+
 
     private final WebClient webClient;
 
@@ -37,11 +41,11 @@ public class KakaoService {
      */
     public KakaoTokenResponseDto getKakaoToken(String kakaoCode) {
 
-        KakaoTokenRequestDto kakaoTokenRequestDto = new KakaoTokenRequestDto("authorization_code", kakaoClientSecretKey, kakaoRedirectUri, kakaoCode);
+        KakaoTokenRequestDto kakaoTokenRequestDto = new KakaoTokenRequestDto("authorization_code", kakaoClientId, kakaoRedirectUri, kakaoCode, kakaoClientSecretKey);
         MultiValueMap<String , String> params = kakaoTokenRequestDto.toMultiValueMap();
 
         return webClient.post()
-                .uri(kakaoToeknRequestUri)
+                .uri(kakaoTokenRequestUri)
                 .body(BodyInserters.fromFormData(params))
                 .header("Content-type","application/x-www-form-urlencoded;charset=utf-8")
                 .retrieve()

@@ -31,7 +31,7 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginMemberException.class))),
     })
     @PostMapping("/member/login")
-    public ResponseEntity login(@RequestParam("loginProvider") String provider,
+    public ResponseEntity login(@RequestParam("login-provider") String provider,
                                 @RequestParam("authorization-code") String code) {
         log.debug("{}");
         TokenDto login = memberService.login(LoginProvider.toLoginProvider(provider), code);
