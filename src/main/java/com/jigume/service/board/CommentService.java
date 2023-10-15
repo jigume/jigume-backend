@@ -7,7 +7,7 @@ import com.jigume.entity.board.Comment;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.repository.BoardRepository;
 import com.jigume.repository.CommentRepository;
-import com.jigume.service.MemberService;
+import com.jigume.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -11,7 +11,7 @@ import com.jigume.entity.order.Order;
 import com.jigume.entity.order.OrderType;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.repository.*;
-import com.jigume.service.MemberService;
+import com.jigume.service.member.MemberService;
 import com.jigume.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
