@@ -30,10 +30,10 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenDto.class))),
             @ApiResponse(responseCode = "404", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginMemberException.class))),
     })
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestParam("login-provider") String provider,
+    @PostMapping("/member/login")
+    public ResponseEntity login(@RequestParam("loginProvider") String provider,
                                 @RequestParam("authorization-code") String code) {
-
+        log.debug("{}");
         TokenDto login = memberService.login(LoginProvider.toLoginProvider(provider), code);
 
         return new ResponseEntity(login, OK);

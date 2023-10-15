@@ -8,19 +8,12 @@ import com.jigume.entity.member.LoginProvider;
 import com.jigume.entity.member.Member;
 import com.jigume.exception.auth.exception.AuthExpiredTokenException;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
-import com.jigume.exception.global.exception.ResourceNotFoundException;
-import com.jigume.exception.member.LoginMemberException;
 import com.jigume.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.Optional;
-
-import static com.jigume.exception.global.GlobalErrorCode.RESOURCE_NOT_FOUND;
 
 @Service
 @Transactional
@@ -36,7 +29,7 @@ public class MemberService {
         String accessToken = null;
         String refreshToken = null;
 
-        if(loginProvider == LoginProvider.KAKAO) {
+        if (loginProvider == LoginProvider.KAKAO) {
             KakaoTokenResponseDto kakaoToken = kakaoService.getKakaoToken(code);
             KakaoUserDto kakaoUser = kakaoService.getKakaoUser(kakaoToken);
 
@@ -45,7 +38,7 @@ public class MemberService {
             accessToken = tokenProvider.generateToken(member, Duration.ofHours(2));
             refreshToken = member.getRefreshToken();
 
-        } else if(loginProvider ==LoginProvider.NAVER) {
+        } else if (loginProvider == LoginProvider.NAVER) {
 //            naverService.getNaverToken(code);
         } else {
 //            appleService.getAppleToken(code);
@@ -55,7 +48,7 @@ public class MemberService {
     }
 
     public TokenDto reissueToken(String refreshToken) {
-        if(!tokenProvider.validToken(refreshToken)) {
+        if (!tokenProvider.validToken(refreshToken)) {
             throw new AuthExpiredTokenException();
         }
         Member memberByRefreshToken = memberRepository.findMemberByRefreshToken(refreshToken).orElseThrow(() -> new AuthMemberNotFoundException());
