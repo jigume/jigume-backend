@@ -7,7 +7,9 @@ import com.jigume.exception.auth.exception.InvalidAuthorizationCodeException;
 import com.jigume.exception.global.exception.GlobalServerErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -30,7 +32,7 @@ public class KakaoService {
     @Value("${KAKAO_USERINFO_REQUEST_URI}")
     private String kakaoUserInfoRequestUri;
 
-    @Value("KAKAO_CLIENT_ID")
+    @Value("${KAKAO_CLIENT_ID}")
     private String kakaoClientId;
 
 
@@ -47,7 +49,7 @@ public class KakaoService {
         return webClient.post()
                 .uri(kakaoTokenRequestUri)
                 .body(BodyInserters.fromFormData(params))
-                .header("Content-type","application/x-www-form-urlencoded;charset=utf-8")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new InvalidAuthorizationCodeException()))
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new GlobalServerErrorException()))
