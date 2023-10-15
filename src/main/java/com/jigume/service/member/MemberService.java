@@ -1,19 +1,23 @@
 package com.jigume.service.member;
 
 import com.jigume.config.jwt.TokenProvider;
-import com.jigume.dto.member.KakaoTokenResponseDto;
-import com.jigume.dto.member.KakaoUserDto;
+import com.jigume.dto.member.LoginResponseDto;
+import com.jigume.dto.member.OAuthTokenResponseDto;
+import com.jigume.dto.member.OAuthUserDto;
 import com.jigume.dto.member.TokenDto;
+import com.jigume.entity.member.BaseRole;
 import com.jigume.entity.member.LoginProvider;
 import com.jigume.entity.member.Member;
 import com.jigume.exception.auth.exception.AuthExpiredTokenException;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -22,29 +26,26 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
-    private final KakaoService kakaoService;
+    private final Map<String, OAuthService> oAuthServiceMap;
 
-    public TokenDto login(LoginProvider loginProvider, String code) {
+    public LoginResponseDto login(LoginProvider loginProvider, String code) {
+        OAuthService oAuthService =
+                oAuthServiceMap.get(StringUtils.uncapitalize(loginProvider.getServiceClass().getSimpleName()));
 
-        String accessToken = null;
-        String refreshToken = null;
+        OAuthTokenResponseDto oAuthToken = oAuthService.getOAuthToken(code);
+        OAuthUserDto oAuthUser = oAuthService.getOAuthUser(oAuthToken);
 
-        if (loginProvider == LoginProvider.KAKAO) {
-            KakaoTokenResponseDto kakaoToken = kakaoService.getKakaoToken(code);
-            KakaoUserDto kakaoUser = kakaoService.getKakaoUser(kakaoToken);
+        Member member = loginMember(String.valueOf(oAuthUser.getId()));
 
-            Member member = loginMember(String.valueOf(kakaoUser.getId()));
+        BaseRole baseRole = member.getBaseRole();
 
-            accessToken = tokenProvider.generateToken(member, Duration.ofHours(2));
-            refreshToken = member.getRefreshToken();
+        String accessToken = tokenProvider.generateToken(member, Duration.ofHours(2));
+        String refreshToken = member.getRefreshToken();
 
-        } else if (loginProvider == LoginProvider.NAVER) {
-//            naverService.getNaverToken(code);
-        } else {
-//            appleService.getAppleToken(code);
-        }
 
-        return new TokenDto(accessToken, refreshToken);
+        TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
+
+        return new LoginResponseDto(tokenDto, baseRole);
     }
 
     public TokenDto reissueToken(String refreshToken) {

@@ -1,5 +1,6 @@
 package com.jigume.controller;
 
+import com.jigume.dto.member.LoginResponseDto;
 import com.jigume.dto.member.TokenDto;
 import com.jigume.entity.member.LoginProvider;
 import com.jigume.exception.member.LoginMemberException;
@@ -33,8 +34,8 @@ public class MemberController {
     @PostMapping("/member/login")
     public ResponseEntity login(@RequestParam("login-provider") String provider,
                                 @RequestParam("authorization-code") String code) {
-        log.debug("{}");
-        TokenDto login = memberService.login(LoginProvider.toLoginProvider(provider), code);
+
+        LoginResponseDto login = memberService.login(LoginProvider.toLoginProvider(provider), code);
 
         return new ResponseEntity(login, OK);
     }

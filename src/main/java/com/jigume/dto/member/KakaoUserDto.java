@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class KakaoUserDto implements Serializable {
+public class KakaoUserDto implements Serializable, OAuthUserDto {
 
     private Long id;
 

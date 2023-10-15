@@ -1,8 +1,6 @@
 package com.jigume.service.member;
 
-import com.jigume.dto.member.KakaoTokenRequestDto;
-import com.jigume.dto.member.KakaoTokenResponseDto;
-import com.jigume.dto.member.KakaoUserDto;
+import com.jigume.dto.member.*;
 import com.jigume.exception.auth.exception.InvalidAuthorizationCodeException;
 import com.jigume.exception.global.exception.GlobalServerErrorException;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-public class KakaoService {
+public class KakaoService implements OAuthService{
 
     @Value("${KAKAO_CLIENT_SECRET_KEY}")
     private String kakaoClientSecretKey;
@@ -38,12 +36,9 @@ public class KakaoService {
 
     private final WebClient webClient;
 
-    /**
-     * 카카오로 부터 토큰을 받는 함수
-     */
-    public KakaoTokenResponseDto getKakaoToken(String kakaoCode) {
-
-        KakaoTokenRequestDto kakaoTokenRequestDto = new KakaoTokenRequestDto("authorization_code", kakaoClientId, kakaoRedirectUri, kakaoCode, kakaoClientSecretKey);
+    @Override
+    public OAuthTokenResponseDto getOAuthToken(String authorizationCode) {
+        KakaoTokenRequestDto kakaoTokenRequestDto = new KakaoTokenRequestDto("authorization_code", kakaoClientId, kakaoRedirectUri, authorizationCode, kakaoClientSecretKey);
         MultiValueMap<String , String> params = kakaoTokenRequestDto.toMultiValueMap();
 
         return webClient.post()
@@ -55,23 +50,17 @@ public class KakaoService {
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new GlobalServerErrorException()))
                 .bodyToMono(KakaoTokenResponseDto.class)
                 .block();
-
     }
 
-
-    /**
-     * 카카오로 부터 유저 정보를 받는 함수
-     */
-    public KakaoUserDto getKakaoUser(KakaoTokenResponseDto token) {
-
+    @Override
+    public OAuthUserDto getOAuthUser(OAuthTokenResponseDto oAuthTokenResponseDto) {
         return webClient.get()
                 .uri(kakaoUserInfoRequestUri)
                 .header("Content-type","application/x-www-form-urlencoded;charset=utf-8" )
-                .header("Authorization","Bearer " + token.getAccessToken())
+                .header("Authorization","Bearer " + oAuthTokenResponseDto.getAccessToken())
                 .retrieve()
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new GlobalServerErrorException()))
                 .bodyToMono(KakaoUserDto.class)
                 .block();
-
     }
 }
