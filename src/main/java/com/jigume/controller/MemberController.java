@@ -1,7 +1,9 @@
 package com.jigume.controller;
 
 import com.jigume.dto.member.LoginResponseDto;
+import com.jigume.dto.member.MemberInfoDto;
 import com.jigume.dto.member.TokenDto;
+import com.jigume.entity.goods.ImageUploadRequest;
 import com.jigume.entity.member.LoginProvider;
 import com.jigume.exception.member.LoginMemberException;
 import com.jigume.service.member.MemberService;
@@ -12,10 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -45,5 +44,19 @@ public class MemberController {
         TokenDto tokenDto = memberService.reissueToken(refreshToken);
 
         return new ResponseEntity(tokenDto, OK);
+    }
+
+    @PostMapping("/member/new")
+    public ResponseEntity updateMemberInfo(@RequestBody MemberInfoDto memberInfoDto) {
+        memberService.updateMemberInfo(memberInfoDto);
+
+        return new ResponseEntity(OK);
+    }
+
+    @PostMapping("/member/profile/new")
+    public ResponseEntity updateMemberProfileImage(ImageUploadRequest imageUploadRequest) {
+        memberService.updateMemberProfileImage(imageUploadRequest);
+
+        return new ResponseEntity(OK);
     }
 }

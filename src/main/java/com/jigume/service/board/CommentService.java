@@ -25,7 +25,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public void createComment(String memberIdx, Long boardId, CommentDto commentDto) {
-        Member member = memberService.getMember(memberIdx);
+        Member member = memberService.getMember();
         Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
                 .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
         Comment comment = Comment.createComment(member, board,commentDto.getContent());

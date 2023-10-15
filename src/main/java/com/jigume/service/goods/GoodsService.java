@@ -42,7 +42,7 @@ public class GoodsService {
         GoodsDto goodsDto = goodsSaveDto.getGoodsDto();
         Category category = getCategory(goodsDto);
 
-        Goods goods = Goods.createGoods(goodsDto.getName(), goodsDto.getIntroduction(), goodsDto.getLink(), goodsDto.getGoodsPrice(), goodsDto.getDeliveryFee(), goodsDto.getMapX(), goodsDto.getMapY(), goodsDto.getGoodsLimitCount(), goodsDto.getGoodsLimitTime(), memberService.getMember(memberIdx).getNickname(), category);
+        Goods goods = Goods.createGoods(goodsDto.getName(), goodsDto.getIntroduction(), goodsDto.getLink(), goodsDto.getGoodsPrice(), goodsDto.getDeliveryFee(), goodsDto.getMapX(), goodsDto.getMapY(), goodsDto.getGoodsLimitCount(), goodsDto.getGoodsLimitTime(), memberService.getMember().getNickname(), category);
 
         boardService.createBoard(goodsSaveDto.getBoardContent(), goods);
 

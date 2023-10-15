@@ -34,7 +34,7 @@ public class OrderService {
     private final BoardRepository boardRepository;
 
     public void orderGoods(String memberIdx, Long goodsId, OrderDto orderDto) {
-        Member member = memberService.getMember(memberIdx);
+        Member member = memberService.getMember();
         Goods goods = getGoods(goodsId);
         List<Order> ordersByGoodsId = orderRepository.findOrdersByGoodsId(goodsId);
 
@@ -46,7 +46,7 @@ public class OrderService {
     }
 
     public List<ProgressDto> getProgressOrderList(String memberIdx, Integer orderTypeNum, Integer orderStatusNum) {
-        Member member = memberService.getMember(memberIdx);
+        Member member = memberService.getMember();
 
         OrderStatus orderStatus = OrderStatus.getOrderStatus(orderStatusNum);
         OrderType orderType = OrderType.getOrderType(orderTypeNum);
@@ -66,7 +66,7 @@ public class OrderService {
     }
 
     public List<DoneDto> getDoneOrderList(String memberIdx, Integer orderTypeNum, Integer orderStatusNum) {
-        Member member = memberService.getMember(memberIdx);
+        Member member = memberService.getMember();
 
         OrderStatus orderStatus = OrderStatus.getOrderStatus(orderStatusNum);
         OrderType orderType = OrderType.getOrderType(orderTypeNum);

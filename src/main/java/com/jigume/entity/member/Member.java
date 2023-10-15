@@ -1,6 +1,7 @@
 package com.jigume.entity.member;
 
 import com.jigume.entity.BaseTimeEntity;
+import com.jigume.entity.goods.Address;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,6 +35,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private String profileImageUrl;
 
+    private Address address;
+
     @Enumerated(EnumType.STRING)
     private BaseRole baseRole;
 
@@ -43,6 +46,16 @@ public class Member extends BaseTimeEntity implements UserDetails {
         member.baseRole = BaseRole.GUEST;
 
         return member;
+    }
+
+    public void updateMemberInfo(String nickname, Long mapX, Long mapY) {
+        this.nickname = nickname;
+        this.address = new Address(mapX, mapY);
+        this.baseRole = BaseRole.USER;
+    }
+
+    public void updateMemberProfileImg(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void updateRefreshToken(String refreshToken) {

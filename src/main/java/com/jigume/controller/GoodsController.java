@@ -36,7 +36,7 @@ public class GoodsController {
     @PostMapping("/{goodsId}/image")
     public ResponseEntity saveImage(ImageUploadRequest request,
                                     @PathVariable("goodsId") Long goodsId) throws IOException {
-        goodsService.saveImage(request.goodsImgFile(), goodsId);
+        goodsService.saveImage(request.multipartFile(), goodsId);
 
         return new ResponseEntity("이미지 저장 성공", OK);
     }

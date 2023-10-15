@@ -1,18 +1,20 @@
 package com.jigume.service.member;
 
 import com.jigume.config.jwt.TokenProvider;
-import com.jigume.dto.member.LoginResponseDto;
-import com.jigume.dto.member.OAuthTokenResponseDto;
-import com.jigume.dto.member.OAuthUserDto;
-import com.jigume.dto.member.TokenDto;
+import com.jigume.dto.member.*;
+import com.jigume.entity.goods.ImageUploadRequest;
 import com.jigume.entity.member.BaseRole;
 import com.jigume.entity.member.LoginProvider;
 import com.jigume.entity.member.Member;
 import com.jigume.exception.auth.exception.AuthExpiredTokenException;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.repository.MemberRepository;
+import com.jigume.service.s3.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final Map<String, OAuthService> oAuthServiceMap;
+    private final S3FileUploadService s3FileUploadService;
 
     public LoginResponseDto login(LoginProvider loginProvider, String code) {
         OAuthService oAuthService =
@@ -59,13 +62,25 @@ public class MemberService {
         return new TokenDto(accessToken, refreshToken);
     }
 
-    public void updateMemberInfo() {
+    public void updateMemberInfo(MemberInfoDto memberInfoDto) {
+        Member member = getMember();
 
+        member.updateMemberInfo(memberInfoDto.getNickname(), memberInfoDto.getMapX(), memberInfoDto.getMapY());
+    }
+
+    public void updateMemberProfileImage(ImageUploadRequest imageUploadRequest) {
+        Member member = getMember();
+
+        String imgUrl = s3FileUploadService.uploadFile(imageUploadRequest.multipartFile());
+
+        member.updateMemberProfileImg(imgUrl);
     }
 
 
-    public Member getMember(String token) {
-        return memberRepository.findMemberBySocialId(tokenProvider.getUserSocialId(token))
+    public Member getMember() {
+        String socialId = getAuthenticatedUser().getUsername();
+
+        return memberRepository.findMemberBySocialId(tokenProvider.getUserSocialId(socialId))
                 .orElseThrow(() -> new AuthMemberNotFoundException());
     }
 
@@ -77,6 +92,16 @@ public class MemberService {
 
         memberRepository.save(member);
         return member;
+    }
+
+    private UserDetails getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            throw new AuthMemberNotFoundException();
+        }
+
+        return (UserDetails) authentication.getPrincipal();
     }
 
 }
