@@ -36,21 +36,10 @@ public class SecurityConfig {
     private final CorsConfig corsConfig;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final TokenProvider tokenProvider;
-    private static final List<String> NO_CHECK_URLS = Arrays.asList(
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/v3/api-docs/**",
-            "/h2-console/**",
-            "/api/login",
-            "/api/member/oauth/**"
-    );
 
 
     @Bean
     public WebSecurityCustomizer configure() {
-        List<RequestMatcher> matchers = NO_CHECK_URLS.stream()
-                .map(AntPathRequestMatcher::new)
-                .collect(Collectors.toList());
 
         return (web) -> web.ignoring()
                 .requestMatchers(toH2Console());
