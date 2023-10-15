@@ -2,8 +2,10 @@ package com.jigume.dto.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class KakaoTokenResponseDto implements OAuthTokenResponseDto{
 
     @JsonProperty("access_token")

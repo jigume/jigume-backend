@@ -3,11 +3,13 @@ package com.jigume.dto.member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class NaverTokenRequestDto {
 
     private String grantType;

@@ -59,6 +59,10 @@ public class MemberService {
         return new TokenDto(accessToken, refreshToken);
     }
 
+    public void updateMemberInfo() {
+
+    }
+
 
     public Member getMember(String token) {
         return memberRepository.findMemberBySocialId(tokenProvider.getUserSocialId(token))
