@@ -35,7 +35,7 @@ public class MemberService {
         OAuthTokenResponseDto oAuthToken = oAuthService.getOAuthToken(code);
         OAuthUserDto oAuthUser = oAuthService.getOAuthUser(oAuthToken);
 
-        Member member = loginMember(String.valueOf(oAuthUser.getId()));
+        Member member = loginMember(oAuthUser.getId());
 
         BaseRole baseRole = member.getBaseRole();
 

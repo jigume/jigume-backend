@@ -1,6 +1,7 @@
 package com.jigume.entity.member;
 
 import com.jigume.exception.auth.exception.InvalidAuthorizationCodeException;
+import com.jigume.service.member.AppleService;
 import com.jigume.service.member.KakaoService;
 import com.jigume.service.member.NaverService;
 import com.jigume.service.member.OAuthService;

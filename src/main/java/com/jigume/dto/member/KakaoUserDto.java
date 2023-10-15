@@ -14,4 +14,8 @@ public class KakaoUserDto implements Serializable, OAuthUserDto {
     @JsonProperty("connected_at")
     private String connectedAt;
 
+    public String getId() {
+        return String.valueOf(this.id);
+    }
+
 }
