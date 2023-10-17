@@ -40,7 +40,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/token")
-    public ResponseEntity refreshNewToken(String refreshToken) {
+    public ResponseEntity refreshNewToken(@RequestBody String refreshToken) {
         TokenDto tokenDto = memberService.reissueToken(refreshToken);
 
         return new ResponseEntity(tokenDto, OK);
@@ -58,5 +58,12 @@ public class MemberController {
         memberService.updateMemberProfileImage(imageUploadRequest);
 
         return new ResponseEntity(OK);
+    }
+
+    @PostMapping("/member/profile")
+    public ResponseEntity getMemberInfo() {
+        MemberInfoDto memberInfo = memberService.getMemberInfo();
+
+        return new ResponseEntity<>(memberInfo, OK);
     }
 }

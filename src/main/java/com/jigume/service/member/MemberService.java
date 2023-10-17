@@ -76,6 +76,12 @@ public class MemberService {
         member.updateMemberProfileImg(imgUrl);
     }
 
+    public MemberInfoDto getMemberInfo() {
+        Member member = getMember();
+
+        return MemberInfoDto.toMemberInfoDto(member);
+    }
+
 
     public Member getMember() {
         String socialId = getAuthenticatedUser().getUsername();
