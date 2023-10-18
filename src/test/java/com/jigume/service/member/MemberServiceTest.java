@@ -7,19 +7,21 @@ import com.jigume.dto.member.MemberInfoDto;
 import com.jigume.dto.member.TokenDto;
 import com.jigume.entity.member.BaseRole;
 import com.jigume.entity.member.Member;
+import com.jigume.exception.auth.exception.AuthExpiredTokenException;
+import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-
 import static com.jigume.fixture.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -46,12 +48,10 @@ class MemberServiceTest {
         guestMember = memberRepository.save(createGuestMember());
 
         String refreshToken = JwtFactory.builder()
-                .claims(Map.of("socialId", member.getSocialId()))
                 .build()
                 .createToken(jwtProperties, member);
 
         String guestRefreshToken = JwtFactory.builder()
-                .claims(Map.of("socialId", guestMember.getSocialId()))
                 .build()
                 .createToken(jwtProperties, guestMember);
 
@@ -81,6 +81,23 @@ class MemberServiceTest {
         assertThat("id").isEqualTo(tokenProvider.getUserSocialId(accessToken));
     }
 
+    @Test
+    @DisplayName("토큰 재발급 - 실패")
+    void reissueToken_fail() {
+        Member testMember = Member.createMember("error");
+        String refreshToken = JwtFactory.builder()
+                .build()
+                .createToken(jwtProperties, testMember);
+        assertThatThrownBy(() -> memberService.reissueToken(refreshToken)).isInstanceOf(AuthMemberNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 - 실패")
+    void reissueToken_fail_token_invalid() {
+        String refreshToken = "token";
+        assertThatThrownBy(() -> memberService.reissueToken(refreshToken)).isInstanceOf(AuthExpiredTokenException.class);
+    }
+
 
     @Test
     void updateInfo() {
@@ -98,9 +115,30 @@ class MemberServiceTest {
     }
 
     @Test
+    void updateUserInfo() {
+        MemberInfoDto memberInfoDto = new MemberInfoDto();
+        memberInfoDto.setNickname("test");
+        memberInfoDto.setProfileImgUrl("test");
+        memberInfoDto.setMapX(1L);
+        memberInfoDto.setMapY(3L);
+
+        setUpCustomAuth(member);
+        memberService.updateMemberInfo(memberInfoDto);
+
+        assertThat(member.getBaseRole()).isEqualTo(BaseRole.USER);
+        assertThat(member.getNickname()).isEqualTo("test");
+    }
+
+    @Test
     void getMember() {
         setUpCustomAuth(member);
         assertThat(memberRepository.findMemberBySocialId("id").get()).isEqualTo(memberService.getMember());
+    }
+
+    @Test
+    void getMember_fail() {
+        SecurityContextHolder.clearContext();
+        assertThatThrownBy(() -> memberService.getMember()).isInstanceOf(AuthMemberNotFoundException.class);
     }
 
 }
