@@ -111,9 +111,9 @@ test {
         excludes += ["com/jigume/config/**",
                      "com/jigume/exception/**",
                      "com/jigume/repository/**",
-                     "com/jigume/service/KakaoService.class",
-                     "com/jigume/service/NaverService.class",
-                     "com/jigume/service/AppleService.class"
+                     "com/jigume/service/member/KakaoService.class",
+                     "com/jigume/service/member/NaverService.class",
+                     "com/jigume/service/member/AppleService.class"
         ]
     }
 }
@@ -128,9 +128,9 @@ jacocoTestReport {
                     exclude: ["com/jigume/config/**",
                               "com/jigume/exception/**",
                               "com/jigume/repository/**",
-                              "com/jigume/service/KakaoService.class",
-                              "com/jigume/service/NaverService.class",
-                              "com/jigume/service/AppleService.class"])
+                              "com/jigume/service/member/KakaoService.class",
+                              "com/jigume/service/member/NaverService.class",
+                              "com/jigume/service/member/AppleService.class"])
         }))
     }
 }
