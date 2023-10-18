@@ -51,7 +51,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void updateMemberInfo(String nickname, Long mapX, Long mapY) {
         this.nickname = nickname;
         this.address = new Address(mapX, mapY);
-        this.baseRole = BaseRole.USER;
+    }
+
+    public void updateBaseRole(BaseRole baseRole) {
+        this.baseRole = baseRole;
     }
 
     public void updateMemberProfileImg(String profileImageUrl) {

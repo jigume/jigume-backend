@@ -66,6 +66,7 @@ public class MemberService {
         Member member = getMember();
 
         member.updateMemberInfo(memberInfoDto.getNickname(), memberInfoDto.getMapX(), memberInfoDto.getMapY());
+        if(member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
     }
 
     public void updateMemberProfileImage(ImageUploadRequest imageUploadRequest) {
@@ -86,7 +87,7 @@ public class MemberService {
     public Member getMember() {
         String socialId = getAuthenticatedUser().getUsername();
 
-        return memberRepository.findMemberBySocialId(tokenProvider.getUserSocialId(socialId))
+        return memberRepository.findMemberBySocialId(socialId)
                 .orElseThrow(() -> new AuthMemberNotFoundException());
     }
 
