@@ -1,6 +1,7 @@
 package com.jigume.entity.goods;
 
 import com.jigume.entity.BaseTimeEntity;
+import com.jigume.entity.board.Board;
 import com.jigume.entity.order.Order;
 import com.jigume.entity.order.Sell;
 import com.jigume.exception.order.OrderOverCountException;
@@ -70,6 +71,9 @@ public class Goods extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "goods")
     private Sell sell;
+
+    @OneToOne(mappedBy = "goods")
+    private Board board;
 
     @OneToMany(mappedBy = "goods")
     private List<GoodsImage> goodsImageList = new ArrayList<>();

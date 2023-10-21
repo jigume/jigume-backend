@@ -47,10 +47,20 @@ public class GoodsPageDto {
 
     private Integer discountDeliveryPrice;
 
+    private Long boardId;
+
     private List<GoodsImagesDto> goodsImagesList = new ArrayList<>();
 
     @Builder
-    public GoodsPageDto(Long goodsId, String goodsName, String introduction, String link, Integer goodsPrice, Integer deliveryFee, Double mapX, Double mapY, Integer goodsLimitCount, LocalDateTime goodsLimitTime, Long category, Integer realDeliveryFee, GoodsStatus goodsStatus, String hostNickname, Integer hostSellCount, Integer goodsOrderCount, Integer discountDeliveryPrice, List<GoodsImagesDto> goodsImagesList) {
+    public GoodsPageDto(Long goodsId, String goodsName, String introduction,
+                        String link, Integer goodsPrice, Integer deliveryFee,
+                        Double mapX, Double mapY, Integer goodsLimitCount,
+                        LocalDateTime goodsLimitTime, Long category,
+                        Integer realDeliveryFee, GoodsStatus goodsStatus,
+                        String hostNickname, Integer hostSellCount,
+                        Integer goodsOrderCount, Integer discountDeliveryPrice,
+                        Long boardId,
+                        List<GoodsImagesDto> goodsImagesList) {
         this.goodsId = goodsId;
         this.goodsName = goodsName;
         this.introduction = introduction;

@@ -1,6 +1,6 @@
 package com.jigume.controller;
 
-import com.jigume.dto.goods.GoodsBoardDto;
+import com.jigume.dto.goods.GoodsDetailPageDto;
 import com.jigume.dto.goods.GoodsDto;
 import com.jigume.dto.goods.GoodsPageDto;
 import com.jigume.dto.goods.GoodsSaveDto;
@@ -32,7 +32,7 @@ public class GoodsController {
 
     @Operation(summary = "이미지를 제외한 상품을 업로드 하는 기능")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "액세스 토큰 재발급 및 리프레쉬 토큰 갱신", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsSaveDto.class))),
+            @ApiResponse(responseCode = "200", description = "상품 저장 성공, goodsId 반환"),
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
     @PostMapping("/goods")
@@ -64,12 +64,12 @@ public class GoodsController {
             @Parameter(name = "goodsId", description = "Goods의 PK", example = "1"),
     })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "굿즈 상세 페이지 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsBoardDto.class))),
+            @ApiResponse(responseCode = "200", description = "굿즈 상세 페이지 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDetailPageDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
     @GetMapping("/goods/{goodsId}/page")
     public ResponseEntity getGoodsPage(@PathVariable("goodsId") Long goodsId) {
-        GoodsBoardDto goodsPage = goodsService.getGoodsPage(goodsId);
+        GoodsDetailPageDto goodsPage = goodsService.getGoodsPage(goodsId);
 
         return new ResponseEntity(goodsPage, OK);
     }
@@ -79,7 +79,7 @@ public class GoodsController {
             @Parameter(name = "categoryId", description = "카테고리 Id", example = "1"),
     })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsPageDto.class))),
+            @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
     @GetMapping("/goods/{categoryId}/list")
@@ -91,7 +91,7 @@ public class GoodsController {
 
     @Operation(summary = "GoodsList를 반환한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsPageDto.class))),
+            @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
     @GetMapping("/goods")

@@ -76,14 +76,14 @@ public class GoodsService {
         goodsImagesRepository.save(goodsImage);
     }
 
-    public GoodsBoardDto getGoodsPage(Long goodsId) {
+    public GoodsDetailPageDto getGoodsPage(Long goodsId) {
         Goods goods = getGoods(goodsId);
         String nickname = goods.getSell().getMember().getNickname();
         List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(goods.getSell().getMember().getId());
 
         checkTime(goods);
 
-        return new GoodsBoardDto(nickname, sellsByMemberId.size(),
+        return new GoodsDetailPageDto(nickname, sellsByMemberId.size(),
                 goods.getCurrentOrderCount(),
                 toGoodsPageDto(goods));
     }
@@ -164,6 +164,7 @@ public class GoodsService {
                 .goodsOrderCount(goods.getCurrentOrderGoodsCount())
                 .discountDeliveryPrice(goods.getDeliveryFee() - goods.getRealDeliveryFee())
                 .goodsImagesList(GoodsImagesDto.toGoodsImagesDto(goods.getGoodsImageList()))
+                .boardId(goods.getBoard().getId())
                 .build();
 
 
