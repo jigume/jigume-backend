@@ -1,6 +1,7 @@
 package com.jigume.service.goods;
 
 import com.jigume.dto.goods.*;
+import com.jigume.entity.board.Board;
 import com.jigume.entity.goods.Category;
 import com.jigume.entity.goods.DefaultImgUrl;
 import com.jigume.entity.goods.Goods;
@@ -8,10 +9,7 @@ import com.jigume.entity.goods.GoodsImage;
 import com.jigume.entity.member.Member;
 import com.jigume.entity.order.Sell;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
-import com.jigume.repository.CategoryRepository;
-import com.jigume.repository.GoodsImagesRepository;
-import com.jigume.repository.GoodsRepository;
-import com.jigume.repository.SellRepository;
+import com.jigume.repository.*;
 import com.jigume.service.board.BoardService;
 import com.jigume.service.member.MemberService;
 import com.jigume.service.s3.S3FileUploadService;
@@ -34,10 +32,10 @@ public class GoodsService {
     private final GoodsRepository goodsRepository;
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
-    private final BoardService boardService;
     private final GoodsImagesRepository goodsImagesRepository;
     private final S3FileUploadService s3FileUploadService;
     private final SellRepository sellRepository;
+    private final BoardRepository boardRepository;
 
     public Long saveGoods(GoodsSaveDto goodsSaveDto) {
         Category category = getCategory(goodsSaveDto.getCategoryName());
@@ -50,7 +48,9 @@ public class GoodsService {
                 goodsSaveDto.getMapY(), goodsSaveDto.getGoodsLimitCount(),
                 goodsSaveDto.getGoodsLimitTime(), category);
 
-        boardService.createBoard(goodsSaveDto.getBoardContent(), goods);
+        Board board = Board.createBoard(goodsSaveDto.getBoardContent(), goods);
+
+        boardRepository.save(board);
 
         Long goodsId = goodsRepository.save(goods).getId();
 
@@ -77,14 +77,17 @@ public class GoodsService {
     }
 
     public GoodsDetailPageDto getGoodsPage(Long goodsId) {
+        Member member = memberService.getMember();
         Goods goods = getGoods(goodsId);
-        String nickname = goods.getSell().getMember().getNickname();
-        List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(goods.getSell().getMember().getId());
+        Member hostMember = goods.getSell().getMember();
+        String nickname = hostMember.getNickname();
+        List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(hostMember.getId());
 
         checkTime(goods);
 
-        return new GoodsDetailPageDto(nickname, sellsByMemberId.size(),
-                goods.getCurrentOrderCount(),
+        boolean isOrderOrSell = isOrderOrSell(member, goods);
+
+        return new GoodsDetailPageDto(isOrderOrSell,
                 toGoodsPageDto(goods));
     }
 
@@ -169,5 +172,14 @@ public class GoodsService {
 
 
         return goodsPageDto;
+    }
+
+    public boolean isOrderOrSell(Member member, Goods goods) {
+        if(goods.getSell().getMember().equals(member)
+                || goods.getOrderList().stream().filter(order -> order
+                .getMember().equals(member)).findAny().isPresent()) {
+            return true;
+        }
+        return false;
     }
 }

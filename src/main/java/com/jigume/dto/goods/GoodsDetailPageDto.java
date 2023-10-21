@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoodsDetailPageDto {
 
-    private String hostNickname;
-
-    private Integer hostSellCount;
-
-    private Integer orderCount;
+    private boolean isOrderOrSell;
 
     private GoodsPageDto goodsPageDto;
 }

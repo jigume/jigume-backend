@@ -67,6 +67,19 @@ public class AuthExceptionHandler {
         );
     }
 
+    @ExceptionHandler(AuthNotAuthorizationMemberException.class)
+    public ResponseEntity<ExceptionResponse> authNotAuthorizationMemberException(
+            AuthNotAuthorizationMemberException e
+    ) {
+        ExceptionCode exceptionCode = e.getExceptionCode();
+        log.error("{}", exceptionCode.getMessage());
+
+        return new ResponseEntity<>(
+                new ExceptionResponse(exceptionCode),
+                exceptionCode.getHttpStatus()
+        );
+    }
+
     @ExceptionHandler(InvalidAuthorizationCodeException.class)
     public ResponseEntity<ExceptionResponse> InvalidAuthorizationCodeException(
             InvalidAuthorizationCodeException e
