@@ -1,6 +1,5 @@
 package com.jigume.dto.order;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,13 +7,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderDto {
 
+    private Long goodsId;
+
     private Integer orderGoodsCount;
 
-    private Integer orderType;
-
-    @Builder
-    public OrderDto(Integer orderGoodsCount, Integer orderType) {
+    public OrderDto(Long goodsId, Integer orderGoodsCount) {
+        this.goodsId = goodsId;
         this.orderGoodsCount = orderGoodsCount;
-        this.orderType = orderType;
     }
 }

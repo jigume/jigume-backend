@@ -2,6 +2,7 @@ package com.jigume.entity.goods;
 
 import com.jigume.entity.BaseTimeEntity;
 import com.jigume.entity.order.Order;
+import com.jigume.entity.order.Sell;
 import com.jigume.exception.order.OrderOverCountException;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.jigume.entity.goods.GoodsStatus.END;
+import static com.jigume.entity.goods.GoodsStatus.PROCESSING;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -45,15 +48,13 @@ public class Goods extends BaseTimeEntity {
     @Embedded
     private Address address;
 
-    @Column(name = "goods_is_end")
-    private boolean isEnd;
+    @Enumerated(EnumType.STRING)
+    private GoodsStatus goodsStatus;
 
     @Column(name = "goods_limit_count")
     private Integer goodsLimitCount;
 
     private LocalDateTime goodsLimitTime;
-
-    private String hostNickname;
 
     private Integer currentOrderCount;
 
@@ -67,14 +68,17 @@ public class Goods extends BaseTimeEntity {
     @OneToMany(mappedBy = "goods")
     private List<Order> orderList = new ArrayList<>();
 
+    @OneToOne(mappedBy = "goods")
+    private Sell sell;
+
     @OneToMany(mappedBy = "goods")
-    private List<GoodsImages> goodsImagesList = new ArrayList<>();
+    private List<GoodsImage> goodsImageList = new ArrayList<>();
 
 
     @Builder
     public static Goods createGoods(String name, String introduction, String link, Integer goodsPrice,
                                     Integer deliveryFee, Double mapX, Double mapY, Integer goodsLimitCount,
-                                    LocalDateTime goodsLimitTime, String hostNickname, Category category) {
+                                    LocalDateTime goodsLimitTime, Category category) {
         Goods goods = new Goods();
         goods.name = name;
         goods.introduction = introduction;
@@ -83,18 +87,18 @@ public class Goods extends BaseTimeEntity {
         goods.deliveryFee = deliveryFee;
         goods.realDeliveryFee = deliveryFee;
         goods.address = new Address(mapX, mapY);
-        goods.isEnd = false;
+        goods.goodsStatus = PROCESSING;
         goods.goodsLimitCount = goodsLimitCount;
         goods.goodsLimitTime = goodsLimitTime;
-        goods.hostNickname = hostNickname;
         goods.currentOrderCount = 1;
+        goods.currentOrderGoodsCount = 0;
         goods.category = category;
 
         return goods;
     }
 
-    public void updateIsEnd(boolean isEnd) {
-        this.isEnd = isEnd;
+    public void updateEnd() {
+        this.goodsStatus = END;
     }
 
     public void updateGoodsOrder(Integer orderGoodsCount) {
@@ -105,12 +109,12 @@ public class Goods extends BaseTimeEntity {
             throw new OrderOverCountException();
         }
 
-        if(this.currentOrderGoodsCount == this.goodsLimitCount) this.isEnd = true;
+        if(this.currentOrderGoodsCount == this.goodsLimitCount) this.goodsStatus = END;
 
         this.realDeliveryFee = this.deliveryFee / this.currentOrderCount;
     }
 
-    public void setGoodsImagesList(GoodsImages goodsImages) {
-        this.goodsImagesList.add(goodsImages);
+    public void setGoodsImageList(GoodsImage goodsImage) {
+        this.goodsImageList.add(goodsImage);
     }
 }

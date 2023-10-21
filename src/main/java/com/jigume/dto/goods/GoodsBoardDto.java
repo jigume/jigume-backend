@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoodsBoardDto {
 
-    private String nickname;
+    private String hostNickname;
 
-    private Integer sellCount;
+    private Integer hostSellCount;
 
     private Integer orderCount;
 
-    private GoodsDto goodsDto;
+    private GoodsPageDto goodsPageDto;
 }

@@ -1,7 +1,6 @@
 package com.jigume.dto.member;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;

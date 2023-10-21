@@ -16,13 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.util.AntPathMatcher;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 

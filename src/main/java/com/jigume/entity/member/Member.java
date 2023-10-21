@@ -2,15 +2,16 @@ package com.jigume.entity.member;
 
 import com.jigume.entity.BaseTimeEntity;
 import com.jigume.entity.goods.Address;
+import com.jigume.entity.order.Sell;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +40,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private BaseRole baseRole;
+
+    @OneToMany(mappedBy = "member")
+    private List<Sell> sellList = new ArrayList<>();
 
     public static Member createMember(String socialId) {
         Member member = new Member();

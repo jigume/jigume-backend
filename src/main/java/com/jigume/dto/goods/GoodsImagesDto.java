@@ -1,7 +1,6 @@
 package com.jigume.dto.goods;
 
-import com.jigume.entity.goods.GoodsImages;
-import lombok.Builder;
+import com.jigume.entity.goods.GoodsImage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,10 +20,10 @@ public class GoodsImagesDto {
         this.repimgYn = repimgYn;
     }
 
-    public static List<GoodsImagesDto> toGoodsImagesDto(List<GoodsImages> goodsImagesList) {
-        return goodsImagesList.stream()
-                .map(goodsImages ->
-                        new GoodsImagesDto(goodsImages.getGoodsImgUrl(), goodsImages.isRepimgYn()))
+    public static List<GoodsImagesDto> toGoodsImagesDto(List<GoodsImage> goodsImageList) {
+        return goodsImageList.stream()
+                .map(goodsImage ->
+                        new GoodsImagesDto(goodsImage.getGoodsImgUrl(), goodsImage.isRepimgYn()))
                 .collect(Collectors.toList());
     }
 }

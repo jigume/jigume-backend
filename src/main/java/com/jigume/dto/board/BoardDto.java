@@ -21,7 +21,7 @@ public class BoardDto {
     public static BoardDto toBoardDto(Board board) {
         BoardDto boardDto = new BoardDto();
         boardDto.boardName = board.getBoardName();
-        boardDto.hostName = board.getGoods().getHostNickname();
+        boardDto.hostName = board.getGoods().getSell().getMember().getNickname();
         boardDto.boardContent = board.getBoardContent();
         boardDto.created_at = board.getCreatedDate();
 

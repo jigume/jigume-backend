@@ -1,64 +1,36 @@
 package com.jigume.dto.goods;
 
-import com.jigume.entity.goods.Goods;
+import com.jigume.entity.goods.GoodsStatus;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-@Data
 @NoArgsConstructor
+@Data
 public class GoodsDto {
-
-    private Long goodsId;
-
-    private String name;
-
-    private String introduction;
-
-    private String link;
-
+    private String goodsName;
+    private String hostNickName;
+    private Integer hostSellCount;
     private Integer goodsPrice;
-
-    private Integer deliveryFee;
-
-    private Double mapX;
-
-    private Double mapY;
-
-    private Integer goodsLimitCount;
-
-    private LocalDateTime goodsLimitTime;
-
-    private Long category;
-
-    private Integer realDeliveryFee;
-
-    private boolean isEnd;
-
-    private List<GoodsImagesDto> goodsImagesList = new ArrayList<>();
+    private Integer goodsDeliveryPrice;
+    private Integer goodsOrderCount;
+    private Integer discountDeliveryPrice;
+    private String repImgUrl;
+    private Integer goodsStatus;
 
 
-    public static GoodsDto toGoodsDto(Goods goods) {
-        GoodsDto goodsDto = new GoodsDto();
-
-        goodsDto.setGoodsId(goods.getId());
-        goodsDto.setName(goods.getName());
-        goodsDto.setGoodsPrice(goods.getGoodsPrice());
-        goodsDto.setIntroduction(goods.getIntroduction());
-        goodsDto.setGoodsLimitCount(goods.getGoodsLimitCount());
-        goodsDto.setGoodsLimitTime(goods.getGoodsLimitTime());
-        goodsDto.setCategory(goods.getCategory().getId());
-        goodsDto.setLink(goods.getLink());
-        goodsDto.setDeliveryFee(goods.getDeliveryFee());
-        goodsDto.setRealDeliveryFee(goods.getRealDeliveryFee());
-        goodsDto.setMapX(goods.getAddress().getMapX());
-        goodsDto.setMapY(goods.getAddress().getMapY());
-        goodsDto.setEnd(goods.isEnd());
-        goodsDto.setGoodsImagesList(GoodsImagesDto.toGoodsImagesDto(goods.getGoodsImagesList()));
-
-        return goodsDto;
+    @Builder
+    public GoodsDto(String goodsName, String hostNickName, Integer hostSellCount,
+                    Integer goodsPrice, Integer goodsDeliveryPrice,
+                    Integer goodsOrderCount, String repImgUrl, GoodsStatus goodsStatus) {
+        this.goodsName = goodsName;
+        this.hostNickName = hostNickName;
+        this.hostSellCount = hostSellCount;
+        this.goodsPrice = goodsPrice;
+        this.goodsDeliveryPrice = goodsDeliveryPrice;
+        this.goodsOrderCount = goodsOrderCount;
+        this.discountDeliveryPrice = goodsDeliveryPrice / goodsOrderCount;
+        this.repImgUrl = repImgUrl;
+        this.goodsStatus = goodsStatus.getStatus();
     }
 }

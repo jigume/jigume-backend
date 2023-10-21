@@ -1,16 +1,17 @@
 package com.jigume.service.goods;
 
-import com.jigume.dto.goods.GoodsBoardDto;
-import com.jigume.dto.goods.GoodsDto;
-import com.jigume.dto.goods.GoodsSaveDto;
+import com.jigume.dto.goods.*;
 import com.jigume.entity.goods.Category;
+import com.jigume.entity.goods.DefaultImgUrl;
 import com.jigume.entity.goods.Goods;
-import com.jigume.entity.goods.GoodsImages;
+import com.jigume.entity.goods.GoodsImage;
 import com.jigume.entity.member.Member;
-import com.jigume.entity.order.Order;
-import com.jigume.entity.order.OrderType;
+import com.jigume.entity.order.Sell;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
-import com.jigume.repository.*;
+import com.jigume.repository.CategoryRepository;
+import com.jigume.repository.GoodsImagesRepository;
+import com.jigume.repository.GoodsRepository;
+import com.jigume.repository.SellRepository;
 import com.jigume.service.board.BoardService;
 import com.jigume.service.member.MemberService;
 import com.jigume.service.s3.S3FileUploadService;
@@ -20,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.jigume.exception.global.GlobalErrorCode.RESOURCE_NOT_FOUND;
 
@@ -35,24 +36,27 @@ public class GoodsService {
     private final MemberService memberService;
     private final BoardService boardService;
     private final GoodsImagesRepository goodsImagesRepository;
-    private final MemberRepository memberRepository;
-    private final OrderRepository orderRepository;
     private final S3FileUploadService s3FileUploadService;
+    private final SellRepository sellRepository;
 
     public Long saveGoods(GoodsSaveDto goodsSaveDto) {
-        GoodsDto goodsDto = goodsSaveDto.getGoodsDto();
-        Category category = getCategory(goodsDto);
+        Category category = getCategory(goodsSaveDto.getCategoryName());
 
-        Goods goods = Goods.createGoods(goodsDto.getName(), goodsDto.getIntroduction(),
-                goodsDto.getLink(), goodsDto.getGoodsPrice(),
-                goodsDto.getDeliveryFee(), goodsDto.getMapX(),
-                goodsDto.getMapY(), goodsDto.getGoodsLimitCount(),
-                goodsDto.getGoodsLimitTime(),
-                memberService.getMember().getNickname(), category);
+        Member member = memberService.getMember();
+
+        Goods goods = Goods.createGoods(goodsSaveDto.getGoodsName(), goodsSaveDto.getIntroduction(),
+                goodsSaveDto.getLink(), goodsSaveDto.getGoodsPrice(),
+                goodsSaveDto.getDeliveryFee(), goodsSaveDto.getMapX(),
+                goodsSaveDto.getMapY(), goodsSaveDto.getGoodsLimitCount(),
+                goodsSaveDto.getGoodsLimitTime(), category);
 
         boardService.createBoard(goodsSaveDto.getBoardContent(), goods);
 
         Long goodsId = goodsRepository.save(goods).getId();
+
+        Sell sell = Sell.createSell(member, goods);
+
+        sellRepository.save(sell);
 
         return goodsId;
     }
@@ -62,56 +66,107 @@ public class GoodsService {
 
         String goodsImgUrl = s3FileUploadService.uploadFile(goodsImgFile);
 
-        GoodsImages goodsImages = new GoodsImages();
-        goodsImages.setGoods(goods);
-        goodsImages.setGoodsImgUrl(goodsImgUrl);
-        goodsImages.setRepimgYn(repImgYn);
+        GoodsImage goodsImage = new GoodsImage();
+        goodsImage.setGoods(goods);
+        goodsImage.setGoodsImgUrl(goodsImgUrl);
+        goodsImage.setRepimgYn(repImgYn);
 
-        goods.setGoodsImagesList(goodsImages);
+        goods.setGoodsImageList(goodsImage);
 
-        goodsImagesRepository.save(goodsImages);
+        goodsImagesRepository.save(goodsImage);
     }
 
     public GoodsBoardDto getGoodsPage(Long goodsId) {
         Goods goods = getGoods(goodsId);
-        String hostNickname = goods.getHostNickname();
-        Member findMember = memberRepository.findMemberByNickname(hostNickname).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
-        List<Order> sellOrderList = orderRepository.findOrdersByMember_IdAndOrderType(findMember.getId(), OrderType.SELL);
+        String nickname = goods.getSell().getMember().getNickname();
+        List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(goods.getSell().getMember().getId());
 
         checkTime(goods);
 
-        return new GoodsBoardDto(hostNickname, sellOrderList.size(), goods.getOrderList().size() + 1, GoodsDto.toGoodsDto(goods));
+        return new GoodsBoardDto(nickname, sellsByMemberId.size(),
+                goods.getCurrentOrderCount(),
+                toGoodsPageDto(goods));
     }
 
     public List<GoodsDto> getGoodsList() {
         List<Goods> goodsList = goodsRepository.findAll();
         goodsList.forEach(this::checkTime);
 
+        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
 
-        return goodsList.stream().map(GoodsDto::toGoodsDto).collect(Collectors.toList());
+        return goodsDtoList;
     }
+
 
     public List<GoodsDto> getGoodsList(Long categoryId) {
         List<Goods> goodsList = goodsRepository.findAllByCategoryId(categoryId);
         goodsList.forEach(this::checkTime);
 
 
-        return goodsList.stream().map(GoodsDto::toGoodsDto).collect(Collectors.toList());
+        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
+
+        return goodsDtoList;
     }
 
     public Goods getGoods(Long goodsId) {
         return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
     }
 
-    private Category getCategory(GoodsDto goodsDto) {
-        return categoryRepository.findById(goodsDto.getCategory()).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
+    private Category getCategory(String categoryName) {
+        return categoryRepository.findCategoryByName(categoryName).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
     }
 
     private void checkTime(Goods goods) {
         LocalDateTime now = LocalDateTime.now();
 
         if (!goods.getGoodsLimitTime().isAfter(now)) {
-            goods.updateIsEnd(true);
+            goods.updateEnd();
         }
+    }
+
+    public List<GoodsDto> toGoodsDtoList(List<Goods> goodsList) {
+        List<GoodsDto> goodsDtoList = new ArrayList<>();
+
+        for (Goods goods : goodsList) {
+            Member hostMember = goods.getSell().getMember();
+            int hostSellCount = sellRepository.findSellsByMemberId(hostMember.getId()).size();
+            GoodsDto goodsDto = new GoodsDto().builder().goodsName(goods.getName())
+                    .goodsStatus(goods.getGoodsStatus())
+                    .goodsPrice(goods.getGoodsPrice())
+                    .goodsOrderCount(goods.getCurrentOrderGoodsCount())
+                    .goodsDeliveryPrice(goods.getDeliveryFee())
+                    .hostNickName(hostMember.getNickname())
+                    .hostSellCount(hostSellCount)
+                    .repImgUrl(goodsImagesRepository.findGoodsImageByGoodsIdAndRepimgYn(goods.getId(), true)
+                            .orElse(goodsImagesRepository.findDefalutGoodsImage(DefaultImgUrl.DEFAULT_GOODS_IMG_URL.getDefaultImgUrl()))
+                            .getGoodsImgUrl()).build();
+
+            goodsDtoList.add(goodsDto);
+        }
+
+        return goodsDtoList;
+    }
+
+
+    private GoodsPageDto toGoodsPageDto(Goods goods) {
+        Member hostMember = goods.getSell().getMember();
+        int hostSellCount = sellRepository.findSellsByMemberId(hostMember.getId()).size();
+
+        GoodsPageDto goodsPageDto = new GoodsPageDto().builder()
+                .goodsId(goods.getId()).goodsName(goods.getName())
+                .introduction(goods.getIntroduction())
+                .link(goods.getLink()).goodsPrice(goods.getGoodsPrice())
+                .deliveryFee(goods.getDeliveryFee()).mapX(goods.getAddress().getMapX())
+                .mapY(goods.getAddress().getMapY()).goodsLimitTime(goods.getGoodsLimitTime())
+                .goodsLimitCount(goods.getGoodsLimitCount()).category(goods.getCategory().getId())
+                .realDeliveryFee(goods.getRealDeliveryFee()).goodsStatus(goods.getGoodsStatus())
+                .hostNickname(hostMember.getNickname()).hostSellCount(hostSellCount)
+                .goodsOrderCount(goods.getCurrentOrderGoodsCount())
+                .discountDeliveryPrice(goods.getDeliveryFee() - goods.getRealDeliveryFee())
+                .goodsImagesList(GoodsImagesDto.toGoodsImagesDto(goods.getGoodsImageList()))
+                .build();
+
+
+        return goodsPageDto;
     }
 }
