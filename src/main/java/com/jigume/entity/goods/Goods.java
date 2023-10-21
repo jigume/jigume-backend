@@ -62,6 +62,9 @@ public class Goods extends BaseTimeEntity {
     @OneToMany(mappedBy = "goods")
     private List<Order> orderList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "goods")
+    private List<GoodsImages> goodsImagesList = new ArrayList<>();
+
 
     @Builder
     public static Goods createGoods(String name, String introduction, String link, Integer goodsPrice,
@@ -96,5 +99,9 @@ public class Goods extends BaseTimeEntity {
         }
 
         if(this.currentOrderCount == this.goodsLimitCount) this.isEnd = true;
+    }
+
+    public void setGoodsImagesList(GoodsImages goodsImages) {
+        this.goodsImagesList.add(goodsImages);
     }
 }

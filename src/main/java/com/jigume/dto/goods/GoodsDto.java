@@ -1,10 +1,14 @@
 package com.jigume.dto.goods;
 
 import com.jigume.entity.goods.Goods;
+import com.jigume.entity.goods.GoodsImages;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -36,6 +40,8 @@ public class GoodsDto {
 
     private boolean isEnd;
 
+    private List<GoodsImagesDto> goodsImagesList = new ArrayList<>();
+
 
     public static GoodsDto toGoodsDto(Goods goods) {
         GoodsDto goodsDto = new GoodsDto();
@@ -52,6 +58,8 @@ public class GoodsDto {
         goodsDto.setMapX(goods.getAddress().getMapX());
         goodsDto.setMapY(goods.getAddress().getMapY());
         goodsDto.setEnd(goods.isEnd());
+        goodsDto.setGoodsImagesList(GoodsImagesDto.toGoodsImagesDto(goods.getGoodsImagesList()));
+
         if(goods.getCurrentOrderCount() != 0) goodsDto.setRealDeliveryFee(goods.getDeliveryFee() / goods.getCurrentOrderCount());
         else goodsDto.setRealDeliveryFee(goods.getDeliveryFee());
 

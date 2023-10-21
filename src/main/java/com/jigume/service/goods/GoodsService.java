@@ -3,22 +3,22 @@ package com.jigume.service.goods;
 import com.jigume.dto.goods.GoodsBoardDto;
 import com.jigume.dto.goods.GoodsDto;
 import com.jigume.dto.goods.GoodsSaveDto;
-import com.jigume.entity.member.Member;
 import com.jigume.entity.goods.Category;
 import com.jigume.entity.goods.Goods;
 import com.jigume.entity.goods.GoodsImages;
+import com.jigume.entity.member.Member;
 import com.jigume.entity.order.Order;
 import com.jigume.entity.order.OrderType;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.repository.*;
-import com.jigume.service.member.MemberService;
 import com.jigume.service.board.BoardService;
+import com.jigume.service.member.MemberService;
+import com.jigume.service.s3.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,12 +37,18 @@ public class GoodsService {
     private final GoodsImagesRepository goodsImagesRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
+    private final S3FileUploadService s3FileUploadService;
 
-    public Long saveGoods(GoodsSaveDto goodsSaveDto, String memberIdx){
+    public Long saveGoods(GoodsSaveDto goodsSaveDto) {
         GoodsDto goodsDto = goodsSaveDto.getGoodsDto();
         Category category = getCategory(goodsDto);
 
-        Goods goods = Goods.createGoods(goodsDto.getName(), goodsDto.getIntroduction(), goodsDto.getLink(), goodsDto.getGoodsPrice(), goodsDto.getDeliveryFee(), goodsDto.getMapX(), goodsDto.getMapY(), goodsDto.getGoodsLimitCount(), goodsDto.getGoodsLimitTime(), memberService.getMember().getNickname(), category);
+        Goods goods = Goods.createGoods(goodsDto.getName(), goodsDto.getIntroduction(),
+                goodsDto.getLink(), goodsDto.getGoodsPrice(),
+                goodsDto.getDeliveryFee(), goodsDto.getMapX(),
+                goodsDto.getMapY(), goodsDto.getGoodsLimitCount(),
+                goodsDto.getGoodsLimitTime(),
+                memberService.getMember().getNickname(), category);
 
         boardService.createBoard(goodsSaveDto.getBoardContent(), goods);
 
@@ -51,17 +57,19 @@ public class GoodsService {
         return goodsId;
     }
 
-    public void saveImage(MultipartFile goodsImgFile, Long goodsId) throws IOException {
+    public void saveImage(MultipartFile goodsImgFile, Long goodsId, Boolean repImgYn) {
         Goods goods = getGoods(goodsId);
 
-            GoodsImages goodsImages = new GoodsImages();
-            goodsImages.setGoods(goods);
-            goodsImages.setImage(goodsImgFile.getBytes());
-            goodsImages.setRepimgYn(true);
+        String goodsImgUrl = s3FileUploadService.uploadFile(goodsImgFile);
 
+        GoodsImages goodsImages = new GoodsImages();
+        goodsImages.setGoods(goods);
+        goodsImages.setGoodsImgUrl(goodsImgUrl);
+        goodsImages.setRepimgYn(repImgYn);
 
-            goodsImagesRepository.save(goodsImages);
+        goods.setGoodsImagesList(goodsImages);
 
+        goodsImagesRepository.save(goodsImages);
     }
 
     public GoodsBoardDto getGoodsPage(Long goodsId) {
