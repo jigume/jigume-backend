@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderDto {
 
-    private Integer orderCount;
+    private Integer orderGoodsCount;
 
     private Integer orderType;
 
     @Builder
-    public OrderDto(Integer orderCount, Integer orderType) {
-        this.orderCount = orderCount;
+    public OrderDto(Integer orderGoodsCount, Integer orderType) {
+        this.orderGoodsCount = orderGoodsCount;
         this.orderType = orderType;
     }
 }

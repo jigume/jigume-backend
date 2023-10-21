@@ -12,9 +12,9 @@ public class MemberInfoDto {
 
     private String profileImgUrl;
 
-    private Long mapX;
+    private Double mapX;
 
-    private Long mapY;
+    private Double mapY;
 
     //TODO: 도로명 주소
 

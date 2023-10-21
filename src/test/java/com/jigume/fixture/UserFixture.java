@@ -14,7 +14,7 @@ public class UserFixture {
     public static Member createMember() {
         Member member = Member.createMember("id");
 
-        member.updateMemberInfo("id", 1L, 2L);
+        member.updateMemberInfo("id", 1.0, 2.0);
         member.updateMemberProfileImg("url");
         member.updateBaseRole(BaseRole.USER);
 
@@ -24,7 +24,7 @@ public class UserFixture {
     public static Member createGuestMember() {
         Member member = Member.createMember("guest");
 
-        member.updateMemberInfo("guest", 1L, 2L);
+        member.updateMemberInfo("guest", 1.0, 2.0);
         member.updateMemberProfileImg("url");
 
         return member;
@@ -33,7 +33,7 @@ public class UserFixture {
     public static Member createCustomMember(String str) {
         Member member = Member.createMember(str);
 
-        member.updateMemberInfo(str, 1L, 2L);
+        member.updateMemberInfo(str, 1.0, 2.0);
         member.updateMemberProfileImg("url");
 
         return member;

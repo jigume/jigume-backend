@@ -19,7 +19,7 @@ public class Order extends BaseTimeEntity {
     private Long id;
 
     @Column(name = "order_count")
-    private Integer orderCount;
+    private Integer orderGoodsCount;
 
     @Column(name = "order_price")
     private Integer orderPrice;
@@ -38,14 +38,16 @@ public class Order extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static Order createOrder(Integer orderCount, OrderType orderType,
-                                    Goods goods, Member member, Integer currentOrderCount) {
+    public static Order createOrder(Integer orderGoodsCount, OrderType orderType,
+                                    Goods goods, Member member) {
         Order order = new Order();
-        if(goods.getGoodsLimitCount() - (currentOrderCount + orderCount) < 0) {
+
+        if(goods.getGoodsLimitCount() - (goods.getCurrentOrderGoodsCount() + orderGoodsCount) < 0) {
             throw new OrderOverCountException();
         }
-        order.orderCount = orderCount;
-        order.orderPrice = (goods.getGoodsPrice() * orderCount) + (goods.getDeliveryFee() / (currentOrderCount + 1));
+
+        order.orderGoodsCount = orderGoodsCount;
+        order.orderPrice = (goods.getGoodsPrice() * orderGoodsCount) + (goods.getDeliveryFee() / (goods.getCurrentOrderCount() + 1));
         order.orderType = orderType;
         order.goods = goods;
         order.member = member;

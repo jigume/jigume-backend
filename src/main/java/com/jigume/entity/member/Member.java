@@ -48,7 +48,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         return member;
     }
 
-    public void updateMemberInfo(String nickname, Long mapX, Long mapY) {
+    public void updateMemberInfo(String nickname, Double mapX, Double mapY) {
         this.nickname = nickname;
         this.address = new Address(mapX, mapY);
     }

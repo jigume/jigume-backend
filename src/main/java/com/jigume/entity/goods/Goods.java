@@ -39,6 +39,9 @@ public class Goods extends BaseTimeEntity {
     @Column(name = "delivery_fee")
     private Integer deliveryFee;
 
+    @Column(name = "real_delivery_fee")
+    private Integer realDeliveryFee;
+
     @Embedded
     private Address address;
 
@@ -54,6 +57,8 @@ public class Goods extends BaseTimeEntity {
 
     private Integer currentOrderCount;
 
+    private Integer currentOrderGoodsCount;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -68,7 +73,7 @@ public class Goods extends BaseTimeEntity {
 
     @Builder
     public static Goods createGoods(String name, String introduction, String link, Integer goodsPrice,
-                                    Integer deliveryFee, Long mapX, Long mapY, Integer goodsLimitCount,
+                                    Integer deliveryFee, Double mapX, Double mapY, Integer goodsLimitCount,
                                     LocalDateTime goodsLimitTime, String hostNickname, Category category) {
         Goods goods = new Goods();
         goods.name = name;
@@ -76,12 +81,13 @@ public class Goods extends BaseTimeEntity {
         goods.link = link;
         goods.goodsPrice = goodsPrice;
         goods.deliveryFee = deliveryFee;
+        goods.realDeliveryFee = deliveryFee;
         goods.address = new Address(mapX, mapY);
         goods.isEnd = false;
         goods.goodsLimitCount = goodsLimitCount;
         goods.goodsLimitTime = goodsLimitTime;
         goods.hostNickname = hostNickname;
-        goods.currentOrderCount = 0;
+        goods.currentOrderCount = 1;
         goods.category = category;
 
         return goods;
@@ -91,14 +97,17 @@ public class Goods extends BaseTimeEntity {
         this.isEnd = isEnd;
     }
 
-    public void updateCurrentOrder(Integer orderCount) {
-        this.currentOrderCount += orderCount;
+    public void updateGoodsOrder(Integer orderGoodsCount) {
+        this.currentOrderCount += 1;
+        this.currentOrderGoodsCount += orderGoodsCount;
 
-        if(this.currentOrderCount > this.goodsLimitCount) {
+        if(this.currentOrderGoodsCount > this.goodsLimitCount) {
             throw new OrderOverCountException();
         }
 
-        if(this.currentOrderCount == this.goodsLimitCount) this.isEnd = true;
+        if(this.currentOrderGoodsCount == this.goodsLimitCount) this.isEnd = true;
+
+        this.realDeliveryFee = this.deliveryFee / this.currentOrderCount;
     }
 
     public void setGoodsImagesList(GoodsImages goodsImages) {
