@@ -80,7 +80,6 @@ public class GoodsService {
         Member member = memberService.getMember();
         Goods goods = getGoods(goodsId);
         Member hostMember = goods.getSell().getMember();
-        String nickname = hostMember.getNickname();
         List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(hostMember.getId());
 
         checkTime(goods);
