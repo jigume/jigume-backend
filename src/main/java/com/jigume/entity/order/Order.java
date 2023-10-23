@@ -47,4 +47,8 @@ public class Order extends BaseTimeEntity {
 
         return order;
     }
+
+    public void updateOrderPrice(Goods goods) {
+        this.orderPrice = (goods.getGoodsPrice() * orderGoodsCount) + (goods.getDeliveryFee() / (goods.getCurrentOrderCount() + 1));
+    }
 }

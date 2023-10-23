@@ -1,13 +1,16 @@
 package com.jigume.controller;
 
+import com.jigume.dto.goods.GoodsDto;
+import com.jigume.dto.order.EndHistoryDto;
 import com.jigume.dto.order.OrderDto;
+import com.jigume.entity.goods.GoodsStatus;
+import com.jigume.service.goods.GoodsService;
 import com.jigume.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -25,18 +28,16 @@ public class OrderController {
         return new ResponseEntity("주문이 성공적으로 되었습니다.", OK);
     }
 
-    //TODO: 판매 내역, 구매 내역 불러오기(두 개 다 진행중, 끝남 분리)
+    @GetMapping("/orders/{status}")
+    public ResponseEntity getOrderHistory(@PathVariable("status") Integer status) {
+        if(status == GoodsStatus.END.getStatus()) {
+            List<EndHistoryDto> orderEndHistory = orderService.getOrderEndHistory();
 
-//    @GetMapping("/order/{orderStatusNum}/{orderTypeNum}")
-//    public ResponseEntity getOrder(@PathVariable Integer orderTypeNum,
-//                                   @PathVariable Integer orderStatusNum) {
-//        if (orderStatusNum == 0) {
-//            List<ProgressDto> progressOrderList = orderService.getProgressOrderList(orderTypeNum, orderStatusNum);
-//            return new ResponseEntity(progressOrderList, OK);
-//        } else {
-//            List<DoneDto> doneOrderList = orderService.getDoneOrderList(orderTypeNum, orderStatusNum);
-//            return new ResponseEntity<>(doneOrderList, OK);
-//        }
-//
-//    }
+            return new ResponseEntity(orderEndHistory, OK);
+        }
+
+        List<GoodsDto> orderProcessingHistory = orderService.getOrderProcessingHistory();
+
+        return new ResponseEntity(orderProcessingHistory, OK);
+    }
 }

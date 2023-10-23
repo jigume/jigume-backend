@@ -8,6 +8,7 @@ import com.jigume.entity.goods.Goods;
 import com.jigume.entity.goods.GoodsImage;
 import com.jigume.entity.member.Member;
 import com.jigume.entity.order.Sell;
+import com.jigume.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.repository.*;
 import com.jigume.service.board.BoardService;
@@ -61,6 +62,16 @@ public class GoodsService {
         return goodsId;
     }
 
+    public void endGoodsSelling(Long goodsId) {
+        Member member = memberService.getMember();
+
+        Goods goods = getGoods(goodsId);
+
+        checkGoodsSeller(goods, member);
+
+        goods.updateEnd();
+    }
+
     public void saveImage(MultipartFile goodsImgFile, Long goodsId, Boolean repImgYn) {
         Goods goods = getGoods(goodsId);
 
@@ -92,6 +103,14 @@ public class GoodsService {
 
     public List<GoodsDto> getGoodsList() {
         List<Goods> goodsList = goodsRepository.findAll();
+        goodsList.forEach(this::checkTime);
+
+        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
+
+        return goodsDtoList;
+    }
+
+    public List<GoodsDto> getGoodsList(List<Goods> goodsList) {
         goodsList.forEach(this::checkTime);
 
         List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
@@ -180,5 +199,11 @@ public class GoodsService {
             return true;
         }
         return false;
+    }
+
+    public void checkGoodsSeller(Goods goods, Member member) {
+        if(goods.getSell().getMember() == member) {
+            throw new AuthNotAuthorizationMemberException();
+        }
     }
 }

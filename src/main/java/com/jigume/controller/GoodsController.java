@@ -84,4 +84,17 @@ public class GoodsController {
     }
 
 
+    @Operation(summary = "Goods 판매를 끝낸다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "굿즈 판매 종료"),
+            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+    })
+    @PostMapping("/goods/{goodsId}/end")
+    public ResponseEntity endGoodsSelling(@PathVariable Long goodsId) {
+        goodsService.endGoodsSelling(goodsId);
+
+        return new ResponseEntity (OK);
+    }
+
+
 }
