@@ -1,7 +1,7 @@
 package com.jigume.service.order;
 
 import com.jigume.dto.goods.GoodsDto;
-import com.jigume.dto.order.EndHistoryDto;
+import com.jigume.dto.order.EndBuyHistoryDto;
 import com.jigume.dto.order.OrderDto;
 import com.jigume.entity.goods.Goods;
 import com.jigume.entity.goods.GoodsStatus;
@@ -49,7 +49,7 @@ public class OrderService {
         return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
     }
 
-    public List<EndHistoryDto> getOrderEndHistory() {
+    public List<EndBuyHistoryDto> getOrderEndHistory() {
         Member member = memberService.getMember();
 
         List<Order> ordersByMemberId = orderRepository.findOrdersByMemberId(member.getId());
@@ -58,7 +58,7 @@ public class OrderService {
                 .collect(Collectors.toList());
 
 
-        List<EndHistoryDto> endHistoryDtoList = endOrderHistory.stream().map(order -> EndHistoryDto.builder()
+        List<EndBuyHistoryDto> endBuyHistoryDtoList = endOrderHistory.stream().map(order -> EndBuyHistoryDto.builder()
                 .boardId(order.getGoods().getBoard().getId())
                 .goodsPrice(order.getGoods().getGoodsPrice())
                 .goodsBuyCount(order.getOrderGoodsCount())
@@ -66,7 +66,7 @@ public class OrderService {
                 .realDeliveryFee(order.getGoods().getRealDeliveryFee())
                 .totalFee(order.getOrderPrice()).build()).collect(Collectors.toList());
 
-        return endHistoryDtoList;
+        return endBuyHistoryDtoList;
     }
 
     public List<GoodsDto> getOrderProcessingHistory() {

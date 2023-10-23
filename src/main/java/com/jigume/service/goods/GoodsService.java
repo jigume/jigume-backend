@@ -151,7 +151,7 @@ public class GoodsService {
         for (Goods goods : goodsList) {
             Member hostMember = goods.getSell().getMember();
             int hostSellCount = sellRepository.findSellsByMemberId(hostMember.getId()).size();
-            GoodsDto goodsDto = new GoodsDto().builder().goodsName(goods.getName())
+            GoodsDto goodsDto = new GoodsDto().builder().goodsId(goods.getId()).goodsName(goods.getName())
                     .goodsStatus(goods.getGoodsStatus())
                     .goodsPrice(goods.getGoodsPrice())
                     .goodsOrderCount(goods.getCurrentOrderGoodsCount())

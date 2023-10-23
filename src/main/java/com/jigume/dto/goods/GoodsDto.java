@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class GoodsDto {
+    private Long goodsId;
     private String goodsName;
     private String hostNickName;
     private Integer hostSellCount;
@@ -20,9 +21,10 @@ public class GoodsDto {
 
 
     @Builder
-    public GoodsDto(String goodsName, String hostNickName, Integer hostSellCount,
+    public GoodsDto(Long goodsId, String goodsName, String hostNickName, Integer hostSellCount,
                     Integer goodsPrice, Integer goodsDeliveryPrice,
                     Integer goodsOrderCount, String repImgUrl, GoodsStatus goodsStatus) {
+        this.goodsId = goodsId;
         this.goodsName = goodsName;
         this.hostNickName = hostNickName;
         this.hostSellCount = hostSellCount;

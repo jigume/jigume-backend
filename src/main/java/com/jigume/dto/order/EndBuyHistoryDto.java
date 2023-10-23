@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class EndHistoryDto {
+public class EndBuyHistoryDto {
 
     private Integer goodsPrice;
     private Integer goodsBuyCount;
@@ -16,7 +16,7 @@ public class EndHistoryDto {
     private Long boardId;
 
     @Builder
-    public EndHistoryDto(Integer goodsPrice, Integer goodsBuyCount, Integer deliveryFee, Integer realDeliveryFee, Integer totalFee, Long boardId) {
+    public EndBuyHistoryDto(Integer goodsPrice, Integer goodsBuyCount, Integer deliveryFee, Integer realDeliveryFee, Integer totalFee, Long boardId) {
         this.goodsPrice = goodsPrice;
         this.goodsBuyCount = goodsBuyCount;
         this.deliveryFee = deliveryFee;
