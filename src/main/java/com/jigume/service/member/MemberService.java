@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.util.Map;
@@ -111,4 +112,10 @@ public class MemberService {
         return (UserDetails) authentication.getPrincipal();
     }
 
+    public void saveMemberImage(MultipartFile multipartFile) {
+        Member member = getMember();
+        String memberProfileImgUrl = s3FileUploadService.uploadFile(multipartFile);
+
+        member.updateMemberProfileImg(memberProfileImgUrl);
+    }
 }

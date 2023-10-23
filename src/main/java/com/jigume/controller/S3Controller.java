@@ -3,6 +3,7 @@ package com.jigume.controller;
 import com.jigume.entity.goods.ImageUploadRequest;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.service.goods.GoodsService;
+import com.jigume.service.member.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -26,6 +27,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class S3Controller {
 
     private final GoodsService goodsService;
+    private final MemberService memberService;
 
     @Operation(summary = "상품 이미지 저장")
     @Parameters(value = {
@@ -40,6 +42,20 @@ public class S3Controller {
     public ResponseEntity saveImage(ImageUploadRequest request,
                                     @PathVariable("goodsId") Long goodsId, @RequestParam("repImg") Boolean repImgYn) {
         goodsService.saveImage(request.multipartFile(), goodsId, repImgYn);
+
+        return new ResponseEntity("이미지 저장 성공", OK);
+    }
+
+    @Operation(summary = "멤버 프로필 이미지 저장")
+    @Parameters(value = {
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이미지 저장 성공"),
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
+    })
+    @PostMapping
+    public ResponseEntity saveMemberImage(ImageUploadRequest request) {
+        memberService.saveMemberImage(request.multipartFile());
 
         return new ResponseEntity("이미지 저장 성공", OK);
     }
