@@ -14,6 +14,6 @@ public interface GoodsImagesRepository extends JpaRepository<GoodsImage, Long> {
 
     Optional<GoodsImage> findGoodsImageByGoodsIdAndRepimgYn(Long goodsId, Boolean repImgYn);
 
-    @Query("select gi from GoodsImage gi where gi.goodsImgUrl =: defaultImgUrl")
+    @Query("select gi from GoodsImage gi where gi.goodsImgUrl = :defaultImgUrl")
     GoodsImage findDefalutGoodsImage(@Param("defaultImgUrl") String defaultImgUrl);
 }
