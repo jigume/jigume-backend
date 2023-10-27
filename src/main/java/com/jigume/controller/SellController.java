@@ -22,7 +22,7 @@ public class SellController {
 
     private final SellService sellService;
 
-    @GetMapping("/orders/{status}")
+    @GetMapping("/sell/{status}")
     public ResponseEntity getSellHistory(@PathVariable("status") Integer status) {
         if(status.equals(GoodsStatus.END.getStatus())) {
             SellHistoryDto sellHistoryDto = sellService.getSellEndHistory();
