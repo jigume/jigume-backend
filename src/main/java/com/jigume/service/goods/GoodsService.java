@@ -2,16 +2,12 @@ package com.jigume.service.goods;
 
 import com.jigume.dto.goods.*;
 import com.jigume.entity.board.Board;
-import com.jigume.entity.goods.Category;
-import com.jigume.entity.goods.DefaultImgUrl;
-import com.jigume.entity.goods.Goods;
-import com.jigume.entity.goods.GoodsImage;
+import com.jigume.entity.goods.*;
 import com.jigume.entity.member.Member;
 import com.jigume.entity.order.Sell;
 import com.jigume.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.repository.*;
-import com.jigume.service.board.BoardService;
 import com.jigume.service.member.MemberService;
 import com.jigume.service.s3.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +34,7 @@ public class GoodsService {
     private final SellRepository sellRepository;
     private final BoardRepository boardRepository;
 
-    public Long saveGoods(GoodsSaveDto goodsSaveDto) {
+    public Long saveGoods(GoodsSaveDto goodsSaveDto, List<ImageUploadRequest> imageUploadRequest, int repImg) {
         Category category = getCategory(goodsSaveDto.getCategoryName());
 
         Member member = memberService.getMember();
@@ -59,6 +55,9 @@ public class GoodsService {
 
         sellRepository.save(sell);
 
+        updateImage(imageUploadRequest, goods.getId(), repImg);
+
+
         return goodsId;
     }
 
@@ -72,19 +71,26 @@ public class GoodsService {
         goods.updateEnd();
     }
 
-    public void saveImage(MultipartFile goodsImgFile, Long goodsId, Boolean repImgYn) {
+    public void updateImage(List<ImageUploadRequest> imageUploadRequestList, Long goodsId, Integer repImg) {
         Goods goods = getGoods(goodsId);
 
-        String goodsImgUrl = s3FileUploadService.uploadFile(goodsImgFile);
+        int i = 0;
 
-        GoodsImage goodsImage = new GoodsImage();
-        goodsImage.setGoods(goods);
-        goodsImage.setGoodsImgUrl(goodsImgUrl);
-        goodsImage.setRepimgYn(repImgYn);
+        for (ImageUploadRequest imageUploadRequest : imageUploadRequestList) {
+            MultipartFile goodsImgFile = imageUploadRequest.multipartFile();
+            String goodsImgUrl = s3FileUploadService.uploadFile(goodsImgFile);
 
-        goods.setGoodsImageList(goodsImage);
+            GoodsImage goodsImage;
+            if (repImg != null && i == repImg) {
+                goodsImage = GoodsImage.createGoodsImage(goods, goodsImgUrl, true);
+            } else {
+                goodsImage = GoodsImage.createGoodsImage(goods, goodsImgUrl, false);
+            }
+            goodsImagesRepository.save(goodsImage);
 
-        goodsImagesRepository.save(goodsImage);
+            i++;
+        }
+
     }
 
     public GoodsDetailPageDto getGoodsPage(Long goodsId) {
@@ -193,7 +199,7 @@ public class GoodsService {
     }
 
     public boolean isOrderOrSell(Member member, Goods goods) {
-        if(goods.getSell().getMember().equals(member)
+        if (goods.getSell().getMember().equals(member)
                 || goods.getOrderList().stream().filter(order -> order
                 .getMember().equals(member)).findAny().isPresent()) {
             return true;
@@ -202,7 +208,7 @@ public class GoodsService {
     }
 
     public void checkGoodsSeller(Goods goods, Member member) {
-        if(goods.getSell().getMember() == member) {
+        if (goods.getSell().getMember() == member) {
             throw new AuthNotAuthorizationMemberException();
         }
     }

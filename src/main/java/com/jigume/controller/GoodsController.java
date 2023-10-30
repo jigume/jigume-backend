@@ -3,6 +3,7 @@ package com.jigume.controller;
 import com.jigume.dto.goods.GoodsDetailPageDto;
 import com.jigume.dto.goods.GoodsDto;
 import com.jigume.dto.goods.GoodsSaveDto;
+import com.jigume.entity.goods.ImageUploadRequest;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.service.goods.GoodsService;
@@ -28,14 +29,15 @@ public class GoodsController {
 
     private final GoodsService goodsService;
 
-    @Operation(summary = "이미지를 제외한 상품을 업로드 하는 기능")
+    @Operation(summary = "이미지를 포함한 상품을 업로드 하는 기능")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 저장 성공, goodsId 반환"),
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
     @PostMapping("/goods")
-    public ResponseEntity saveGoods(@RequestBody GoodsSaveDto goodsSaveDto) {
-        Long goodsId = goodsService.saveGoods(goodsSaveDto);
+    public ResponseEntity saveGoods(@RequestBody GoodsSaveDto goodsSaveDto, List<ImageUploadRequest> imageUploadRequestList,
+                                    @RequestParam("repImg") int repImg) {
+        Long goodsId = goodsService.saveGoods(goodsSaveDto, imageUploadRequestList, repImg);
 
         return new ResponseEntity(goodsId, OK);
     }
@@ -93,7 +95,7 @@ public class GoodsController {
     public ResponseEntity endGoodsSelling(@PathVariable Long goodsId) {
         goodsService.endGoodsSelling(goodsId);
 
-        return new ResponseEntity (OK);
+        return new ResponseEntity(OK);
     }
 
 

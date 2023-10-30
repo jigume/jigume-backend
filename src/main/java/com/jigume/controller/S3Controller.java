@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.OK;
 
 @Controller
@@ -29,7 +31,7 @@ public class S3Controller {
     private final GoodsService goodsService;
     private final MemberService memberService;
 
-    @Operation(summary = "상품 이미지 저장")
+    @Operation(summary = "상품 이미지 업데이트")
     @Parameters(value = {
             @Parameter(name = "goodsId", description = "이미지를 업로드 하려는 Goods의 PK", example = "1"),
             @Parameter(name = "repImg", description = "이미지가 대표 이미지인지", example = "true, false")
@@ -39,9 +41,9 @@ public class S3Controller {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
     @PostMapping("/{goodsId}/image")
-    public ResponseEntity saveImage(ImageUploadRequest request,
-                                    @PathVariable("goodsId") Long goodsId, @RequestParam("repImg") Boolean repImgYn) {
-        goodsService.saveImage(request.multipartFile(), goodsId, repImgYn);
+    public ResponseEntity updateImage(List<ImageUploadRequest> request,
+                                      @PathVariable("goodsId") Long goodsId, @RequestParam("repImg") Integer repImgYn) {
+        goodsService.updateImage(request, goodsId, repImgYn);
 
         return new ResponseEntity("이미지 저장 성공", OK);
     }

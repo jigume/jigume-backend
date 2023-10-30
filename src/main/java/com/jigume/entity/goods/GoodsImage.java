@@ -23,15 +23,14 @@ public class GoodsImage extends BaseTimeEntity {
 
     private boolean repimgYn; //대표 이미지 여부
 
-    public void setGoods(Goods goods) {
-        this.goods = goods;
+    public static GoodsImage createGoodsImage(Goods goods, String goodsImgUrl, boolean repimgYn) {
+        GoodsImage goodsImage = new GoodsImage();
+        goodsImage.goods = goods;
+        goodsImage.goodsImgUrl = goodsImgUrl;
+        goodsImage.repimgYn = repimgYn;
+        goods.getGoodsImageList().add(goodsImage);
+
+        return goodsImage;
     }
 
-    public void setGoodsImgUrl(String goodsImgUrl) {
-        this.goodsImgUrl = goodsImgUrl;
-    }
-
-    public void setRepimgYn(boolean repimgYn) {
-        this.repimgYn = repimgYn;
-    }
 }

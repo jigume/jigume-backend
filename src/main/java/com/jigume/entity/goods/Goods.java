@@ -118,7 +118,4 @@ public class Goods extends BaseTimeEntity {
         this.realDeliveryFee = this.deliveryFee / this.currentOrderCount;
     }
 
-    public void setGoodsImageList(GoodsImage goodsImage) {
-        this.goodsImageList.add(goodsImage);
-    }
 }
