@@ -36,7 +36,7 @@ public class GoodsService {
     private final BoardRepository boardRepository;
 
     public Long saveGoods(GoodsSaveDto goodsSaveDto, List<ImageUploadRequest> imageUploadRequest, int repImg) {
-        Category category = getCategory(goodsSaveDto.getCategoryName());
+        Category category = getCategory(goodsSaveDto.getCategoryId());
 
         Member member = memberService.getMember();
 
@@ -140,8 +140,8 @@ public class GoodsService {
         return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
     }
 
-    private Category getCategory(String categoryName) {
-        return categoryRepository.findCategoryByName(categoryName).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
+    private Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
     }
 
     private void checkTime(Goods goods) {

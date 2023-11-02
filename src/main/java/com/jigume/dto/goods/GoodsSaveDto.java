@@ -18,7 +18,7 @@ public class GoodsSaveDto {
     private Double mapY;
     private Integer goodsLimitCount;
     private LocalDateTime goodsLimitTime;
-    private String categoryName;
+    private Long categoryId;
     private String boardContent;
 
 }
