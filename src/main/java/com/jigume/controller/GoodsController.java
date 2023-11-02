@@ -39,8 +39,7 @@ public class GoodsController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity saveGoods(@RequestPart GoodsSaveDto goodsSaveDto, @RequestPart(value = "images", required = false) List<MultipartFile> imageList,
                                     @RequestPart("repImg") int repImg) {
-        Long goodsId = goodsService.saveGoods(goodsSaveDto);
-        goodsService.updateImage(imageList, goodsId, repImg);
+        Long goodsId = goodsService.saveGoods(goodsSaveDto, imageList, repImg);
 
         return new ResponseEntity(goodsId, OK);
     }

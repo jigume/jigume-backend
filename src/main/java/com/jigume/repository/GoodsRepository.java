@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface GoodsRepository extends JpaRepository<Goods, Long> {
 
-    @Query("select g from Goods g join fetch g.orderList where g.id =:goodsId")
+    @Query("select g from Goods g left join fetch g.orderList where g.id =:goodsId")
     Optional<Goods> findGoodsById(@Param("goodsId") Long goodsId);
 
     List<Goods> findAllByCategoryId(Long categoryId);
