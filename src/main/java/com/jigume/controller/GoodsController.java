@@ -3,8 +3,6 @@ package com.jigume.controller;
 import com.jigume.dto.goods.GoodsDetailPageDto;
 import com.jigume.dto.goods.GoodsDto;
 import com.jigume.dto.goods.GoodsSaveDto;
-import com.jigume.dto.image.ImageListDto;
-import com.jigume.dto.image.ImageUploadRequest;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.service.goods.GoodsService;
@@ -39,9 +37,10 @@ public class GoodsController {
     })
     @PostMapping(value = "/goods",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity saveGoods(@RequestPart GoodsSaveDto goodsSaveDto,  @RequestPart(value = "images", required = false) List<MultipartFile> imageList,
+    public ResponseEntity saveGoods(@RequestPart GoodsSaveDto goodsSaveDto, @RequestPart(value = "images", required = false) List<MultipartFile> imageList,
                                     @RequestPart("repImg") int repImg) {
-        Long goodsId = goodsService.saveGoods(goodsSaveDto, imageList, repImg);
+        Long goodsId = goodsService.saveGoods(goodsSaveDto);
+        goodsService.updateImage(imageList, goodsId, repImg);
 
         return new ResponseEntity(goodsId, OK);
     }

@@ -39,7 +39,7 @@ public class GoodsService {
     private final SellRepository sellRepository;
     private final BoardRepository boardRepository;
 
-    public Long saveGoods(GoodsSaveDto goodsSaveDto, List<MultipartFile> imageList, int repImg) {
+    public Long saveGoods(GoodsSaveDto goodsSaveDto) {
         log.info("{}", goodsSaveDto.getCategoryId());
         Category category = getCategory(goodsSaveDto.getCategoryId());
 
@@ -60,10 +60,6 @@ public class GoodsService {
         Sell sell = Sell.createSell(member, goods);
 
         sellRepository.save(sell);
-
-        if (imageList.size() != 0) {
-            updateImage(imageList, goods.getId(), repImg);
-        }
 
         log.info("{}", goodsId);
 
