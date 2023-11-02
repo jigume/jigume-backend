@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -41,9 +42,9 @@ public class S3Controller {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
     @PostMapping("/{goodsId}/image")
-    public ResponseEntity updateImage(List<ImageUploadRequest> request,
+    public ResponseEntity updateImage(@RequestParam(value = "images", required = false) List<MultipartFile> multipartFiles,
                                       @PathVariable("goodsId") Long goodsId, @RequestParam("repImg") Integer repImgYn) {
-        goodsService.updateImage(request, goodsId, repImgYn);
+        goodsService.updateImage(multipartFiles, goodsId, repImgYn);
 
         return new ResponseEntity("이미지 저장 성공", OK);
     }

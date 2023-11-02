@@ -37,7 +37,7 @@ public class GoodsService {
     private final SellRepository sellRepository;
     private final BoardRepository boardRepository;
 
-    public Long saveGoods(GoodsSaveDto goodsSaveDto, List<ImageUploadRequest> imageUploadRequest, int repImg) {
+    public Long saveGoods(GoodsSaveDto goodsSaveDto, List<MultipartFile> imageList, int repImg) {
         log.info("{}", goodsSaveDto.getCategoryId());
         Category category = getCategory(goodsSaveDto.getCategoryId());
 
@@ -59,7 +59,7 @@ public class GoodsService {
 
         sellRepository.save(sell);
 
-        updateImage(imageUploadRequest, goods.getId(), repImg);
+        updateImage(imageList, goods.getId(), repImg);
 
 
         return goodsId;
@@ -75,13 +75,12 @@ public class GoodsService {
         goods.updateEnd();
     }
 
-    public void updateImage(List<ImageUploadRequest> imageUploadRequestList, Long goodsId, Integer repImg) {
+    public void updateImage(List<MultipartFile> imageList, Long goodsId, Integer repImg) {
         Goods goods = getGoods(goodsId);
 
         int i = 0;
 
-        for (ImageUploadRequest imageUploadRequest : imageUploadRequestList) {
-            MultipartFile goodsImgFile = imageUploadRequest.multipartFile();
+        for (MultipartFile goodsImgFile : imageList) {
             String goodsImgUrl = s3FileUploadService.uploadFile(goodsImgFile);
 
             GoodsImage goodsImage;

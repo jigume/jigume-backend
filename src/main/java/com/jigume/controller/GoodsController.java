@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,9 +37,9 @@ public class GoodsController {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
     @PostMapping("/goods")
-    public ResponseEntity saveGoods(@RequestBody GoodsSaveDto goodsSaveDto, ImageListDto imageListDto,
+    public ResponseEntity saveGoods(@RequestBody GoodsSaveDto goodsSaveDto,  @RequestParam(value = "images", required = false) List<MultipartFile> imageList,
                                     @RequestParam("repImg") int repImg) {
-        Long goodsId = goodsService.saveGoods(goodsSaveDto, imageListDto.getImageUploadRequestList(), repImg);
+        Long goodsId = goodsService.saveGoods(goodsSaveDto, imageList, repImg);
 
         return new ResponseEntity(goodsId, OK);
     }
