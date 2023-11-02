@@ -1,9 +1,11 @@
 package com.jigume.service.goods;
 
 import com.jigume.dto.goods.*;
-import com.jigume.dto.image.ImageUploadRequest;
 import com.jigume.entity.board.Board;
-import com.jigume.entity.goods.*;
+import com.jigume.entity.goods.Category;
+import com.jigume.entity.goods.DefaultImgUrl;
+import com.jigume.entity.goods.Goods;
+import com.jigume.entity.goods.GoodsImage;
 import com.jigume.entity.member.Member;
 import com.jigume.entity.order.Sell;
 import com.jigume.exception.auth.exception.AuthNotAuthorizationMemberException;
@@ -51,16 +53,19 @@ public class GoodsService {
 
         Board board = Board.createBoard(goodsSaveDto.getBoardContent(), goods);
 
-        boardRepository.save(board);
-
         Long goodsId = goodsRepository.save(goods).getId();
+
+        boardRepository.save(board);
 
         Sell sell = Sell.createSell(member, goods);
 
         sellRepository.save(sell);
 
-        updateImage(imageList, goods.getId(), repImg);
+        if (imageList.size() != 0) {
+            updateImage(imageList, goods.getId(), repImg);
+        }
 
+        log.info("{}", goodsId);
 
         return goodsId;
     }
