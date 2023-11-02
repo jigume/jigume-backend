@@ -12,6 +12,7 @@ import com.jigume.repository.*;
 import com.jigume.service.member.MemberService;
 import com.jigume.service.s3.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import java.util.List;
 import static com.jigume.exception.global.GlobalErrorCode.RESOURCE_NOT_FOUND;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class GoodsService {
@@ -36,6 +38,7 @@ public class GoodsService {
     private final BoardRepository boardRepository;
 
     public Long saveGoods(GoodsSaveDto goodsSaveDto, List<ImageUploadRequest> imageUploadRequest, int repImg) {
+        log.info("{}", goodsSaveDto.getCategoryId());
         Category category = getCategory(goodsSaveDto.getCategoryId());
 
         Member member = memberService.getMember();

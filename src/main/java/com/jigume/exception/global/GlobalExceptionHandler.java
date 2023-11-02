@@ -1,5 +1,6 @@
 package com.jigume.exception.global;
 
+import com.jigume.exception.global.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @ControllerAdvice
@@ -40,6 +42,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 exception.getMessage(),
                 BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity resourceNotFoundException(
+            ResourceNotFoundException exception
+    ) {
+        log.error("{}", exception.getMessage());
+
+        return new ResponseEntity<>(
+                exception.getMessage(),
+                NOT_FOUND
         );
     }
 }
