@@ -1,6 +1,6 @@
 package com.jigume.controller;
 
-import com.jigume.entity.goods.ImageUploadRequest;
+import com.jigume.dto.image.ImageUploadRequest;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.service.goods.GoodsService;
 import com.jigume.service.member.MemberService;

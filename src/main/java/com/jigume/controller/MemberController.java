@@ -3,7 +3,7 @@ package com.jigume.controller;
 import com.jigume.dto.member.LoginResponseDto;
 import com.jigume.dto.member.MemberInfoDto;
 import com.jigume.dto.member.TokenDto;
-import com.jigume.entity.goods.ImageUploadRequest;
+import com.jigume.dto.image.ImageUploadRequest;
 import com.jigume.entity.member.LoginProvider;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.exception.auth.exception.InvalidAuthorizationCodeException;

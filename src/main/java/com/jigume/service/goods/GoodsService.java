@@ -1,6 +1,7 @@
 package com.jigume.service.goods;
 
 import com.jigume.dto.goods.*;
+import com.jigume.dto.image.ImageUploadRequest;
 import com.jigume.entity.board.Board;
 import com.jigume.entity.goods.*;
 import com.jigume.entity.member.Member;

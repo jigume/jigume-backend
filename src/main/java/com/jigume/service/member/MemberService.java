@@ -2,7 +2,7 @@ package com.jigume.service.member;
 
 import com.jigume.config.jwt.TokenProvider;
 import com.jigume.dto.member.*;
-import com.jigume.entity.goods.ImageUploadRequest;
+import com.jigume.dto.image.ImageUploadRequest;
 import com.jigume.entity.member.BaseRole;
 import com.jigume.entity.member.LoginProvider;
 import com.jigume.entity.member.Member;

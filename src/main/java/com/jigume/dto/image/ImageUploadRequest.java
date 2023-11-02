@@ -1,4 +1,4 @@
-package com.jigume.entity.goods;
+package com.jigume.dto.image;
 
 import org.springframework.web.multipart.MultipartFile;
 
