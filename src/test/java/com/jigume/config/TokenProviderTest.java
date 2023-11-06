@@ -1,10 +1,10 @@
 package com.jigume.config;
 
-import com.jigume.config.jwt.JwtProperties;
-import com.jigume.config.jwt.TokenProvider;
-import com.jigume.entity.member.Member;
+import com.jigume.global.jwt.JwtProperties;
+import com.jigume.global.jwt.TokenProvider;
+import com.jigume.domain.member.entity.Member;
 import com.jigume.fixture.UserFixture;
-import com.jigume.repository.MemberRepository;
+import com.jigume.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;

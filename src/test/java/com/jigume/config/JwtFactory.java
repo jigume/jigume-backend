@@ -1,7 +1,7 @@
 package com.jigume.config;
 
-import com.jigume.config.jwt.JwtProperties;
-import com.jigume.entity.member.Member;
+import com.jigume.global.jwt.JwtProperties;
+import com.jigume.domain.member.entity.Member;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

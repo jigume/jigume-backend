@@ -1,7 +1,7 @@
 package com.jigume.fixture;
 
-import com.jigume.entity.member.BaseRole;
-import com.jigume.entity.member.Member;
+import com.jigume.domain.member.entity.BaseRole;
+import com.jigume.domain.member.entity.Member;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
