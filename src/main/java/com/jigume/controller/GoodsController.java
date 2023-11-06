@@ -3,8 +3,6 @@ package com.jigume.controller;
 import com.jigume.dto.goods.GoodsDetailPageDto;
 import com.jigume.dto.goods.GoodsDto;
 import com.jigume.dto.goods.GoodsSaveDto;
-import com.jigume.dto.image.ImageListDto;
-import com.jigume.dto.image.ImageUploadRequest;
 import com.jigume.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.exception.global.exception.ResourceNotFoundException;
 import com.jigume.service.goods.GoodsService;
@@ -16,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,9 +35,10 @@ public class GoodsController {
             @ApiResponse(responseCode = "200", description = "상품 저장 성공, goodsId 반환"),
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
-    @PostMapping("/goods")
-    public ResponseEntity saveGoods(@RequestBody GoodsSaveDto goodsSaveDto,  @RequestParam(value = "images", required = false) List<MultipartFile> imageList,
-                                    @RequestParam("repImg") int repImg) {
+    @PostMapping(value = "/goods",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity saveGoods(@RequestPart GoodsSaveDto goodsSaveDto, @RequestPart(value = "images", required = false) List<MultipartFile> imageList,
+                                    @RequestPart("repImg") int repImg) {
         Long goodsId = goodsService.saveGoods(goodsSaveDto, imageList, repImg);
 
         return new ResponseEntity(goodsId, OK);
