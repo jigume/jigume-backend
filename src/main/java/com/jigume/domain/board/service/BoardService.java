@@ -1,10 +1,10 @@
 package com.jigume.domain.board.service;
 
 import com.jigume.domain.board.dto.BoardDto;
+import com.jigume.domain.board.dto.GetCommentsDto;
 import com.jigume.domain.board.dto.UpdateBoardDto;
 import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.repository.BoardRepository;
-import com.jigume.domain.board.repository.CommentRepository;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.service.GoodsService;
 import com.jigume.domain.member.entity.Member;
@@ -15,33 +15,33 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.jigume.global.exception.GlobalErrorCode.RESOURCE_NOT_FOUND;
-
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final CommentRepository commentRepository;
+    private final CommentService commentService;
     private final GoodsService goodsService;
     private final MemberService memberService;
 
     public BoardDto getBoard(Long boardId) {
         Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
-                .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException());
         Goods goods = board.getGoods();
         Member member = memberService.getMember();
-        if(!goodsService.isOrderOrSell(member, goods)) {
+        if (!goodsService.isOrderOrSell(member, goods)) {
             throw new AuthNotAuthorizationMemberException();
         }
 
-        return BoardDto.toBoardDto(board);
+        GetCommentsDto comments = commentService.getComments(boardId);
+
+        return toBoardDto(board, comments);
     }
 
+    @Transactional
     public BoardDto updateBoard(Long boardId, UpdateBoardDto updateBoardDto) {
         Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
-                .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException());
         Member member = memberService.getMember();
         isHost(board, member);
 
@@ -49,12 +49,22 @@ public class BoardService {
 
         board.updateBoardContent(boardContent);
 
-        return BoardDto.toBoardDto(board);
+        GetCommentsDto comments = commentService.getComments(boardId);
+
+        return toBoardDto(board, comments);
     }
 
-    private static void isHost(Board board, Member member) {
-        if(board.getGoods().getSell().getMember().equals(member)) {
+    private void isHost(Board board, Member member) {
+        if (board.getGoods().getSell().getMember().equals(member)) {
             throw new AuthNotAuthorizationMemberException();
         }
+    }
+
+    private BoardDto toBoardDto(Board board, GetCommentsDto commentsDto) {
+        return new BoardDto().builder().boardName(board.getBoardName())
+                .boardContent(board.getBoardContent())
+                .hostName(board.getGoods().getSell().getMember().getNickname())
+                .created_at(board.getCreatedDate())
+                .comments(commentsDto).build();
     }
 }

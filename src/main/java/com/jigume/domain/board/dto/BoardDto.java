@@ -1,33 +1,29 @@
 package com.jigume.domain.board.dto;
 
-import com.jigume.domain.board.entity.Board;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class BoardDto {
 
     private String boardName;
     private String boardContent;
     private String hostName;
     private LocalDateTime created_at;
+    private GetCommentsDto commentsDto;
 
-    private List<CommentDto> commentDtoList = new ArrayList<>();
-
-    public static BoardDto toBoardDto(Board board) {
-        BoardDto boardDto = new BoardDto();
-        boardDto.boardName = board.getBoardName();
-        boardDto.hostName = board.getGoods().getSell().getMember().getNickname();
-        boardDto.boardContent = board.getBoardContent();
-        boardDto.created_at = board.getCreatedDate();
-
-        boardDto.commentDtoList = board.getCommentList().stream()
-                .map(CommentDto::toCommentDto).collect(Collectors.toList());
-
-        return boardDto;
+    @Builder
+    public BoardDto(String boardName, String boardContent, String hostName, LocalDateTime created_at, GetCommentsDto comments) {
+        this.boardName = boardName;
+        this.boardContent = boardContent;
+        this.hostName = hostName;
+        this.created_at = created_at;
+        this.commentsDto = comments;
     }
 }
