@@ -1,37 +1,103 @@
 package com.jigume.domain.board.service;
 
-import com.jigume.domain.board.dto.CommentDto;
+import com.jigume.domain.board.dto.*;
 import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.entity.Comment;
 import com.jigume.domain.board.repository.BoardRepository;
 import com.jigume.domain.board.repository.CommentRepository;
+import com.jigume.domain.goods.service.GoodsService;
 import com.jigume.domain.member.entity.Member;
+import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.domain.member.service.MemberService;
 import com.jigume.global.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.jigume.global.exception.GlobalErrorCode.RESOURCE_NOT_FOUND;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class CommentService {
 
     private final MemberService memberService;
-
     private final BoardRepository boardRepository;
+    private final GoodsService goodsService;
     private final CommentRepository commentRepository;
 
-    public void createComment(String memberIdx, Long boardId, CommentDto commentDto) {
+    @Transactional
+    public void createComment(Long boardId, CreateCommentDto commentDto) {
         Member member = memberService.getMember();
-        Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
-                .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
-        Comment comment = Comment.createComment(member, board,commentDto.getContent());
+        Board board = getBoard(boardId);
+
+        Comment comment = Comment.createComment(member, board, commentDto.getContent());
         board.addComment(comment);
         commentRepository.save(comment);
     }
 
+    @Transactional
+    public void createReplyComment(Long boardId, CreateReplyComment createReplyComment) {
+        Member member = memberService.getMember();
+        Board board = getBoard(boardId);
 
+        goodsService.isOrderOrSell(member, board.getGoods());
+
+        Comment parentComment = commentRepository.findById(createReplyComment.getParentCommentId())
+                .orElseThrow(() -> new ResourceNotFoundException());
+
+        Comment comment = Comment.createReplyComment(member, board, parentComment
+                , createReplyComment.getContent());
+
+        commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void updateComment(Long boardId, Long commentId, UpdateCommentDto updateCommentDto) {
+        String commentContent = updateCommentDto.getCommentContent();
+
+        getBoard(boardId);
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException());
+
+        Member member = memberService.getMember();
+
+        if (!comment.getMember().equals(member)) {
+            throw new AuthNotAuthorizationMemberException();
+        }
+
+        comment.updateContent(commentContent);
+    }
+
+    public GetCommentsDto getComments(Long boardId) {
+        Board board = getBoard(boardId);
+        goodsService.isOrderOrSell(memberService.getMember(),
+                board.getGoods());
+
+        List<Comment> commentList = board.getCommentList();
+
+        List<CommentDto> commentDtoList = commentList.stream()
+                .map(this::toCommentDto)
+                .collect(Collectors.toList());
+
+        return new GetCommentsDto(commentDtoList);
+    }
+
+    private Board getBoard(Long boardId) {
+        Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
+                .orElseThrow(() -> new ResourceNotFoundException());
+        return board;
+    }
+
+    private CommentDto toCommentDto(Comment comment) {
+        CommentDto commentDto = new CommentDto().builder()
+                .commentId(comment.getId())
+                .content(comment.getContent())
+                .memberNickname(comment.getMember().getNickname())
+                .created_at(comment.getCreatedDate())
+                .build();
+
+        return commentDto;
+    }
 }

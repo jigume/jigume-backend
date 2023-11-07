@@ -1,23 +1,25 @@
 package com.jigume.domain.board.dto;
 
-import com.jigume.domain.board.entity.Comment;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 public class CommentDto {
 
+    private Long commentId;
     private String content;
     private String memberNickname;
     private LocalDateTime created_at;
 
-    public static CommentDto toCommentDto(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.content = comment.getContent();
-        commentDto.memberNickname = comment.getMember().getNickname();
-        commentDto.created_at = comment.getCreatedDate();
-
-        return commentDto;
+    @Builder
+    public CommentDto(Long commentId, String content, String memberNickname, LocalDateTime created_at) {
+        this.commentId = commentId;
+        this.content = content;
+        this.memberNickname = memberNickname;
+        this.created_at = created_at;
     }
 }

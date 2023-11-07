@@ -6,6 +6,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Table(name = "Comment")
 @NoArgsConstructor
@@ -17,15 +22,22 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "comment_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
     private String content;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
 
 
     public static Comment createComment(Member member, Board board,
@@ -39,4 +51,20 @@ public class Comment extends BaseTimeEntity {
     }
 
 
+    public static Comment createReplyComment(Member member, Board board,
+                                             Comment parent, String content) {
+        Comment comment = new Comment();
+        comment.member = member;
+        comment.board = board;
+        comment.content = content;
+
+        comment.parent = parent;
+        parent.getChildren().add(comment);
+
+        return comment;
+    }
+
+    public void updateContent(String commentContent) {
+        this.content = commentContent;
+    }
 }
