@@ -2,6 +2,7 @@ package com.jigume.domain.board.controller;
 
 import com.jigume.domain.board.dto.BoardDto;
 import com.jigume.domain.board.dto.CommentDto;
+import com.jigume.domain.board.dto.UpdateBoardDto;
 import com.jigume.domain.board.service.BoardService;
 import com.jigume.domain.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -32,4 +33,13 @@ public class BoardController {
 
         return new ResponseEntity("댓글이 성공적으로 저장되었습니다.", OK);
     }
+
+    @PostMapping("/{boardId}")
+    public ResponseEntity updateBoardContent(@PathVariable Long boardId, @RequestBody UpdateBoardDto updateBoardDto) {
+        BoardDto boardDto = boardService.updateBoard(boardId, updateBoardDto);
+
+        return new ResponseEntity(boardDto, OK);
+    }
+
+    //TODO: CRUD 댓글, 권한 체크
 }

@@ -1,6 +1,7 @@
 package com.jigume.domain.board.service;
 
 import com.jigume.domain.board.dto.BoardDto;
+import com.jigume.domain.board.dto.UpdateBoardDto;
 import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.repository.BoardRepository;
 import com.jigume.domain.board.repository.CommentRepository;
@@ -36,5 +37,24 @@ public class BoardService {
         }
 
         return BoardDto.toBoardDto(board);
+    }
+
+    public BoardDto updateBoard(Long boardId, UpdateBoardDto updateBoardDto) {
+        Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
+                .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
+        Member member = memberService.getMember();
+        isHost(board, member);
+
+        String boardContent = updateBoardDto.getBoardContent();
+
+        board.updateBoardContent(boardContent);
+
+        return BoardDto.toBoardDto(board);
+    }
+
+    private static void isHost(Board board, Member member) {
+        if(board.getGoods().getSell().getMember().equals(member)) {
+            throw new AuthNotAuthorizationMemberException();
+        }
     }
 }

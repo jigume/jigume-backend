@@ -42,4 +42,8 @@ public class Board extends BaseTimeEntity {
     public void addComment(Comment comment) {
         commentList.add(comment);
     }
+
+    public void updateBoardContent(String boardContent) {
+        this.boardContent = boardContent;
+    }
 }
