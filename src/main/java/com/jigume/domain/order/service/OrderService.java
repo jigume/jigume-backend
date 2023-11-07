@@ -46,7 +46,7 @@ public class OrderService {
 
 
     private Goods getGoods(Long goodsId) {
-        return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
+        return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException());
     }
 
     public List<EndBuyHistoryDto> getOrderEndHistory() {

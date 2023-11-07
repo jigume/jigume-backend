@@ -148,11 +148,11 @@ public class GoodsService {
     }
 
     public Goods getGoods(Long goodsId) {
-        return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
+        return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException());
     }
 
     private Category getCategory(Long categoryId) {
-        return categoryRepository.findCategoryById(categoryId).orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND));
+        return categoryRepository.findCategoryById(categoryId).orElseThrow(() -> new ResourceNotFoundException());
     }
 
     private void checkTime(Goods goods) {

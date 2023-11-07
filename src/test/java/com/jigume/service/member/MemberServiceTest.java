@@ -105,8 +105,8 @@ class MemberServiceTest {
         MemberInfoDto memberInfoDto = new MemberInfoDto();
         memberInfoDto.setNickname("test");
         memberInfoDto.setProfileImgUrl("test");
-        memberInfoDto.setMapX(1L);
-        memberInfoDto.setMapY(3L);
+        memberInfoDto.setMapX(1.0);
+        memberInfoDto.setMapY(3.0);
 
         setUpCustomAuth(guestMember);
         memberService.updateMemberInfo(memberInfoDto);
@@ -120,8 +120,8 @@ class MemberServiceTest {
         MemberInfoDto memberInfoDto = new MemberInfoDto();
         memberInfoDto.setNickname("test");
         memberInfoDto.setProfileImgUrl("test");
-        memberInfoDto.setMapX(1L);
-        memberInfoDto.setMapY(3L);
+        memberInfoDto.setMapX(1.0);
+        memberInfoDto.setMapY(3.0);
 
         setUpCustomAuth(member);
         memberService.updateMemberInfo(memberInfoDto);
