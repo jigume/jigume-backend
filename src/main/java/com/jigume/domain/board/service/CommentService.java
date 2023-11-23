@@ -5,7 +5,7 @@ import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.entity.Comment;
 import com.jigume.domain.board.repository.BoardRepository;
 import com.jigume.domain.board.repository.CommentRepository;
-import com.jigume.domain.goods.service.GoodsService;
+import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.domain.member.service.MemberService;
@@ -23,7 +23,6 @@ public class CommentService {
 
     private final MemberService memberService;
     private final BoardRepository boardRepository;
-    private final GoodsService goodsService;
     private final CommentRepository commentRepository;
 
     @Transactional
@@ -41,7 +40,7 @@ public class CommentService {
         Member member = memberService.getMember();
         Board board = getBoard(boardId);
 
-        goodsService.isOrderOrSell(member, board.getGoods());
+        isOrderSell(board.getGoods(), member);
 
         Comment parentComment = commentRepository.findById(createReplyComment.getParentCommentId())
                 .orElseThrow(() -> new ResourceNotFoundException());
@@ -71,9 +70,11 @@ public class CommentService {
     }
 
     public GetCommentsDto getComments(Long boardId) {
+        Member member = memberService.getMember();
         Board board = getBoard(boardId);
-        goodsService.isOrderOrSell(memberService.getMember(),
-                board.getGoods());
+        Goods goods = board.getGoods();
+
+        isOrderSell(goods, member);
 
         List<Comment> commentList = board.getCommentList();
 
@@ -82,6 +83,12 @@ public class CommentService {
                 .collect(Collectors.toList());
 
         return new GetCommentsDto(commentDtoList);
+    }
+
+    private void isOrderSell(Goods goods, Member member) {
+        if (goods.isOrder(member) || goods.isSell(member)) {
+            throw new AuthNotAuthorizationMemberException();
+        }
     }
 
     private Board getBoard(Long boardId) {

@@ -4,6 +4,7 @@ import com.jigume.domain.goods.dto.GoodsDto;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.entity.GoodsStatus;
 import com.jigume.domain.goods.repository.GoodsRepository;
+import com.jigume.domain.goods.service.GoodsQueryService;
 import com.jigume.domain.goods.service.GoodsService;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.service.MemberService;
@@ -19,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.jigume.global.exception.GlobalErrorCode.RESOURCE_NOT_FOUND;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ public class OrderService {
     private final MemberService memberService;
     private final GoodsRepository goodsRepository;
     private final GoodsService goodsService;
+    private final GoodsQueryService goodsQueryService;
 
     public void orderGoods(OrderDto orderDto) {
         Member member = memberService.getMember();
@@ -79,6 +79,6 @@ public class OrderService {
 
         List<Goods> processingGoodsList = processingOrderHistory.stream().map(Order::getGoods).collect(Collectors.toList());
 
-        return goodsService.getGoodsList(processingGoodsList);
+        return goodsQueryService.getGoodsList(processingGoodsList);
     }
 }

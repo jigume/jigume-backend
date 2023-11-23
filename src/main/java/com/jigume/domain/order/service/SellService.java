@@ -3,6 +3,7 @@ package com.jigume.domain.order.service;
 import com.jigume.domain.goods.dto.GoodsDto;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.entity.GoodsStatus;
+import com.jigume.domain.goods.service.GoodsQueryService;
 import com.jigume.domain.goods.service.GoodsService;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.service.MemberService;
@@ -25,6 +26,13 @@ public class SellService {
     private final SellRepository sellRepository;
     private final MemberService memberService;
     private final GoodsService goodsService;
+    private final GoodsQueryService goodsQueryService;
+
+    public void createSell(Member member, Goods goods) {
+        Sell sell = Sell.createSell(member, goods);
+
+        sellRepository.save(sell);
+    }
 
     public SellHistoryDto getSellProcessingHistory() {
         Member member = memberService.getMember();
@@ -34,7 +42,7 @@ public class SellService {
         List<Goods> goodsList = sellsByMemberId.stream().filter(sell -> sell.getGoods().getGoodsStatus() == GoodsStatus.PROCESSING)
                 .map(Sell::getGoods).collect(Collectors.toList());
 
-        List<GoodsDto> goodsDtoList = goodsService.getGoodsList(goodsList);
+        List<GoodsDto> goodsDtoList = goodsQueryService.getGoodsList(goodsList);
 
         List<SellInfoDto> sellInfoDtoList = toSellInfoDtoList(goodsList);
 
@@ -52,7 +60,7 @@ public class SellService {
         List<Goods> goodsList = sellsByMemberId.stream().filter(sell -> sell.getGoods().getGoodsStatus() == GoodsStatus.END)
                 .map(Sell::getGoods).collect(Collectors.toList());
 
-        List<GoodsDto> goodsDtoList = goodsService.getGoodsList(goodsList);
+        List<GoodsDto> goodsDtoList = goodsQueryService.getGoodsList(goodsList);
 
         List<SellInfoDto> sellInfoDtoList = toSellInfoDtoList(goodsList);
 

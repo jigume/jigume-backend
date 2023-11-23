@@ -6,7 +6,6 @@ import com.jigume.domain.board.dto.UpdateBoardDto;
 import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.repository.BoardRepository;
 import com.jigume.domain.goods.entity.Goods;
-import com.jigume.domain.goods.service.GoodsService;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.domain.member.service.MemberService;
@@ -21,15 +20,21 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final CommentService commentService;
-    private final GoodsService goodsService;
     private final MemberService memberService;
+
+    public void createBoard(String boardContent, Goods goods) {
+        Board board = Board.createBoard(boardContent, goods);
+
+        boardRepository.save(board);
+
+    }
 
     public BoardDto getBoard(Long boardId) {
         Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
                 .orElseThrow(() -> new ResourceNotFoundException());
         Goods goods = board.getGoods();
         Member member = memberService.getMember();
-        if (!goodsService.isOrderOrSell(member, goods)) {
+        if (goods.isOrder(member) || goods.isSell(member)) {
             throw new AuthNotAuthorizationMemberException();
         }
 

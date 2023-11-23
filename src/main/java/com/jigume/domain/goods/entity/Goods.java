@@ -1,12 +1,12 @@
 package com.jigume.domain.goods.entity;
 
 import com.jigume.domain.board.entity.Board;
+import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.order.entity.Order;
 import com.jigume.domain.order.entity.Sell;
 import com.jigume.domain.order.exception.OrderOverCountException;
 import com.jigume.global.audit.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -79,7 +79,6 @@ public class Goods extends BaseTimeEntity {
     private List<GoodsImage> goodsImageList = new ArrayList<>();
 
 
-    @Builder
     public static Goods createGoods(String name, String introduction, String link, Integer goodsPrice,
                                     Integer deliveryFee, Double mapX, Double mapY, Integer goodsLimitCount,
                                     LocalDateTime goodsLimitTime, Category category) {
@@ -109,13 +108,29 @@ public class Goods extends BaseTimeEntity {
         this.currentOrderCount += 1;
         this.currentOrderGoodsCount += orderGoodsCount;
 
-        if(this.currentOrderGoodsCount > this.goodsLimitCount) {
+        if (this.currentOrderGoodsCount > this.goodsLimitCount) {
             throw new OrderOverCountException();
         }
 
-        if(this.currentOrderGoodsCount == this.goodsLimitCount) this.goodsStatus = END;
+        if (this.currentOrderGoodsCount == this.goodsLimitCount) {
+            this.goodsStatus = END;
+        }
 
         this.realDeliveryFee = this.deliveryFee / this.currentOrderCount;
     }
 
+    public boolean isSell(Member member) {
+        if (this.sell.getMember().equals(member)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isOrder(Member member) {
+        return this.orderList
+                .stream()
+                .filter(order -> order.getMember().equals(member))
+                .findAny().isPresent();
+    }
 }
