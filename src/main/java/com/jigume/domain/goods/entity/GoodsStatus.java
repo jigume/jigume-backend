@@ -15,9 +15,9 @@ public enum GoodsStatus {
         this.status = status;
     }
 
-    public static GoodsStatus getGoodsStatus(Integer status) {
-        return Arrays.stream(GoodsStatus.values()).filter(goodsStatus -> goodsStatus.getStatus() == status)
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException());
-    }
+//    public static GoodsStatus getGoodsStatus(Integer status) {
+//        return Arrays.stream(GoodsStatus.values()).filter(goodsStatus -> goodsStatus.getStatus() == status)
+//                .findFirst()
+//                .orElseThrow(() -> new ());
+//    }
 }

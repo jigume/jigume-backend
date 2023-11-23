@@ -3,6 +3,7 @@ package com.jigume.domain.goods.service;
 import com.jigume.domain.goods.dto.*;
 import com.jigume.domain.goods.entity.Address;
 import com.jigume.domain.goods.entity.Goods;
+import com.jigume.domain.goods.entity.GoodsStatus;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
 import com.jigume.domain.member.entity.Member;
@@ -48,7 +49,7 @@ public class GoodsQueryService {
 
         Page<Goods> goodsList = goodsRepository
                 .findGoodsByCategoryAndMapRangeOrderByCreatedDate(categoryId, minPoint.x(), maxPoint.x(),
-                        minPoint.y(), maxPoint.y(), pageable);
+                        minPoint.y(), maxPoint.y(), GoodsStatus.PROCESSING, pageable);
 
         goodsList.stream()
                 .filter(goods -> checkTime(goods))
@@ -65,7 +66,7 @@ public class GoodsQueryService {
 
         Page<Goods> goodsList = goodsRepository
                 .findGoodsByMapRange(minPoint.x(), maxPoint.x(),
-                        minPoint.y(), maxPoint.y(), pageable);
+                        minPoint.y(), maxPoint.y(), GoodsStatus.PROCESSING, pageable);
 
         goodsList.stream()
                 .filter(goods -> checkTime(goods))
@@ -86,7 +87,7 @@ public class GoodsQueryService {
 
     public MarkerListDto getMapMarker(Double minX, Double maxX, Double minY, Double maxY) {
         List<Goods> goodsByMapRange = goodsRepository
-                .findGoodsByMapRange(minX, maxX, minY, maxY);
+                .findGoodsByMapRange(minX, maxX, minY, maxY, GoodsStatus.PROCESSING);
 
         List<MarkerDto> markerList = goodsByMapRange.stream()
                 .map(goods -> toMarkerDto(goods))
