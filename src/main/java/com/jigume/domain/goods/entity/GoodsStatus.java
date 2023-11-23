@@ -1,6 +1,5 @@
 package com.jigume.domain.goods.entity;
 
-import com.jigume.global.exception.GlobalErrorCode;
 import com.jigume.global.exception.ResourceNotFoundException;
 import lombok.Getter;
 
