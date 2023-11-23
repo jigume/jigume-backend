@@ -22,11 +22,12 @@ public class BoardService {
     private final CommentService commentService;
     private final MemberService memberService;
 
-    public void createBoard(String boardContent, Goods goods) {
+    public Board createBoard(String boardContent, Goods goods) {
         Board board = Board.createBoard(boardContent, goods);
 
         boardRepository.save(board);
 
+        return board;
     }
 
     public BoardDto getBoard(Long boardId) {

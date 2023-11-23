@@ -25,10 +25,12 @@ public class SellService {
     private final GoodsService goodsService;
     private final GoodsQueryService goodsQueryService;
 
-    public void createSell(Member member, Goods goods) {
+    public Sell createSell(Member member, Goods goods) {
         Sell sell = Sell.createSell(member, goods);
 
         sellRepository.save(sell);
+
+        return sell;
     }
 
 //    public SellHistoryDto getSellProcessingHistory() {

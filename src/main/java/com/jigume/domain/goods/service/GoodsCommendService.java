@@ -1,5 +1,6 @@
 package com.jigume.domain.goods.service;
 
+import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.service.BoardService;
 import com.jigume.domain.goods.dto.GoodsSaveDto;
 import com.jigume.domain.goods.entity.Category;
@@ -8,6 +9,7 @@ import com.jigume.domain.goods.repository.GoodsRepository;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.domain.member.service.MemberService;
+import com.jigume.domain.order.entity.Sell;
 import com.jigume.domain.order.service.SellService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +42,10 @@ public class GoodsCommendService {
                 goodsSaveDto.getGoodsLimitTime(), category);
 
         Long goodsId = goodsRepository.save(goods).getId();
-        boardService.createBoard(goodsSaveDto.getBoardContent(), goods);
-        sellService.createSell(member, goods);
+        Board board = boardService.createBoard(goodsSaveDto.getBoardContent(), goods);
+        goods.setBoard(board);
+        Sell sell = sellService.createSell(member, goods);
+        goods.setSell(sell);
 
         if (imageList.size() != 0) {
             goodsService.updateImage(imageList, goodsId, repImg);

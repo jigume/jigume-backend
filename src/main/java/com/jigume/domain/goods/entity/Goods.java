@@ -100,6 +100,18 @@ public class Goods extends BaseTimeEntity {
         return goods;
     }
 
+    public void setSell(Sell sell) {
+        this.sell = sell;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public void setOrder(Order order) {
+        this.orderList.add(order);
+    }
+
     public void updateEnd() {
         this.goodsStatus = END;
     }
