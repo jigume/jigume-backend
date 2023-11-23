@@ -13,9 +13,7 @@ import java.util.Optional;
 
 public interface GoodsRepository extends JpaRepository<Goods, Long> {
 
-    @Query("select g from Goods g left join fetch g.orderList " +
-            "left join fetch g.sell " +
-            "left join fetch g.goodsImageList where g.id =:goodsId")
+    @Query("select g from Goods g where g.id =:goodsId")
     Optional<Goods> findGoodsById(@Param("goodsId") Long goodsId);
 
     @Query("select g from  Goods g join fetch g.sell left join fetch g.goodsImageList where g.address.mapX > :minX and g.address.mapX < :maxX " +
