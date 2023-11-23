@@ -65,7 +65,7 @@ public class GoodsCommendService {
     }
 
     private void checkGoodsSeller(Goods goods, Member member) {
-        if (goods.isSell(member)) {
+        if (!goods.isSell(member)) {
             throw new AuthNotAuthorizationMemberException();
         }
     }
