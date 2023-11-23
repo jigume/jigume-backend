@@ -27,13 +27,11 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final MemberService memberService;
-    private final GoodsRepository goodsRepository;
     private final GoodsService goodsService;
-    private final GoodsQueryService goodsQueryService;
 
     public void orderGoods(OrderDto orderDto) {
         Member member = memberService.getMember();
-        Goods goods = getGoods(orderDto.getGoodsId());
+        Goods goods = goodsService.getGoods(orderDto.getGoodsId());
 
         Order order = Order.createBuyOrder(orderDto.getOrderGoodsCount(),
                 goods, member);
@@ -44,10 +42,6 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-
-    private Goods getGoods(Long goodsId) {
-        return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException());
-    }
 
     public List<EndBuyHistoryDto> getOrderEndHistory() {
         Member member = memberService.getMember();
@@ -69,16 +63,16 @@ public class OrderService {
         return endBuyHistoryDtoList;
     }
 
-    public List<GoodsDto> getOrderProcessingHistory() {
-        Member member = memberService.getMember();
-
-        List<Order> ordersByMemberId = orderRepository.findOrdersByMemberId(member.getId());
-
-        List<Order> processingOrderHistory = ordersByMemberId.stream().filter(order -> order.getGoods().getGoodsStatus() == GoodsStatus.PROCESSING)
-                .collect(Collectors.toList());
-
-        List<Goods> processingGoodsList = processingOrderHistory.stream().map(Order::getGoods).collect(Collectors.toList());
-
-        return goodsQueryService.getGoodsList(processingGoodsList);
-    }
+//    public List<GoodsDto> getOrderProcessingHistory() {
+//        Member member = memberService.getMember();
+//
+//        List<Order> ordersByMemberId = orderRepository.findOrdersByMemberId(member.getId());
+//
+//        List<Order> processingOrderHistory = ordersByMemberId.stream().filter(order -> order.getGoods().getGoodsStatus() == GoodsStatus.PROCESSING)
+//                .collect(Collectors.toList());
+//
+//        List<Goods> processingGoodsList = processingOrderHistory.stream().map(Order::getGoods).collect(Collectors.toList());
+//
+//        return goodsQueryService.getGoodsList(processingGoodsList);
+//    }
 }

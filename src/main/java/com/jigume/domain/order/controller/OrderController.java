@@ -27,16 +27,17 @@ public class OrderController {
         return new ResponseEntity("주문이 성공적으로 되었습니다.", OK);
     }
 
-    @GetMapping("/orders/{status}")
-    public ResponseEntity getOrderHistory(@PathVariable("status") Integer status) {
-        if(status.equals(GoodsStatus.END.getStatus())) {
-            List<EndBuyHistoryDto> orderEndHistory = orderService.getOrderEndHistory();
-
-            return new ResponseEntity(orderEndHistory, OK);
-        }
-
-        List<GoodsDto> orderProcessingHistory = orderService.getOrderProcessingHistory();
-
-        return new ResponseEntity(orderProcessingHistory, OK);
-    }
+//    @GetMapping("/orders/{status}")
+//    public ResponseEntity getOrderHistory(@PathVariable("status") Integer status) {
+//        if(status.equals(GoodsStatus.END.getStatus())) {
+//            List<EndBuyHistoryDto> orderEndHistory = orderService.getOrderEndHistory();
+//
+//            return new ResponseEntity(orderEndHistory, OK);
+//        }
+//
+//        //TODO: 진행 중인 주문 내역을 누르면 보여줄 걸 다시 생각 GoodsId만 알려주면 될듯
+//        List<GoodsDto> orderProcessingHistory = orderService.getOrderProcessingHistory();
+//
+//        return new ResponseEntity(orderProcessingHistory, OK);
+//    }
 }

@@ -6,6 +6,7 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class TokenProvider {
@@ -52,7 +54,7 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
-
+        log.info("{}", claims.get("socialId"));
         return new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(claims.get("socialId", String.class), "", authorities), token, authorities);
     }
 

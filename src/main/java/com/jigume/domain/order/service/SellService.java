@@ -34,41 +34,41 @@ public class SellService {
         sellRepository.save(sell);
     }
 
-    public SellHistoryDto getSellProcessingHistory() {
-        Member member = memberService.getMember();
+//    public SellHistoryDto getSellProcessingHistory() {
+//        Member member = memberService.getMember();
+//
+//        List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(member.getId());
+//
+//        List<Goods> goodsList = sellsByMemberId.stream().filter(sell -> sell.getGoods().getGoodsStatus() == GoodsStatus.PROCESSING)
+//                .map(Sell::getGoods).collect(Collectors.toList());
+//
+//        List<GoodsDto> goodsDtoList = goodsQueryService.getGoodsList(goodsList);
+//
+//        List<SellInfoDto> sellInfoDtoList = toSellInfoDtoList(goodsList);
+//
+//        SellHistoryDto sellHistoryDto = SellHistoryDto.builder().goodsDtoList(goodsDtoList)
+//                .sellInfoDtoList(sellInfoDtoList).build();
+//
+//        return sellHistoryDto;
+//    }
 
-        List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(member.getId());
-
-        List<Goods> goodsList = sellsByMemberId.stream().filter(sell -> sell.getGoods().getGoodsStatus() == GoodsStatus.PROCESSING)
-                .map(Sell::getGoods).collect(Collectors.toList());
-
-        List<GoodsDto> goodsDtoList = goodsQueryService.getGoodsList(goodsList);
-
-        List<SellInfoDto> sellInfoDtoList = toSellInfoDtoList(goodsList);
-
-        SellHistoryDto sellHistoryDto = SellHistoryDto.builder().goodsDtoList(goodsDtoList)
-                .sellInfoDtoList(sellInfoDtoList).build();
-
-        return sellHistoryDto;
-    }
-
-    public SellHistoryDto getSellEndHistory() {
-        Member member = memberService.getMember();
-
-        List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(member.getId());
-
-        List<Goods> goodsList = sellsByMemberId.stream().filter(sell -> sell.getGoods().getGoodsStatus() == GoodsStatus.END)
-                .map(Sell::getGoods).collect(Collectors.toList());
-
-        List<GoodsDto> goodsDtoList = goodsQueryService.getGoodsList(goodsList);
-
-        List<SellInfoDto> sellInfoDtoList = toSellInfoDtoList(goodsList);
-
-        SellHistoryDto sellHistoryDto = SellHistoryDto.builder().goodsDtoList(goodsDtoList)
-                .sellInfoDtoList(sellInfoDtoList).build();
-
-        return sellHistoryDto;
-    }
+//    public SellHistoryDto getSellEndHistory() {
+//        Member member = memberService.getMember();
+//
+//        List<Sell> sellsByMemberId = sellRepository.findSellsByMemberId(member.getId());
+//
+//        List<Goods> goodsList = sellsByMemberId.stream().filter(sell -> sell.getGoods().getGoodsStatus() == GoodsStatus.END)
+//                .map(Sell::getGoods).collect(Collectors.toList());
+//
+//        List<GoodsDto> goodsDtoList = goodsQueryService.getGoodsList(goodsList);
+//
+//        List<SellInfoDto> sellInfoDtoList = toSellInfoDtoList(goodsList);
+//
+//        SellHistoryDto sellHistoryDto = SellHistoryDto.builder().goodsDtoList(goodsDtoList)
+//                .sellInfoDtoList(sellInfoDtoList).build();
+//
+//        return sellHistoryDto;
+//    }
 
     private List<SellInfoDto> toSellInfoDtoList(List<Goods> goodsList) {
         List<SellInfoDto> sellInfoDtoList = goodsList.stream().map(goods ->
