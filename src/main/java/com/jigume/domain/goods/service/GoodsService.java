@@ -9,7 +9,6 @@ import com.jigume.domain.goods.repository.CategoryRepository;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
 import com.jigume.global.aws.s3.S3FileUploadService;
-import com.jigume.global.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,9 +1,6 @@
 package com.jigume.domain.goods.entity;
 
-import com.jigume.global.exception.ResourceNotFoundException;
 import lombok.Getter;
-
-import java.util.Arrays;
 
 @Getter
 public enum GoodsStatus {

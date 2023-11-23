@@ -1,10 +1,7 @@
 package com.jigume.domain.order.service;
 
-import com.jigume.domain.goods.dto.GoodsDto;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.entity.GoodsStatus;
-import com.jigume.domain.goods.repository.GoodsRepository;
-import com.jigume.domain.goods.service.GoodsQueryService;
 import com.jigume.domain.goods.service.GoodsService;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.service.MemberService;
@@ -12,7 +9,6 @@ import com.jigume.domain.order.dto.EndBuyHistoryDto;
 import com.jigume.domain.order.dto.OrderDto;
 import com.jigume.domain.order.entity.Order;
 import com.jigume.domain.order.repository.OrderRepository;
-import com.jigume.global.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

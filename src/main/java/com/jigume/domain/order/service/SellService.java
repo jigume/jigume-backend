@@ -1,13 +1,10 @@
 package com.jigume.domain.order.service;
 
-import com.jigume.domain.goods.dto.GoodsDto;
 import com.jigume.domain.goods.entity.Goods;
-import com.jigume.domain.goods.entity.GoodsStatus;
 import com.jigume.domain.goods.service.GoodsQueryService;
 import com.jigume.domain.goods.service.GoodsService;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.service.MemberService;
-import com.jigume.domain.order.dto.SellHistoryDto;
 import com.jigume.domain.order.dto.SellInfoDto;
 import com.jigume.domain.order.entity.Sell;
 import com.jigume.domain.order.repository.SellRepository;
