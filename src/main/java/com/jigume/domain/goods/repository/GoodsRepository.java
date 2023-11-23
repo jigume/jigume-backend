@@ -19,9 +19,9 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
     Optional<Goods> findGoodsById(@Param("goodsId") Long goodsId);
 
     @Query("select g from  Goods g join fetch g.sell left join fetch g.goodsImageList where g.address.mapX > :minX and g.address.mapX < :maxX " +
-            "and g.address.mapY > :minY and g.address.mapY < :maxY and g.category.id = :categoryId and g.goodsStatus = :status" +
+            "and g.address.mapY > :minY and g.address.mapY < :maxY and g.category.id = :categoryId and g.goodsStatus = :status " +
             "order by g.createdDate desc")
-    Page<Goods> findGoodsByCategoryAndMapRangeOrderByCreatedDate(Long categoryId,
+    Page<Goods> findGoodsByCategoryAndMapRangeOrderByCreatedDate(@Param("categoryId") Long categoryId,
                                                                  @Param("minX") double minX, @Param("maxX") double maxX,
                                                                  @Param("minY") double minY, @Param("maxY") double maxY,
                                                                  @Param("status") GoodsStatus goodsStatus,
@@ -43,5 +43,5 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
                                     Pageable pageable);
 
     @Query("select g from Goods g join fetch g.sell left join fetch g.goodsImageList where g.id in :goodsIds")
-    Page<Goods> findGoodsByIdIn(List<Long> goodsIds, Pageable pageable);
+    Page<Goods> findGoodsByIdIn(@Param("goodsIds") List<Long> goodsIds, Pageable pageable);
 }
