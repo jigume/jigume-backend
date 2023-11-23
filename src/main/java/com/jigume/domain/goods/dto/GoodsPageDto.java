@@ -79,5 +79,6 @@ public class GoodsPageDto {
         this.goodsOrderCount = goodsOrderCount;
         this.discountDeliveryPrice = discountDeliveryPrice;
         this.goodsImagesList = goodsImagesList;
+        this.boardId = boardId;
     }
 }

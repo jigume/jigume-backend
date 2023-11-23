@@ -1,9 +1,7 @@
 package com.jigume.domain.goods.service;
 
-import com.jigume.domain.goods.dto.GoodsDetailPageDto;
-import com.jigume.domain.goods.dto.GoodsDto;
-import com.jigume.domain.goods.dto.GoodsImagesDto;
-import com.jigume.domain.goods.dto.GoodsPageDto;
+import com.jigume.domain.goods.dto.*;
+import com.jigume.domain.goods.entity.Address;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
@@ -12,6 +10,8 @@ import com.jigume.domain.member.service.MemberService;
 import com.jigume.domain.order.repository.SellRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,8 +42,13 @@ public class GoodsQueryService {
                 toGoodsPageDto(goods));
     }
 
-    public List<GoodsDto> getGoodsList() {
-        List<Goods> goodsList = goodsRepository.findAll();
+    public List<GoodsDto> getGoodsListByCategoryId(Long categoryId, CoordinateDto coordinateDto, Pageable pageable) {
+        Point maxPoint = coordinateDto.getMaxPoint();
+        Point minPoint = coordinateDto.getMinPoint();
+
+        Page<Goods> goodsList = goodsRepository
+                .findGoodsByCategoryAndMapRangeOrderByCreatedDate(categoryId, minPoint.x(), maxPoint.x(),
+                        minPoint.y(), maxPoint.y(), pageable);
 
         goodsList.stream()
                 .filter(goods -> checkTime(goods))
@@ -54,7 +59,14 @@ public class GoodsQueryService {
         return goodsDtoList;
     }
 
-    public List<GoodsDto> getGoodsList(List<Goods> goodsList) {
+    public List<GoodsDto> getGoodsList(CoordinateDto coordinateDto, Pageable pageable) {
+        Point maxPoint = coordinateDto.getMaxPoint();
+        Point minPoint = coordinateDto.getMinPoint();
+
+        Page<Goods> goodsList = goodsRepository
+                .findGoodsByMapRange(minPoint.x(), maxPoint.x(),
+                        minPoint.y(), maxPoint.y(), pageable);
+
         goodsList.stream()
                 .filter(goods -> checkTime(goods))
                 .collect(Collectors.toList());
@@ -64,17 +76,23 @@ public class GoodsQueryService {
         return goodsDtoList;
     }
 
-    public List<GoodsDto> getGoodsList(Long categoryId) {
-        List<Goods> goodsList = goodsRepository.findAllByCategoryId(categoryId);
+    public List<GoodsDto> getMarkerGoods(List<Long> goodsIds, Pageable pageable) {
+        Page<Goods> goodsByIdIn = goodsRepository.findGoodsByIdIn(goodsIds, pageable);
 
-        goodsList.stream()
-                .filter(goods -> checkTime(goods))
-                .collect(Collectors.toList());
-
-
-        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
+        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsByIdIn);
 
         return goodsDtoList;
+    }
+
+    public MarkerListDto getMapMarker(Double minX, Double maxX, Double minY, Double maxY) {
+        List<Goods> goodsByMapRange = goodsRepository
+                .findGoodsByMapRange(minX, maxX, minY, maxY);
+
+        List<MarkerDto> markerList = goodsByMapRange.stream()
+                .map(goods -> toMarkerDto(goods))
+                .collect(Collectors.toList());
+
+        return new MarkerListDto(markerList);
     }
 
     private boolean checkTime(Goods goods) {
@@ -89,20 +107,23 @@ public class GoodsQueryService {
         return false;
     }
 
-    public List<GoodsDto> toGoodsDtoList(List<Goods> goodsList) {
+    public List<GoodsDto> toGoodsDtoList(Page<Goods> goodsList) {
         List<GoodsDto> goodsDtoList = new ArrayList<>();
 
         for (Goods goods : goodsList) {
             Member hostMember = goods.getSell().getMember();
             int hostSellCount = sellRepository.findSellsByMemberId(hostMember.getId()).size();
-            GoodsDto goodsDto = new GoodsDto().builder().goodsId(goods.getId()).goodsName(goods.getName())
+            GoodsDto goodsDto = new GoodsDto().builder()
+                    .goodsId(goods.getId())
+                    .goodsName(goods.getName())
                     .goodsStatus(goods.getGoodsStatus())
                     .goodsPrice(goods.getGoodsPrice())
                     .goodsOrderCount(goods.getCurrentOrderCount())
                     .goodsDeliveryPrice(goods.getDeliveryFee())
                     .hostNickName(hostMember.getNickname())
                     .hostSellCount(hostSellCount)
-                    .repImgUrl(goodsImagesRepository.findGoodsImageByGoodsIdAndRepimgYn(goods.getId(), true).get().getGoodsImgUrl()).build();
+                    .repImgUrl(goodsImagesRepository.findGoodsImageByGoodsIdAndRepimgYn(goods.getId(), true)
+                            .get().getGoodsImgUrl()).build();
 
             goodsDtoList.add(goodsDto);
         }
@@ -132,6 +153,18 @@ public class GoodsQueryService {
 
 
         return goodsPageDto;
+    }
+
+    private MarkerDto toMarkerDto(Goods goods) {
+        Long goodsId = goods.getId();
+        Address address = goods.getAddress();
+
+        MarkerDto markerDto = new MarkerDto();
+
+        markerDto.setGoodsId(goodsId);
+        markerDto.setPoint(new Point(address.getMapX(), address.getMapY()));
+
+        return markerDto;
     }
 
     private boolean isOrderOrSell(Member member, Goods goods) {
