@@ -3,13 +3,14 @@ package com.jigume.domain.board.service;
 import com.jigume.domain.board.dto.*;
 import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.entity.Comment;
+import com.jigume.domain.board.exception.exception.BoardNotFoundException;
+import com.jigume.domain.board.exception.exception.CommentNotFoundException;
 import com.jigume.domain.board.repository.BoardRepository;
 import com.jigume.domain.board.repository.CommentRepository;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.domain.member.service.MemberService;
-import com.jigume.global.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +44,7 @@ public class CommentService {
         isOrderSell(board.getGoods(), member);
 
         Comment parentComment = commentRepository.findById(createReplyComment.getParentCommentId())
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(() -> new CommentNotFoundException());
 
         Comment comment = Comment.createReplyComment(member, board, parentComment
                 , createReplyComment.getContent());
@@ -58,7 +59,7 @@ public class CommentService {
         getBoard(boardId);
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(() -> new CommentNotFoundException());
 
         Member member = memberService.getMember();
 
@@ -93,7 +94,7 @@ public class CommentService {
 
     private Board getBoard(Long boardId) {
         Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(() -> new BoardNotFoundException());
         return board;
     }
 

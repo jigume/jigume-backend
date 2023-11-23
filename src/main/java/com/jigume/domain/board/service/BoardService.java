@@ -4,12 +4,12 @@ import com.jigume.domain.board.dto.BoardDto;
 import com.jigume.domain.board.dto.GetCommentsDto;
 import com.jigume.domain.board.dto.UpdateBoardDto;
 import com.jigume.domain.board.entity.Board;
+import com.jigume.domain.board.exception.exception.BoardNotFoundException;
 import com.jigume.domain.board.repository.BoardRepository;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.domain.member.service.MemberService;
-import com.jigume.global.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ public class BoardService {
 
     public BoardDto getBoard(Long boardId) {
         Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(() -> new BoardNotFoundException());
         Goods goods = board.getGoods();
         Member member = memberService.getMember();
         if (goods.isOrder(member) || goods.isSell(member)) {
@@ -46,7 +46,7 @@ public class BoardService {
     @Transactional
     public BoardDto updateBoard(Long boardId, UpdateBoardDto updateBoardDto) {
         Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(() -> new BoardNotFoundException());
         Member member = memberService.getMember();
         isHost(board, member);
 
