@@ -70,7 +70,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
-    @GetMapping("/goods")
+    @GetMapping("/goods/list")
     public ResponseEntity getGoodsList(@RequestParam("minX") double minX,
                                        @RequestParam("maxX") double maxX,
                                        @RequestParam("minY") double minY,
@@ -90,7 +90,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
-    @GetMapping("/goods")
+    @GetMapping("/goods/marker/list")
     public ResponseEntity getGoodsMarker(@RequestParam("minX") double minX,
                                          @RequestParam("maxX") double maxX,
                                          @RequestParam("minY") double minY,
@@ -105,7 +105,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
-    @GetMapping("/goods")
+    @GetMapping("/goods/marker")
     public ResponseEntity getMarkerGoods(@RequestParam List<Long> goodsIds, Pageable pageable) {
         List<GoodsDto> markerGoods = goodsQueryService.getMarkerGoods(goodsIds, pageable);
 
