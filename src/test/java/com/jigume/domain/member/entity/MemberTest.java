@@ -1,4 +1,4 @@
-package com.jigume.entity.member;
+package com.jigume.domain.member.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 

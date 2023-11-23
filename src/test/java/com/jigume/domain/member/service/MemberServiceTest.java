@@ -1,4 +1,4 @@
-package com.jigume.service.member;
+package com.jigume.domain.member.service;
 
 import com.jigume.config.JwtFactory;
 import com.jigume.domain.member.service.MemberService;
