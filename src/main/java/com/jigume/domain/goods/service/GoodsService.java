@@ -3,6 +3,8 @@ package com.jigume.domain.goods.service;
 import com.jigume.domain.goods.entity.Category;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.entity.GoodsImage;
+import com.jigume.domain.goods.exception.CategoryNotFoundException;
+import com.jigume.domain.goods.exception.GoodsNotFoundException;
 import com.jigume.domain.goods.repository.CategoryRepository;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
@@ -46,10 +48,10 @@ public class GoodsService {
     }
 
     public Goods getGoods(Long goodsId) {
-        return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new ResourceNotFoundException());
+        return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new GoodsNotFoundException());
     }
 
     public Category getCategory(Long categoryId) {
-        return categoryRepository.findCategoryById(categoryId).orElseThrow(() -> new ResourceNotFoundException());
+        return categoryRepository.findCategoryById(categoryId).orElseThrow(() -> new CategoryNotFoundException());
     }
 }

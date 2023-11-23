@@ -5,7 +5,7 @@ import com.jigume.global.exception.ResourceNotFoundException;
 
 import static com.jigume.domain.member.exception.member.MemberException.MEMBER_NOT_FOUND;
 
-public class LoginMemberException extends ResourceNotFoundException {
+public class LoginMemberException extends ResourceNotFoundException{
 
     private final ExceptionCode exceptionCode;
 
