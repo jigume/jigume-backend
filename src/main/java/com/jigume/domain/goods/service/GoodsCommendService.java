@@ -64,6 +64,18 @@ public class GoodsCommendService {
         goods.updateEnd();
     }
 
+    @Transactional
+    public void updateGoodsIntroduction(Long goodsId, String introduction) {
+        Member member = memberService.getMember();
+        Goods goods = goodsService.getGoods(goodsId);
+
+        if (!goods.isSell(member)) {
+            throw new AuthNotAuthorizationMemberException();
+        }
+
+        goods.updateGoodsIntroduction(introduction);
+    }
+
     private void checkGoodsSeller(Goods goods, Member member) {
         if (!goods.isSell(member)) {
             throw new AuthNotAuthorizationMemberException();

@@ -125,7 +125,9 @@ public class GoodsQueryService {
                     .hostNickName(hostMember.getNickname())
                     .hostSellCount(hostSellCount)
                     .repImgUrl(goodsImagesRepository.findGoodsImageByGoodsIdAndRepimgYn(goods.getId(), true)
-                            .get().getGoodsImgUrl()).build();
+                            .get().getGoodsImgUrl())
+                    .categoryId(goods.getCategory().getId())
+                    .build();
 
             goodsDtoList.add(goodsDto);
         }
@@ -144,7 +146,7 @@ public class GoodsQueryService {
                 .link(goods.getLink()).goodsPrice(goods.getGoodsPrice())
                 .deliveryFee(goods.getDeliveryFee()).mapX(goods.getAddress().getMapX())
                 .mapY(goods.getAddress().getMapY()).goodsLimitTime(goods.getGoodsLimitTime())
-                .goodsLimitCount(goods.getGoodsLimitCount()).category(goods.getCategory().getId())
+                .goodsLimitCount(goods.getGoodsLimitCount()).categoryId(goods.getCategory().getId())
                 .realDeliveryFee(goods.getRealDeliveryFee()).goodsStatus(goods.getGoodsStatus())
                 .hostNickname(hostMember.getNickname()).hostSellCount(hostSellCount)
                 .goodsOrderCount(goods.getCurrentOrderGoodsCount())

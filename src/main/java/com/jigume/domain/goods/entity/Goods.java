@@ -145,4 +145,8 @@ public class Goods extends BaseTimeEntity {
                 .filter(order -> order.getMember().equals(member))
                 .findAny().isPresent();
     }
+
+    public void updateGoodsIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
 }

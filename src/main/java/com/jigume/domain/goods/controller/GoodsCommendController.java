@@ -51,4 +51,17 @@ public class GoodsCommendController {
 
         return new ResponseEntity(OK);
     }
+
+    @Operation(summary = "Goods 설명을 업데이트 한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "굿즈 판매 종료"),
+            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+    })
+    @PostMapping("/goods/{goodsId}/intro")
+    public ResponseEntity updateGoodsIntroduction(@PathVariable Long goodsId,
+                                                  @RequestBody String introduction) {
+        goodsCommendService.updateGoodsIntroduction(goodsId, introduction);
+
+        return new ResponseEntity(OK);
+    }
 }
