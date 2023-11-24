@@ -3,6 +3,7 @@ package com.jigume.domain.goods.service;
 import com.jigume.domain.goods.dto.*;
 import com.jigume.domain.goods.entity.Address;
 import com.jigume.domain.goods.entity.Goods;
+import com.jigume.domain.goods.entity.GoodsImage;
 import com.jigume.domain.goods.entity.GoodsStatus;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
@@ -164,7 +165,11 @@ public class GoodsQueryService {
 
         markerDto.setGoodsId(goodsId);
         markerDto.setPoint(new Point(address.getMapX(), address.getMapY()));
-        markerDto.setGoodsImageUrl(goods.getGoodsImageList().get(0).getGoodsImgUrl());
+
+        String goodsImgUrl = goods.getGoodsImageList().stream().filter(GoodsImage::isRepimgYn)
+                .findAny().get().getGoodsImgUrl();
+
+        markerDto.setGoodsImageUrl(goodsImgUrl);
 
         return markerDto;
     }
