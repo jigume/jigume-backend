@@ -30,7 +30,7 @@ public enum AuthExceptionCode implements ExceptionCode {
     LOGIN_PROVIDER_MISMATCH(BAD_REQUEST, "AT-C-100", "잘못된 OAuth2 인증입니다."),
     INVALID_LOGIN_PROVIDER(BAD_REQUEST, "AT-C-101", "유효하지 않은 로그인 제공자입니다."),
     INVALID_MEMBER_ROLE(FORBIDDEN, "AT-C-102", "유효하지 않은 사용자 권한입니다."),
-    NOT_AUTHORIZATION_USER(NOT_FOUND, "AT-C-103", "인가된 사용자가 아닙니다."),
+    NOT_AUTHORIZATION_USER(UNAUTHORIZED, "AT-C-103", "인가된 사용자가 아닙니다."),
     INVALID_REDIRECT_URI(UNAUTHORIZED, "AT-C-104", "허용되지 않은 리다이렉션 URI 입니다."),
     AUTH_MEMBER_NOT_FOUND(NOT_FOUND, "AT-C-105", "존재하지 않는 회원입니다."),
 

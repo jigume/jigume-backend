@@ -1,9 +1,12 @@
 package com.jigume.domain.goods.controller;
 
 import com.jigume.domain.goods.dto.GoodsSaveDto;
+import com.jigume.domain.goods.exception.CategoryNotFoundException;
+import com.jigume.domain.goods.exception.GoodsNotFoundException;
 import com.jigume.domain.goods.service.GoodsCommendService;
 import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
-import com.jigume.global.exception.ResourceNotFoundException;
+import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
+import com.jigume.global.aws.s3.exception.exception.S3InvalidImageException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,7 +32,9 @@ public class GoodsCommendController {
     @Operation(summary = "이미지를 포함한 상품을 업로드 하는 기능")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 저장 성공, goodsId 반환"),
-            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "카테고리를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryNotFoundException.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 이미지", content = @Content(mediaType = "application/json", schema = @Schema(implementation = S3InvalidImageException.class)))
     })
     @PostMapping(value = "/goods",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -43,7 +48,9 @@ public class GoodsCommendController {
     @Operation(summary = "Goods 판매를 끝낸다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "굿즈 판매 종료"),
-            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "굿즈를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class))),
+            @ApiResponse(responseCode = "401", description = "해당 굿즈에 대한 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthNotAuthorizationMemberException.class)))
     })
     @PostMapping("/goods/{goodsId}/end")
     public ResponseEntity endGoodsSelling(@PathVariable Long goodsId) {
@@ -54,8 +61,10 @@ public class GoodsCommendController {
 
     @Operation(summary = "Goods 설명을 업데이트 한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "굿즈 판매 종료"),
-            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "200", description = "굿즈 업데이트를 성공적으로 했음"),
+            @ApiResponse(responseCode = "404", description = "굿즈를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class))),
+            @ApiResponse(responseCode = "401", description = "해당 굿즈에 대한 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthNotAuthorizationMemberException.class)))
     })
     @PostMapping("/goods/{goodsId}/intro")
     public ResponseEntity updateGoodsIntroduction(@PathVariable Long goodsId,
