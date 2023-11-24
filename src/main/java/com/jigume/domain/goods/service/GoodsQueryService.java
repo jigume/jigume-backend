@@ -166,6 +166,7 @@ public class GoodsQueryService {
         MarkerDto markerDto = new MarkerDto();
 
         markerDto.setGoodsId(goodsId);
+        markerDto.setCategoryId(goods.getCategory().getId());
         markerDto.setPoint(new Point(address.getMapX(), address.getMapY()));
 
         String goodsImgUrl = goods.getGoodsImageList().stream().filter(GoodsImage::isRepimgYn)

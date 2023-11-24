@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class MarkerDto {
     private Long goodsId;
+    private Long categoryId;
     private Point point;
     private String goodsImageUrl;
 }

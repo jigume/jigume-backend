@@ -33,7 +33,7 @@ public class GoodsPageDto {
 
     private LocalDateTime goodsLimitTime;
 
-    private Long category;
+    private Long categoryId;
 
     private Integer realDeliveryFee;
 
@@ -55,7 +55,7 @@ public class GoodsPageDto {
     public GoodsPageDto(Long goodsId, String goodsName, String introduction,
                         String link, Integer goodsPrice, Integer deliveryFee,
                         Double mapX, Double mapY, Integer goodsLimitCount,
-                        LocalDateTime goodsLimitTime, Long category,
+                        LocalDateTime goodsLimitTime, Long categoryId,
                         Integer realDeliveryFee, GoodsStatus goodsStatus,
                         String hostNickname, Integer hostSellCount,
                         Integer goodsOrderCount, Integer discountDeliveryPrice,
@@ -71,7 +71,7 @@ public class GoodsPageDto {
         this.mapY = mapY;
         this.goodsLimitCount = goodsLimitCount;
         this.goodsLimitTime = goodsLimitTime;
-        this.category = category;
+        this.categoryId = categoryId;
         this.realDeliveryFee = realDeliveryFee;
         this.goodsStatus = goodsStatus;
         this.hostNickname = hostNickname;
