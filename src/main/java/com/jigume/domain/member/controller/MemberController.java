@@ -6,6 +6,8 @@ import com.jigume.domain.member.dto.TokenDto;
 import com.jigume.domain.member.entity.LoginProvider;
 import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.domain.member.exception.auth.exception.InvalidAuthorizationCodeException;
+import com.jigume.domain.member.exception.member.DuplicateNicknameException;
+import com.jigume.domain.member.exception.member.InvalidNicknameException;
 import com.jigume.domain.member.service.MemberService;
 import com.jigume.global.exception.GlobalServerErrorException;
 import com.jigume.global.image.dto.ImageUploadRequest;
@@ -16,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -74,7 +77,7 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "멤버를 찾을 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
     @PostMapping("/member/new")
-    public ResponseEntity updateMemberInfo(@RequestBody MemberInfoDto memberInfoDto) {
+    public ResponseEntity updateMemberInfo(@Valid @RequestBody MemberInfoDto memberInfoDto) {
         memberService.updateMemberInfo(memberInfoDto);
 
         return new ResponseEntity(OK);
@@ -105,5 +108,18 @@ public class MemberController {
         MemberInfoDto memberInfo = memberService.getMemberInfo();
 
         return new ResponseEntity<>(memberInfo, OK);
+    }
+
+    @Operation(summary = "닉네임 중복 검사를 한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "정상적인 닉네임"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 닉네임", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvalidNicknameException.class))),
+            @ApiResponse(responseCode = "400", description = "중복된 닉네임", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DuplicateNicknameException.class)))
+    })
+    @GetMapping("/member/nickname")
+    public ResponseEntity checkDuplicateNickname(@RequestParam String nickname) {
+        memberService.checkDuplicateNickname(nickname);
+
+        return new ResponseEntity<>(OK);
     }
 }

@@ -6,6 +6,8 @@ import com.jigume.domain.member.entity.LoginProvider;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.exception.auth.exception.AuthExpiredTokenException;
 import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
+import com.jigume.domain.member.exception.member.DuplicateNicknameException;
+import com.jigume.domain.member.exception.member.InvalidNicknameException;
 import com.jigume.domain.member.repository.MemberRepository;
 import com.jigume.global.aws.s3.S3FileUploadService;
 import com.jigume.global.image.ImageUrl;
@@ -24,7 +26,6 @@ import java.time.Duration;
 import java.util.Map;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -32,7 +33,9 @@ public class MemberService {
     private final TokenProvider tokenProvider;
     private final Map<String, OAuthService> oAuthServiceMap;
     private final S3FileUploadService s3FileUploadService;
+    private String regex = "^[가-힣a-zA-Z0-9]*$";
 
+    @Transactional
     public LoginResponseDto login(LoginProvider loginProvider, String code) {
         OAuthService oAuthService =
                 oAuthServiceMap.get(StringUtils.uncapitalize(loginProvider.getServiceClass().getSimpleName()));
@@ -53,6 +56,7 @@ public class MemberService {
         return new LoginResponseDto(tokenDto, baseRole);
     }
 
+    @Transactional
     public TokenDto reissueToken(String refreshToken) {
         if (!tokenProvider.validToken(refreshToken)) {
             throw new AuthExpiredTokenException();
@@ -64,6 +68,7 @@ public class MemberService {
         return new TokenDto(accessToken, refreshToken);
     }
 
+    @Transactional
     public void updateMemberInfo(MemberInfoDto memberInfoDto) {
         Member member = getMember();
 
@@ -71,6 +76,7 @@ public class MemberService {
         if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
     }
 
+    @Transactional
     public void updateMemberProfileImage(ImageUploadRequest imageUploadRequest) {
         Member member = getMember();
 
@@ -113,6 +119,7 @@ public class MemberService {
         return (UserDetails) authentication.getPrincipal();
     }
 
+    @Transactional
     public void saveMemberImage(MultipartFile multipartFile) {
         Member member = getMember();
         String memberProfileImgUrl = s3FileUploadService.uploadFile(multipartFile);
@@ -133,5 +140,19 @@ public class MemberService {
         memberInfoDto.setMapY(member.getAddress().getMapY());
 
         return memberInfoDto;
+    }
+
+    public void checkDuplicateNickname(String nickname) {
+        if (nickname.length() < 2 && nickname.length() > 10) {
+            throw new InvalidNicknameException();
+        }
+
+        if (nickname.matches(regex)) {
+            throw new InvalidNicknameException();
+        }
+
+        if (memberRepository.findMemberByNickname(nickname).isPresent()) {
+            throw new DuplicateNicknameException();
+        }
     }
 }

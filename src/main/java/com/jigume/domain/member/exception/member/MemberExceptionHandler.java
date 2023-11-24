@@ -22,4 +22,28 @@ public class MemberExceptionHandler {
                 exception.getExceptionCode().getHttpStatus()
         );
     }
+
+    @ExceptionHandler(DuplicateNicknameException.class)
+    public ResponseEntity duplicateNicknameException(
+            DuplicateNicknameException exception
+    ) {
+        log.error("{}", exception.getMessage());
+
+        return new ResponseEntity<>(
+                exception.getMessage(),
+                exception.getExceptionCode().getHttpStatus()
+        );
+    }
+
+    @ExceptionHandler(InvalidNicknameException.class)
+    public ResponseEntity invalidNicknameException(
+            InvalidNicknameException exception
+    ) {
+        log.error("{}", exception.getMessage());
+
+        return new ResponseEntity<>(
+                exception.getMessage(),
+                exception.getExceptionCode().getHttpStatus()
+        );
+    }
 }
