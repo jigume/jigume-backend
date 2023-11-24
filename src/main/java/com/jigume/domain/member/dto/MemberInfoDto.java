@@ -15,16 +15,4 @@ public class MemberInfoDto {
     private Double mapX;
 
     private Double mapY;
-
-    //TODO: 도로명 주소
-
-    public static MemberInfoDto toMemberInfoDto(Member member) {
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
-        memberInfoDto.setNickname(member.getNickname());
-        memberInfoDto.setProfileImgUrl(member.getProfileImageUrl());
-        memberInfoDto.setMapX(member.getAddress().getMapX());
-        memberInfoDto.setMapY(member.getAddress().getMapY());
-
-        return memberInfoDto;
-    }
 }

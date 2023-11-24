@@ -8,6 +8,7 @@ import com.jigume.domain.member.exception.auth.exception.AuthExpiredTokenExcepti
 import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.domain.member.repository.MemberRepository;
 import com.jigume.global.aws.s3.S3FileUploadService;
+import com.jigume.global.image.ImageUrl;
 import com.jigume.global.image.dto.ImageUploadRequest;
 import com.jigume.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +68,7 @@ public class MemberService {
         Member member = getMember();
 
         member.updateMemberInfo(memberInfoDto.getNickname(), memberInfoDto.getMapX(), memberInfoDto.getMapY());
-        if(member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
+        if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
     }
 
     public void updateMemberProfileImage(ImageUploadRequest imageUploadRequest) {
@@ -81,7 +82,7 @@ public class MemberService {
     public MemberInfoDto getMemberInfo() {
         Member member = getMember();
 
-        return MemberInfoDto.toMemberInfoDto(member);
+        return toMemberInfoDto(member);
     }
 
 
@@ -117,5 +118,20 @@ public class MemberService {
         String memberProfileImgUrl = s3FileUploadService.uploadFile(multipartFile);
 
         member.updateMemberProfileImg(memberProfileImgUrl);
+    }
+
+    private MemberInfoDto toMemberInfoDto(Member member) {
+        MemberInfoDto memberInfoDto = new MemberInfoDto();
+        memberInfoDto.setNickname(member.getNickname());
+
+        if (!member.getProfileImageUrl().isEmpty()) {
+            memberInfoDto.setProfileImgUrl(member.getProfileImageUrl());
+        } else {
+            memberInfoDto.setProfileImgUrl(ImageUrl.defaultImageUrl);
+        }
+        memberInfoDto.setMapX(member.getAddress().getMapX());
+        memberInfoDto.setMapY(member.getAddress().getMapY());
+
+        return memberInfoDto;
     }
 }
