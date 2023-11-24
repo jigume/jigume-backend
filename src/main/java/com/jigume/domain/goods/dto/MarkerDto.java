@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class MarkerDto {
     private Long goodsId;
     private Point point;
+    private String goodsImageUrl;
 }

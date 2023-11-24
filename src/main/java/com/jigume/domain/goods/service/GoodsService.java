@@ -9,6 +9,7 @@ import com.jigume.domain.goods.repository.CategoryRepository;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
 import com.jigume.global.aws.s3.S3FileUploadService;
+import com.jigume.global.image.ImageUrl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,18 @@ public class GoodsService {
     @Transactional
     public void updateImage(List<MultipartFile> imageList, Long goodsId, Integer repImg) {
         Goods goods = getGoods(goodsId);
-
-        IntStream.range(0, imageList.size())
-                .forEach(i -> {
-                    String goodsImgUrl = s3FileUploadService.uploadFile(imageList.get(i));
-                    boolean isRepImg = (repImg != null && i == repImg);
-                    GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, goodsImgUrl, isRepImg);
-                    goodsImagesRepository.save(goodsImage);
-                });
+        if (imageList.size() != 0) {
+            IntStream.range(0, imageList.size())
+                    .forEach(i -> {
+                        String goodsImgUrl = s3FileUploadService.uploadFile(imageList.get(i));
+                        boolean isRepImg = (repImg != null && i == repImg);
+                        GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, goodsImgUrl, isRepImg);
+                        goodsImagesRepository.save(goodsImage);
+                    });
+        } else {
+            GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, ImageUrl.defaultImageUrl, true);
+            goodsImagesRepository.save(goodsImage);
+        }
     }
 
     @Transactional

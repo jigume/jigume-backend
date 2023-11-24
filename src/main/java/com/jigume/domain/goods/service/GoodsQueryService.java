@@ -164,6 +164,7 @@ public class GoodsQueryService {
 
         markerDto.setGoodsId(goodsId);
         markerDto.setPoint(new Point(address.getMapX(), address.getMapY()));
+        markerDto.setGoodsImageUrl(goods.getGoodsImageList().get(0).getGoodsImgUrl());
 
         return markerDto;
     }
