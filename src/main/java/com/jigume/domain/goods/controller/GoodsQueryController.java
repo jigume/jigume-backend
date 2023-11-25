@@ -87,7 +87,7 @@ public class GoodsQueryController {
 
     @Operation(summary = "해당 지도 범위의 상품들을 모두 반환한다 - 마커용")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
+            @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarkerListDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
     @GetMapping("/marker/list")
