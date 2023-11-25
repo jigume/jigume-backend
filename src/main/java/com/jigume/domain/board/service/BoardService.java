@@ -1,7 +1,6 @@
 package com.jigume.domain.board.service;
 
 import com.jigume.domain.board.dto.BoardDto;
-import com.jigume.domain.board.dto.GetCommentsDto;
 import com.jigume.domain.board.dto.UpdateBoardDto;
 import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.exception.exception.BoardNotFoundException;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final CommentService commentService;
     private final MemberService memberService;
 
     public Board createBoard(String boardContent, Goods goods) {
@@ -31,22 +29,22 @@ public class BoardService {
     }
 
     public BoardDto getBoard(Long boardId) {
-        Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
+        Board board = boardRepository.findBoardByBoardId(boardId)
                 .orElseThrow(() -> new BoardNotFoundException());
+
         Goods goods = board.getGoods();
+
         Member member = memberService.getMember();
         if (goods.isOrder(member) || goods.isSell(member)) {
             throw new AuthNotAuthorizationMemberException();
         }
 
-        GetCommentsDto comments = commentService.getComments(boardId);
-
-        return toBoardDto(board, comments);
+        return toBoardDto(board);
     }
 
     @Transactional
     public BoardDto updateBoard(Long boardId, UpdateBoardDto updateBoardDto) {
-        Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
+        Board board = boardRepository.findBoardByBoardId(boardId)
                 .orElseThrow(() -> new BoardNotFoundException());
         Member member = memberService.getMember();
         isHost(board, member);
@@ -55,9 +53,7 @@ public class BoardService {
 
         board.updateBoardContent(boardContent);
 
-        GetCommentsDto comments = commentService.getComments(boardId);
-
-        return toBoardDto(board, comments);
+        return toBoardDto(board);
     }
 
     private void isHost(Board board, Member member) {
@@ -66,11 +62,12 @@ public class BoardService {
         }
     }
 
-    private BoardDto toBoardDto(Board board, GetCommentsDto commentsDto) {
+    private BoardDto toBoardDto(Board board) {
         return new BoardDto().builder().boardName(board.getBoardName())
                 .boardContent(board.getBoardContent())
                 .hostName(board.getGoods().getSell().getMember().getNickname())
                 .created_at(board.getCreatedDate())
-                .comments(commentsDto).build();
+                .modified_at(board.getModifiedDate())
+                .build();
     }
 }

@@ -14,14 +14,15 @@ public class BoardDto {
     private String boardContent;
     private String hostName;
     private LocalDateTime created_at;
-    private GetCommentsDto commentsDto;
+    private LocalDateTime modified_at;
 
     @Builder
-    public BoardDto(String boardName, String boardContent, String hostName, LocalDateTime created_at, GetCommentsDto comments) {
+    public BoardDto(String boardName, String boardContent, String hostName,
+                    LocalDateTime created_at, LocalDateTime modified_at) {
         this.boardName = boardName;
         this.boardContent = boardContent;
         this.hostName = hostName;
         this.created_at = created_at;
-        this.commentsDto = comments;
+        this.modified_at = modified_at;
     }
 }
