@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/post")
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
     @GetMapping("/{boardId}")
-    public ResponseEntity getBoardWithComments(@PathVariable Long boardId) {
+    public ResponseEntity getBoard(@PathVariable Long boardId) {
         BoardDto board = boardService.getBoard(boardId);
 
         return new ResponseEntity<>(board, OK);
@@ -29,6 +29,4 @@ public class BoardController {
 
         return new ResponseEntity(boardDto, OK);
     }
-
-    //TODO: CRUD 댓글, 권한 체크
 }

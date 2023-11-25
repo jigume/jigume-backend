@@ -29,7 +29,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/member")
 public class MemberController {
 
     private final MemberService memberService;
@@ -44,7 +44,7 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "잘못된 Authorization code 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvalidAuthorizationCodeException.class))),
             @ApiResponse(responseCode = "500", description = "소셜 로그인 서버 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GlobalServerErrorException.class)))
     })
-    @PostMapping("/member/login")
+    @PostMapping("/login")
     public ResponseEntity login(@RequestParam("login-provider") String provider,
                                 @RequestParam("authorization-code") String code) {
 
@@ -61,7 +61,7 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "액세스 토큰 재발급 및 리프레쉬 토큰 갱신", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리프레쉬 토큰을 가진 회원이 존재하지 않음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
-    @PostMapping("/member/token")
+    @PostMapping("/token")
     public ResponseEntity refreshNewToken(@RequestBody String refreshToken) {
         TokenDto tokenDto = memberService.reissueToken(refreshToken);
 
@@ -76,7 +76,7 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "성공적으로 업데이트 했음"),
             @ApiResponse(responseCode = "404", description = "멤버를 찾을 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
-    @PostMapping("/member/new")
+    @PostMapping("/info")
     public ResponseEntity updateMemberInfo(@Valid @RequestBody MemberInfoDto memberInfoDto) {
         memberService.updateMemberInfo(memberInfoDto);
 
@@ -91,7 +91,7 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "성공적으로 업데이트 했음"),
             @ApiResponse(responseCode = "404", description = "멤버를 찾을 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
-    @PostMapping("/member/profile/new")
+    @PostMapping("/profile")
     public ResponseEntity updateMemberProfileImage(ImageUploadRequest imageUploadRequest) {
         memberService.updateMemberProfileImage(imageUploadRequest);
 
@@ -103,7 +103,7 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "이미지 파일 업데이트 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemberInfoDto.class))),
             @ApiResponse(responseCode = "404", description = "멤버를 찾을 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
     })
-    @PostMapping("/member/profile")
+    @GetMapping("/profile")
     public ResponseEntity getMemberInfo() {
         MemberInfoDto memberInfo = memberService.getMemberInfo();
 
@@ -116,7 +116,7 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "유효하지 않은 닉네임", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvalidNicknameException.class))),
             @ApiResponse(responseCode = "400", description = "중복된 닉네임", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DuplicateNicknameException.class)))
     })
-    @GetMapping("/member/nickname")
+    @GetMapping("/nickname")
     public ResponseEntity checkDuplicateNickname(@RequestParam String nickname) {
         memberService.checkDuplicateNickname(nickname);
 

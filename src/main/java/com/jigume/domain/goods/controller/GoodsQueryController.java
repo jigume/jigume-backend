@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/goods")
 public class GoodsQueryController {
 
     private final GoodsQueryService goodsQueryService;
@@ -34,7 +34,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 상세 페이지 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDetailPageDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
-    @GetMapping("/goods/{goodsId}/page")
+    @GetMapping("/{goodsId}/page")
     public ResponseEntity getGoodsPage(@PathVariable("goodsId") Long goodsId) {
         GoodsDetailPageDto goodsPage = goodsQueryService.getGoodsPage(goodsId);
 
@@ -49,7 +49,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
-    @GetMapping("/goods/{categoryId}/list")
+    @GetMapping("/{categoryId}/list")
     public ResponseEntity getGoodsList(@PathVariable("categoryId") Long categoryId,
                                        @RequestParam("minX") double minX,
                                        @RequestParam("maxX") double maxX,
@@ -70,7 +70,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
-    @GetMapping("/goods/list")
+    @GetMapping("/list")
     public ResponseEntity getGoodsList(@RequestParam("minX") double minX,
                                        @RequestParam("maxX") double maxX,
                                        @RequestParam("minY") double minY,
@@ -90,7 +90,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
-    @GetMapping("/goods/marker/list")
+    @GetMapping("/marker/list")
     public ResponseEntity getGoodsMarker(@RequestParam("minX") double minX,
                                          @RequestParam("maxX") double maxX,
                                          @RequestParam("minY") double minY,
@@ -105,7 +105,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
     })
-    @GetMapping("/goods/marker")
+    @GetMapping("/marker")
     public ResponseEntity getMarkerGoods(@RequestParam List<Long> goodsIds, Pageable pageable) {
         List<GoodsDto> markerGoods = goodsQueryService.getMarkerGoods(goodsIds, pageable);
 

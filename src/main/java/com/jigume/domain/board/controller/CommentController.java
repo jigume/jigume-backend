@@ -18,7 +18,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{boardId}/comment/new")
+    @PostMapping("/{boardId}/comment")
     public ResponseEntity createComment(@PathVariable Long boardId,
                                         @RequestBody CreateCommentDto commentDto) {
         commentService.createComment(boardId, commentDto);
