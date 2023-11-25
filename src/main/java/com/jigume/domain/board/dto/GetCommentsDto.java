@@ -9,10 +9,10 @@ import java.util.List;
 @Data
 public class GetCommentsDto {
 
-    List<CommentDto> commentDtoList;
+    List<CommentWithReplyDto> commentDtoList;
 
 
-    public GetCommentsDto(List<CommentDto> commentDtoList) {
+    public GetCommentsDto(List<CommentWithReplyDto> commentDtoList) {
         this.commentDtoList = commentDtoList;
     }
 }

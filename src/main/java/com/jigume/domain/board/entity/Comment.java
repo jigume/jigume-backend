@@ -32,6 +32,8 @@ public class Comment extends BaseTimeEntity {
 
     private String content;
 
+    private Boolean isDelete;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
@@ -57,6 +59,7 @@ public class Comment extends BaseTimeEntity {
         comment.member = member;
         comment.board = board;
         comment.content = content;
+        comment.isDelete = false;
 
         comment.parent = parent;
         parent.getChildren().add(comment);
@@ -66,5 +69,9 @@ public class Comment extends BaseTimeEntity {
 
     public void updateContent(String commentContent) {
         this.content = commentContent;
+    }
+
+    public void deleteComment() {
+        this.isDelete = true;
     }
 }

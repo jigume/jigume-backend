@@ -12,6 +12,8 @@ import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,8 @@ public class CommentService {
     public void createComment(Long boardId, CreateCommentDto commentDto) {
         Member member = memberService.getMember();
         Board board = getBoard(boardId);
+
+        isOrderSell(board.getGoods(), member);
 
         Comment comment = Comment.createComment(member, board, commentDto.getContent());
         board.addComment(comment);
@@ -70,20 +74,40 @@ public class CommentService {
         comment.updateContent(commentContent);
     }
 
-    public GetCommentsDto getComments(Long boardId) {
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Member member = memberService.getMember();
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException());
+
+        if (comment.getMember().equals(member)) {
+            throw new AuthNotAuthorizationMemberException();
+        }
+
+        comment.deleteComment();
+    }
+
+    public GetCommentsDto getComments(Long boardId, Pageable pageable) {
         Member member = memberService.getMember();
         Board board = getBoard(boardId);
         Goods goods = board.getGoods();
 
         isOrderSell(goods, member);
 
-        List<Comment> commentList = board.getCommentList();
+        Page<Comment> commentsByBoardId = commentRepository.findCommentsByBoardId(boardId, pageable);
 
-        List<CommentDto> commentDtoList = commentList.stream()
-                .map(this::toCommentDto)
+        List<CommentWithReplyDto> commentWithReplyDtoList = commentsByBoardId.stream()
+                .map(comment -> {
+                    List<CommentDto> childList = comment.getChildren().stream()
+                            .map(this::toCommentDto)
+                            .collect(Collectors.toList());
+                    CommentDto parent = toCommentDto(comment);
+                    return new CommentWithReplyDto(parent, childList);
+                })
                 .collect(Collectors.toList());
 
-        return new GetCommentsDto(commentDtoList);
+
+        return new GetCommentsDto(commentWithReplyDtoList);
     }
 
     private void isOrderSell(Goods goods, Member member) {
@@ -93,19 +117,29 @@ public class CommentService {
     }
 
     private Board getBoard(Long boardId) {
-        Board board = boardRepository.findBoardByBoardIdWithGetComment(boardId)
+        Board board = boardRepository.findBoardByBoardId(boardId)
                 .orElseThrow(() -> new BoardNotFoundException());
         return board;
     }
 
     private CommentDto toCommentDto(Comment comment) {
-        CommentDto commentDto = new CommentDto().builder()
+        if (!comment.getIsDelete()) {
+            return new CommentDto().builder()
+                    .commentId(comment.getId())
+                    .content(comment.getContent())
+                    .memberNickname(comment.getMember().getNickname())
+                    .created_at(comment.getCreatedDate())
+                    .modified_at(comment.getModifiedDate())
+                    .isDelete(comment.getIsDelete())
+                    .build();
+        }
+
+        return new CommentDto().builder().
+                isDelete(comment.getIsDelete())
                 .commentId(comment.getId())
-                .content(comment.getContent())
                 .memberNickname(comment.getMember().getNickname())
                 .created_at(comment.getCreatedDate())
+                .modified_at(comment.getModifiedDate())
                 .build();
-
-        return commentDto;
     }
 }
