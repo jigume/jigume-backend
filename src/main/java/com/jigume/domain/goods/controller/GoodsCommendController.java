@@ -39,7 +39,7 @@ public class GoodsCommendController {
     @PostMapping(value = "/new",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity saveGoods(@RequestPart GoodsSaveDto goodsSaveDto, @RequestPart(value = "images", required = false) List<MultipartFile> imageList,
-                                    @RequestPart("repImg") int repImg) {
+                                    @RequestParam(name = "repImg", required = false) Integer repImg) {
         Long goodsId = goodsCommendService.saveGoods(goodsSaveDto, imageList, repImg);
 
         return new ResponseEntity(goodsId, OK);

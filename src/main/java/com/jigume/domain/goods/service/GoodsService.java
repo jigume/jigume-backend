@@ -37,6 +37,7 @@ public class GoodsService {
                     .forEach(i -> {
                         String goodsImgUrl = s3FileUploadService.uploadFile(imageList.get(i));
                         boolean isRepImg = (repImg != null && i == repImg);
+                        log.info("{}", isRepImg);
                         GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, goodsImgUrl, isRepImg);
                         goodsImagesRepository.save(goodsImage);
                     });

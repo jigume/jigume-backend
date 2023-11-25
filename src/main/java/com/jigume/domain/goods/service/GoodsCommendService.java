@@ -31,7 +31,8 @@ public class GoodsCommendService {
     private final GoodsService goodsService;
 
     @Transactional
-    public Long saveGoods(GoodsSaveDto goodsSaveDto, List<MultipartFile> imageList, int repImg) {
+    public Long saveGoods(GoodsSaveDto goodsSaveDto, List<MultipartFile> imageList, Integer repImg) {
+        log.info("{}", repImg);
         Member member = memberService.getMember();
 
         Category category = goodsService.getCategory(goodsSaveDto.getCategoryId());
@@ -46,10 +47,8 @@ public class GoodsCommendService {
         goods.setBoard(board);
         Sell sell = sellService.createSell(member, goods);
         goods.setSell(sell);
+        goodsService.updateImage(imageList, goodsId, repImg);
 
-        if (imageList.size() != 0) {
-            goodsService.updateImage(imageList, goodsId, repImg);
-        }
 
         return goodsId;
     }

@@ -83,6 +83,7 @@ public class MemberService {
         String imgUrl = s3FileUploadService.uploadFile(imageUploadRequest.multipartFile());
 
         member.updateMemberProfileImg(imgUrl);
+        if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
     }
 
     public MemberInfoDto getMemberInfo() {

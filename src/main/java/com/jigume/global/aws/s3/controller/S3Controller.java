@@ -43,7 +43,7 @@ public class S3Controller {
     })
     @PostMapping("/{goodsId}/image")
     public ResponseEntity updateImage(@RequestParam(value = "images", required = false) List<MultipartFile> multipartFiles,
-                                      @PathVariable("goodsId") Long goodsId, @RequestParam("repImg") Integer repImgYn) {
+                                      @PathVariable("goodsId") Long goodsId, @RequestParam(value = "repImg", required = false) Integer repImgYn) {
         goodsService.updateImage(multipartFiles, goodsId, repImgYn);
 
         return new ResponseEntity("이미지 저장 성공", OK);
