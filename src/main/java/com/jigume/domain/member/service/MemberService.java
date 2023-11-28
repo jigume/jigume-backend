@@ -148,7 +148,7 @@ public class MemberService {
             throw new InvalidNicknameException();
         }
 
-        if (nickname.matches(regex)) {
+        if (!nickname.matches(regex)) {
             throw new InvalidNicknameException();
         }
 
