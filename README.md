@@ -1,6 +1,17 @@
+<br />
+<h3 align='center'>구름톤 7기 대상</h3>
+<br />
+
 # 제주의 지도형 공동구매 플랫폼: JIGUME
 
-![Untitled](https://github.com/jigume/jigume-backend/assets/102659136/a12fbda5-4cb0-403e-8772-2c3da17c37c4)
+![image](https://github.com/jigume/.github/assets/68184254/ce7cc7cb-656f-49f6-8601-4e043e7bae0d)
+
+<br/>
+
+## 시연
+`추후 공개 예정 (리펙토링 진행 중)`
+
+<br/>
 
 
 Github 🔗 [https://github.com/jigume](https://github.com/jigume)
