@@ -26,8 +26,8 @@ Github 🔗 [https://github.com/jigume](https://github.com/jigume)
 > 
 
 <aside>
+    
 🍊 제주도의 연간 추가 배송비, 20년 기준 600억, 22년 기준 760억 지출
-****
 
 </aside>
 
