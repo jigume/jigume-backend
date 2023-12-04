@@ -87,6 +87,7 @@ public class CommentService {
         comment.deleteComment();
     }
 
+    @Transactional(readOnly = true)
     public GetCommentsDto getComments(Long boardId, Pageable pageable) {
         Member member = memberService.getMember();
         Board board = getBoard(boardId);

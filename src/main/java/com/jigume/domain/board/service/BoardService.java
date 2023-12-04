@@ -28,6 +28,7 @@ public class BoardService {
         return board;
     }
 
+    @Transactional(readOnly = true)
     public BoardDto getBoard(Long boardId) {
         Board board = boardRepository.findBoardByBoardId(boardId)
                 .orElseThrow(() -> new BoardNotFoundException());
