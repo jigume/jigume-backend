@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @ControllerAdvice
@@ -54,5 +53,12 @@ public class GlobalExceptionHandler {
                 exception.getMessage(),
                 NOT_FOUND
         );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity globalException(Exception e) {
+        log.error("{}", e);
+
+        return new ResponseEntity(e.getMessage(), INTERNAL_SERVER_ERROR);
     }
 }
