@@ -60,9 +60,9 @@ public class GoodsQueryController {
         coordinateDto.setMaxPoint(new Point(maxX, maxY));
         coordinateDto.setMinPoint(new Point(minX, minY));
 
-        List<GoodsDto> goodsList = goodsQueryService.getGoodsListByCategoryId(categoryId, coordinateDto, pageable);
+        GoodsSliceDto goodsSliceDto = goodsQueryService.getGoodsListByCategoryId(categoryId, coordinateDto, pageable);
 
-        return new ResponseEntity(goodsList, OK);
+        return new ResponseEntity(goodsSliceDto, OK);
     }
 
     @Operation(summary = "해당 범위의 상품들을 모두 반환한다. 바텀시트 올릴 시")
@@ -80,9 +80,9 @@ public class GoodsQueryController {
         coordinateDto.setMaxPoint(new Point(maxX, maxY));
         coordinateDto.setMinPoint(new Point(minX, minY));
 
-        List<GoodsDto> goodsList = goodsQueryService.getGoodsList(coordinateDto, pageable);
+        GoodsSliceDto goodsSliceDto = goodsQueryService.getGoodsList(coordinateDto, pageable);
 
-        return new ResponseEntity(goodsList, OK);
+        return new ResponseEntity(goodsSliceDto, OK);
     }
 
     @Operation(summary = "해당 지도 범위의 상품들을 모두 반환한다 - 마커용")
@@ -107,8 +107,8 @@ public class GoodsQueryController {
     })
     @GetMapping("/marker")
     public ResponseEntity getMarkerGoods(@RequestParam List<Long> goodsIds, Pageable pageable) {
-        List<GoodsDto> markerGoods = goodsQueryService.getMarkerGoods(goodsIds, pageable);
+        GoodsSliceDto goodsSliceDto = goodsQueryService.getMarkerGoods(goodsIds, pageable);
 
-        return new ResponseEntity(markerGoods, OK);
+        return new ResponseEntity(goodsSliceDto, OK);
     }
 }

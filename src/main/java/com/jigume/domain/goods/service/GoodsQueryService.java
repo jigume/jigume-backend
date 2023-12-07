@@ -12,8 +12,8 @@ import com.jigume.domain.member.service.MemberService;
 import com.jigume.domain.order.repository.SellRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,46 +46,58 @@ public class GoodsQueryService {
                 toGoodsPageDto(goods));
     }
 
-    public List<GoodsDto> getGoodsListByCategoryId(Long categoryId, CoordinateDto coordinateDto, Pageable pageable) {
+    public GoodsSliceDto getGoodsListByCategoryId(Long categoryId, CoordinateDto coordinateDto, Pageable pageable) {
         Point maxPoint = coordinateDto.getMaxPoint();
         Point minPoint = coordinateDto.getMinPoint();
 
-        Page<Goods> goodsList = goodsRepository
+        Slice<Goods> goodsSlice = goodsRepository
                 .findGoodsByCategoryAndMapRangeOrderByCreatedDate(categoryId, minPoint.x(), maxPoint.x(),
                         minPoint.y(), maxPoint.y(), GoodsStatus.PROCESSING, pageable);
 
-        goodsList.stream()
+        List<Goods> goodsList = goodsSlice.stream()
                 .filter(goods -> checkTime(goods))
                 .collect(Collectors.toList());
 
         List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
 
-        return goodsDtoList;
+        boolean hasNext = goodsSlice.hasNext();
+
+        GoodsSliceDto goodsSliceDto = new GoodsSliceDto(goodsDtoList, hasNext);
+
+        return goodsSliceDto;
     }
 
-    public List<GoodsDto> getGoodsList(CoordinateDto coordinateDto, Pageable pageable) {
+    public GoodsSliceDto getGoodsList(CoordinateDto coordinateDto, Pageable pageable) {
         Point maxPoint = coordinateDto.getMaxPoint();
         Point minPoint = coordinateDto.getMinPoint();
 
-        Page<Goods> goodsList = goodsRepository
+        Slice<Goods> goodsSlice = goodsRepository
                 .findGoodsByMapRange(minPoint.x(), maxPoint.x(),
                         minPoint.y(), maxPoint.y(), GoodsStatus.PROCESSING, pageable);
 
-        goodsList.stream()
+        List<Goods> goodsList = goodsSlice.stream()
                 .filter(goods -> checkTime(goods))
                 .collect(Collectors.toList());
 
         List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
 
-        return goodsDtoList;
+        boolean hasNext = goodsSlice.hasNext();
+
+        GoodsSliceDto goodsSliceDto = new GoodsSliceDto(goodsDtoList, hasNext);
+
+        return goodsSliceDto;
     }
 
-    public List<GoodsDto> getMarkerGoods(List<Long> goodsIds, Pageable pageable) {
-        Page<Goods> goodsByIdIn = goodsRepository.findGoodsByIdIn(goodsIds, pageable);
+    public GoodsSliceDto getMarkerGoods(List<Long> goodsIds, Pageable pageable) {
+        Slice<Goods> goodsByIdIn = goodsRepository.findGoodsByIdIn(goodsIds, pageable);
 
-        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsByIdIn);
+        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsByIdIn.getContent());
 
-        return goodsDtoList;
+        boolean hasNext = goodsByIdIn.hasNext();
+
+        GoodsSliceDto goodsSliceDto = new GoodsSliceDto(goodsDtoList, hasNext);
+
+        return goodsSliceDto;
     }
 
     public MarkerListDto getMapMarker(Double minX, Double maxX, Double minY, Double maxY) {
@@ -111,7 +123,7 @@ public class GoodsQueryService {
         return false;
     }
 
-    public List<GoodsDto> toGoodsDtoList(Page<Goods> goodsList) {
+    public List<GoodsDto> toGoodsDtoList(List<Goods> goodsList) {
         List<GoodsDto> goodsDtoList = new ArrayList<>();
 
         for (Goods goods : goodsList) {
