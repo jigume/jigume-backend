@@ -224,30 +224,3 @@ Github 🔗 [https://github.com/jigume](https://github.com/jigume)
 
 ### 협업 이야기
 <img width="80%" height="80%" src="https://github.com/jigume/jigume-backend/assets/102659136/ce8a5518-627d-4e2b-80bb-102e4b164701">
-
-### CONTACT
-<div style="display: flex; justify-content: center;">
-    <table>
-      <tr>
-        </td><td align="center"><a href=""><img src="https://github.com/jigume/jigume-backend/assets/102659136/c590ced9-79b8-49f3-8e83-342e21d98e0d" width="100px;" alt=""/><br />
-            <a><sub><b>`팀장` 김서희 (디자이너)</b></sub></a><br />
-            </a>
-            </td>
-       <td align="center"><a href=""><img src="https://github.com/jigume/jigume-backend/assets/102659136/12544b68-4eba-4fbb-acba-e3e0d2af5025" width="100px;" alt=""/><br />
-            <a><sub><b>김현준 (BE)</b></sub></a><br />
-            </a>
-    </td>
-      <td align="center"><a href=""><img src="https://github.com/jigume/jigume-backend/assets/102659136/4eed85c8-a20c-49a9-ba67-bdc744327384" width="100px;" alt=""/><br />
-            <a><sub><b>이도경 (FE)</b></sub></a><br />
-            </a>
-            </td>
-       <td align="center"><a href=""><img src="https://github.com/jigume/jigume-backend/assets/102659136/57608efd-2072-41e8-9ba7-46d1af9844eb" width="100px;" alt=""/><br />
-            <a><sub><b>정혜연 (FE)</b></sub></a><br />
-            </a>
-            </td>
-        <td align="center"><a href=""><img src="https://github.com/jigume/jigume-backend/assets/102659136/f31bbc62-9543-424d-b4a3-fb4c324d76dd" width="100px;" alt=""/><br />
-            <a><sub><b>천수승 (기획 / PM)</b></sub></a><br />
-            </a>
-            </td>
-    </table>
-</div>
