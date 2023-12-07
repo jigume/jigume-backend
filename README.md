@@ -136,11 +136,6 @@ Github 🔗 [https://github.com/jigume](https://github.com/jigume)
 유저간 대화를 통해 픽업 기간, 시간 등을
 조율할 수 있어요.
 
-❷ 보증금 제도(제 3자 에스크로 결제 • 보관)
-
-보증금을 지구미 에스크로에 맡겨야 공지방에 입장 가능하도록 정책을 세워
-구매리더와 팔로워간에 노쇼/먹튀에 대한 걱정을 줄였어요.
-
 <img width="80%" height="80%" src="https://github.com/jigume/jigume-backend/assets/102659136/00a38f0a-fe29-4745-93a2-5e090d64c3f3">
 
 
