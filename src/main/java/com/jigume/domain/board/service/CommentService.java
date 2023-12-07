@@ -97,6 +97,8 @@ public class CommentService {
 
         Page<Comment> commentsByBoardId = commentRepository.findCommentsByBoardId(boardId, pageable);
 
+        int totalPages = commentsByBoardId.getTotalPages();
+
         List<CommentWithReplyDto> commentWithReplyDtoList = commentsByBoardId.stream()
                 .map(comment -> {
                     List<CommentDto> childList = comment.getChildren().stream()
@@ -108,7 +110,7 @@ public class CommentService {
                 .collect(Collectors.toList());
 
 
-        return new GetCommentsDto(commentWithReplyDtoList);
+        return new GetCommentsDto(commentWithReplyDtoList, totalPages);
     }
 
     private void isOrderSell(Goods goods, Member member) {
