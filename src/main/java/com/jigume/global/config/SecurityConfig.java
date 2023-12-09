@@ -58,8 +58,8 @@ public class SecurityConfig {
 
         http.authorizeRequests()
                 .requestMatchers(new AntPathRequestMatcher("/api/member/login")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/api/check")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
                 .anyRequest().permitAll();
 
 
