@@ -40,7 +40,7 @@ public class GoodsQueryService {
 
         checkTime(goods);
 
-        boolean isOrderOrSell = isOrderOrSell(member, goods);
+        MemberStatus isOrderOrSell = isOrderOrSell(member, goods);
 
         return new GoodsDetailPageDto(isOrderOrSell,
                 toGoodsPageDto(goods));
@@ -128,7 +128,7 @@ public class GoodsQueryService {
 
         for (Goods goods : goodsList) {
             Member hostMember = goods.getSell().getMember();
-            int hostSellCount = sellRepository.findSellsByMemberId(hostMember.getId()).size();
+            int hostSellCount = sellRepository.countSellByMemberId(hostMember.getId());
             GoodsDto goodsDto = new GoodsDto().builder()
                     .goodsId(goods.getId())
                     .goodsName(goods.getName())
@@ -193,11 +193,12 @@ public class GoodsQueryService {
         return markerDto;
     }
 
-    private boolean isOrderOrSell(Member member, Goods goods) {
-        if (goods.isSell(member) || goods.isOrder(member)) {
-            return true;
+    private MemberStatus isOrderOrSell(Member member, Goods goods) {
+        if (goods.isSell(member)) {
+            return MemberStatus.SELLER;
+        } else if (goods.isOrder(member)) {
+            return MemberStatus.ORDER;
         }
-
-        return false;
+        return MemberStatus.NONE;
     }
 }

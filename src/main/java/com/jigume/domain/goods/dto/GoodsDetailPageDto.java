@@ -1,5 +1,6 @@
 package com.jigume.domain.goods.dto;
 
+import com.jigume.domain.goods.service.MemberStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoodsDetailPageDto {
 
-    private boolean isOrderOrSell;
+    private MemberStatus memberStatus;
 
     private GoodsPageDto goodsPageDto;
 }
