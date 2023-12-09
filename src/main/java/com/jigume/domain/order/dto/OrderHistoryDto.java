@@ -5,14 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class SellHistoryDto {
-
-    private List<GoodsDto> goodsDtoList = new ArrayList<>();
-
+@AllArgsConstructor
+public class OrderHistoryDto {
+    private List<GoodsDto> goodsDtoList;
 }
