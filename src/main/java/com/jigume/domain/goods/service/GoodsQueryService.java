@@ -1,15 +1,11 @@
 package com.jigume.domain.goods.service;
 
 import com.jigume.domain.goods.dto.*;
-import com.jigume.domain.goods.entity.Address;
 import com.jigume.domain.goods.entity.Goods;
-import com.jigume.domain.goods.entity.GoodsImage;
 import com.jigume.domain.goods.entity.GoodsStatus;
-import com.jigume.domain.goods.repository.GoodsImagesRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.service.MemberService;
-import com.jigume.domain.order.repository.SellRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +26,7 @@ public class GoodsQueryService {
 
     private final GoodsService goodsService;
     private final MemberService memberService;
-    private final SellRepository sellRepository;
     private final GoodsRepository goodsRepository;
-    private final GoodsImagesRepository goodsImagesRepository;
 
     public GoodsDetailPageDto getGoodsPage(Long goodsId) {
         Member member = memberService.getMember();
@@ -43,7 +37,7 @@ public class GoodsQueryService {
         MemberStatus isOrderOrSell = isOrderOrSell(member, goods);
 
         return new GoodsDetailPageDto(isOrderOrSell,
-                toGoodsPageDto(goods));
+                GoodsPageDto.toGoodsPageDto(goods));
     }
 
     public GoodsSliceDto getGoodsListByCategoryId(Long categoryId, CoordinateDto coordinateDto, Pageable pageable) {
@@ -54,15 +48,7 @@ public class GoodsQueryService {
                 .findGoodsByCategoryAndMapRangeOrderByCreatedDate(categoryId, minPoint.x(), maxPoint.x(),
                         minPoint.y(), maxPoint.y(), GoodsStatus.PROCESSING, pageable);
 
-        List<Goods> goodsList = goodsSlice.stream()
-                .filter(goods -> checkTime(goods))
-                .collect(Collectors.toList());
-
-        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
-
-        boolean hasNext = goodsSlice.hasNext();
-
-        GoodsSliceDto goodsSliceDto = new GoodsSliceDto(goodsDtoList, hasNext);
+        GoodsSliceDto goodsSliceDto = getGoodsSliceDto(goodsSlice);
 
         return goodsSliceDto;
     }
@@ -75,15 +61,7 @@ public class GoodsQueryService {
                 .findGoodsByMapRange(minPoint.x(), maxPoint.x(),
                         minPoint.y(), maxPoint.y(), GoodsStatus.PROCESSING, pageable);
 
-        List<Goods> goodsList = goodsSlice.stream()
-                .filter(goods -> checkTime(goods))
-                .collect(Collectors.toList());
-
-        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsList);
-
-        boolean hasNext = goodsSlice.hasNext();
-
-        GoodsSliceDto goodsSliceDto = new GoodsSliceDto(goodsDtoList, hasNext);
+        GoodsSliceDto goodsSliceDto = getGoodsSliceDto(goodsSlice);
 
         return goodsSliceDto;
     }
@@ -91,11 +69,11 @@ public class GoodsQueryService {
     public GoodsSliceDto getMarkerGoods(List<Long> goodsIds, Pageable pageable) {
         Slice<Goods> goodsByIdIn = goodsRepository.findGoodsByIdIn(goodsIds, pageable);
 
-        List<GoodsDto> goodsDtoList = toGoodsDtoList(goodsByIdIn.getContent());
+        List<GoodsListDto> goodsListDtoList = toGoodsListDtoList(goodsByIdIn.getContent());
 
         boolean hasNext = goodsByIdIn.hasNext();
 
-        GoodsSliceDto goodsSliceDto = new GoodsSliceDto(goodsDtoList, hasNext);
+        GoodsSliceDto goodsSliceDto = new GoodsSliceDto(goodsListDtoList, hasNext);
 
         return goodsSliceDto;
     }
@@ -105,7 +83,7 @@ public class GoodsQueryService {
                 .findGoodsByMapRange(minX, maxX, minY, maxY, GoodsStatus.PROCESSING);
 
         List<MarkerDto> markerList = goodsByMapRange.stream()
-                .map(goods -> toMarkerDto(goods))
+                .map(goods -> MarkerDto.toMarkerDto(goods))
                 .collect(Collectors.toList());
 
         return new MarkerListDto(markerList);
@@ -116,81 +94,33 @@ public class GoodsQueryService {
 
         if (!goods.getGoodsLimitTime().isAfter(now)) {
             goodsService.timeEnd(goods);
-
             return true;
         }
 
         return false;
     }
 
-    public List<GoodsDto> toGoodsDtoList(List<Goods> goodsList) {
-        List<GoodsDto> goodsDtoList = new ArrayList<>();
+    private GoodsSliceDto getGoodsSliceDto(Slice<Goods> goodsSlice) {
+        List<Goods> goodsList = goodsSlice.stream()
+                .filter(goods -> checkTime(goods))
+                .collect(Collectors.toList());
 
-        for (Goods goods : goodsList) {
-            Member hostMember = goods.getSell().getMember();
-            int hostSellCount = sellRepository.countSellByMemberId(hostMember.getId());
-            GoodsDto goodsDto = new GoodsDto().builder()
-                    .goodsId(goods.getId())
-                    .goodsName(goods.getName())
-                    .goodsStatus(goods.getGoodsStatus())
-                    .goodsPrice(goods.getGoodsPrice())
-                    .goodsOrderCount(goods.getCurrentOrderCount())
-                    .goodsDeliveryPrice(goods.getDeliveryFee())
-                    .hostNickName(hostMember.getNickname())
-                    .hostSellCount(hostSellCount)
-                    .repImgUrl(goodsImagesRepository.findGoodsImageByGoodsIdAndRepimgYn(goods.getId(), true)
-                            .get().getGoodsImgUrl())
-                    .categoryId(goods.getCategory().getId())
-                    .build();
+        List<GoodsListDto> goodsListDtoList = toGoodsListDtoList(goodsList);
 
-            goodsDtoList.add(goodsDto);
-        }
+        boolean hasNext = goodsSlice.hasNext();
 
-        return goodsDtoList;
+        GoodsSliceDto goodsSliceDto = new GoodsSliceDto(goodsListDtoList, hasNext);
+        return goodsSliceDto;
     }
 
+    private List<GoodsListDto> toGoodsListDtoList(List<Goods> goodsList) {
+        List<GoodsListDto> goodsListDtoList = new ArrayList<>();
 
-    private GoodsPageDto toGoodsPageDto(Goods goods) {
-        Member hostMember = goods.getSell().getMember();
-        int hostSellCount = sellRepository.findSellsByMemberId(hostMember.getId()).size();
+        goodsList.stream().map(goods ->
+                        GoodsListDto.toGoodsListDto(goods))
+                .collect(Collectors.toList());
 
-        GoodsPageDto goodsPageDto = new GoodsPageDto().builder()
-                .goodsId(goods.getId()).goodsName(goods.getName())
-                .introduction(goods.getIntroduction())
-                .link(goods.getLink()).goodsPrice(goods.getGoodsPrice())
-                .deliveryFee(goods.getDeliveryFee()).mapX(goods.getAddress().getMapX())
-                .mapY(goods.getAddress().getMapY()).goodsLimitTime(goods.getGoodsLimitTime())
-                .goodsLimitCount(goods.getGoodsLimitCount()).categoryId(goods.getCategory().getId())
-                .realDeliveryFee(goods.getRealDeliveryFee()).goodsStatus(goods.getGoodsStatus())
-                .hostNickname(hostMember.getNickname()).hostSellCount(hostSellCount)
-                .goodsOrderCount(goods.getCurrentOrderGoodsCount())
-                .discountDeliveryPrice(goods.getDeliveryFee() - goods.getRealDeliveryFee())
-                .goodsImagesList(GoodsImagesDto.toGoodsImagesDto(goods.getGoodsImageList()))
-                .boardId(goods.getBoard().getId())
-                .build();
-
-
-        return goodsPageDto;
-    }
-
-    private MarkerDto toMarkerDto(Goods goods) {
-        Long goodsId = goods.getId();
-        Address address = goods.getAddress();
-
-        MarkerDto markerDto = new MarkerDto();
-
-        markerDto.setGoodsId(goodsId);
-        markerDto.setCategoryId(goods.getCategory().getId());
-        markerDto.setPoint(new Point(address.getMapX(), address.getMapY()));
-
-        String goodsImgUrl = goods.getGoodsImageList()
-                .stream()
-                .filter(GoodsImage::isRepimgYn)
-                .findAny().get().getGoodsImgUrl();
-
-        markerDto.setGoodsImageUrl(goodsImgUrl);
-
-        return markerDto;
+        return goodsListDtoList;
     }
 
     private MemberStatus isOrderOrSell(Member member, Goods goods) {

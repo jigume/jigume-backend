@@ -1,6 +1,6 @@
 package com.jigume.domain.order.service;
 
-import com.jigume.domain.goods.dto.GoodsDto;
+import com.jigume.domain.goods.dto.GoodsListDto;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.entity.GoodsStatus;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
@@ -48,12 +48,12 @@ public class OrderService {
         List<Order> findOrders = orderRepository
                 .findOrdersByMemberIdAndGoodsGoodsStatus(member.getId(), GoodsStatus.END);
 
-        List<GoodsDto> goodsDtoList = findOrders.stream()
+        List<GoodsListDto> goodsListDtoList = findOrders.stream()
                 .map(order -> order.getGoods())
-                .map(goods -> toGoodsDto(goods))
+                .map(goods -> GoodsListDto.toGoodsListDto(goods))
                 .collect(Collectors.toList());
 
-        return new OrderHistoryDto(goodsDtoList);
+        return new OrderHistoryDto(goodsListDtoList);
     }
 
     public OrderHistoryDto getOrderProcessingHistory() {
@@ -61,31 +61,11 @@ public class OrderService {
         List<Order> findOrders = orderRepository
                 .findOrdersByMemberIdAndGoodsGoodsStatus(member.getId(), GoodsStatus.PROCESSING);
 
-        List<GoodsDto> goodsDtoList = findOrders.stream()
+        List<GoodsListDto> goodsListDtoList = findOrders.stream()
                 .map(order -> order.getGoods())
-                .map(goods -> toGoodsDto(goods))
+                .map(goods -> GoodsListDto.toGoodsListDto(goods))
                 .collect(Collectors.toList());
 
-        return new OrderHistoryDto(goodsDtoList);
-    }
-
-    private GoodsDto toGoodsDto(Goods goods) {
-        Member hostMember = goods.getSell().getMember();
-        int hostSellCount = sellRepository.countSellByMemberId(hostMember.getId());
-        GoodsDto goodsDto = new GoodsDto().builder()
-                .goodsId(goods.getId())
-                .goodsName(goods.getName())
-                .goodsStatus(goods.getGoodsStatus())
-                .goodsPrice(goods.getGoodsPrice())
-                .goodsOrderCount(goods.getCurrentOrderCount())
-                .goodsDeliveryPrice(goods.getDeliveryFee())
-                .hostNickName(hostMember.getNickname())
-                .hostSellCount(hostSellCount)
-                .repImgUrl(goodsImagesRepository.findGoodsImageByGoodsIdAndRepimgYn(goods.getId(), true)
-                        .get().getGoodsImgUrl())
-                .categoryId(goods.getCategory().getId())
-                .build();
-
-        return goodsDto;
+        return new OrderHistoryDto(goodsListDtoList);
     }
 }

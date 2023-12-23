@@ -1,7 +1,9 @@
 package com.jigume.domain.goods.dto;
 
+import com.jigume.domain.goods.entity.Address;
+import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.entity.GoodsStatus;
-import lombok.Builder;
+import com.jigume.domain.order.dto.SellerInfoDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,9 +27,7 @@ public class GoodsPageDto {
 
     private Integer deliveryFee;
 
-    private Double mapX;
-
-    private Double mapY;
+    private Address address;
 
     private Integer goodsLimitCount;
 
@@ -39,9 +39,7 @@ public class GoodsPageDto {
 
     private GoodsStatus goodsStatus;
 
-    private String hostNickname;
-
-    private Integer hostSellCount;
+    private SellerInfoDto sellerInfoDto;
 
     private Integer goodsOrderCount;
 
@@ -51,34 +49,27 @@ public class GoodsPageDto {
 
     private List<GoodsImagesDto> goodsImagesList = new ArrayList<>();
 
-    @Builder
-    public GoodsPageDto(Long goodsId, String goodsName, String introduction,
-                        String link, Integer goodsPrice, Integer deliveryFee,
-                        Double mapX, Double mapY, Integer goodsLimitCount,
-                        LocalDateTime goodsLimitTime, Long categoryId,
-                        Integer realDeliveryFee, GoodsStatus goodsStatus,
-                        String hostNickname, Integer hostSellCount,
-                        Integer goodsOrderCount, Integer discountDeliveryPrice,
-                        Long boardId,
-                        List<GoodsImagesDto> goodsImagesList) {
-        this.goodsId = goodsId;
-        this.goodsName = goodsName;
-        this.introduction = introduction;
-        this.link = link;
-        this.goodsPrice = goodsPrice;
-        this.deliveryFee = deliveryFee;
-        this.mapX = mapX;
-        this.mapY = mapY;
-        this.goodsLimitCount = goodsLimitCount;
-        this.goodsLimitTime = goodsLimitTime;
-        this.categoryId = categoryId;
-        this.realDeliveryFee = realDeliveryFee;
-        this.goodsStatus = goodsStatus;
-        this.hostNickname = hostNickname;
-        this.hostSellCount = hostSellCount;
-        this.goodsOrderCount = goodsOrderCount;
-        this.discountDeliveryPrice = discountDeliveryPrice;
-        this.goodsImagesList = goodsImagesList;
-        this.boardId = boardId;
+    public static GoodsPageDto toGoodsPageDto(Goods goods) {
+        GoodsPageDto goodsPageDto = new GoodsPageDto();
+
+        goodsPageDto.goodsId = goods.getId();
+        goodsPageDto.goodsName = goods.getName();
+        goodsPageDto.introduction = goods.getIntroduction();
+        goodsPageDto.link = goods.getLink();
+        goodsPageDto.goodsPrice = goods.getGoodsPrice();
+        goodsPageDto.deliveryFee = goods.getDeliveryFee();
+        goodsPageDto.address = goods.getAddress();
+        goodsPageDto.goodsLimitCount = goodsPageDto.getGoodsLimitCount();
+        goodsPageDto.goodsLimitTime = goodsPageDto.getGoodsLimitTime();
+        goodsPageDto.categoryId = goods.getCategory().getId();
+        goodsPageDto.realDeliveryFee = goods.getRealDeliveryFee();
+        goodsPageDto.goodsStatus = goods.getGoodsStatus();
+        goodsPageDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(goods.getSell().getMember());
+        goodsPageDto.goodsOrderCount = goods.getCurrentOrderCount();
+        goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - goods.getRealDeliveryFee();
+        goodsPageDto.boardId = goods.getBoard().getId();
+        goodsPageDto.goodsImagesList = GoodsImagesDto.toGoodsImagesDto(goods.getGoodsImageList());
+
+        return goodsPageDto;
     }
 }

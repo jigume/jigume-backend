@@ -1,6 +1,6 @@
 package com.jigume.domain.order.service;
 
-import com.jigume.domain.goods.dto.GoodsDto;
+import com.jigume.domain.goods.dto.GoodsListDto;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.entity.GoodsStatus;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
@@ -43,12 +43,12 @@ public class SellService {
         List<Sell> sellsByMemberId = sellRepository
                 .findSellsByMemberIdAndGoodsGoodsStatus(member.getId(), GoodsStatus.PROCESSING);
 
-        List<GoodsDto> goodsDtoList = sellsByMemberId.stream()
+        List<GoodsListDto> goodsListDtoList = sellsByMemberId.stream()
                 .map(sell -> sell.getGoods())
-                .map(goods -> toGoodsDto(goods))
+                .map(goods -> GoodsListDto.toGoodsListDto(goods))
                 .collect(Collectors.toList());
 
-        return new SellHistoryDto(goodsDtoList);
+        return new SellHistoryDto(goodsListDtoList);
     }
 
     //TODO: 판매 완료
@@ -60,7 +60,7 @@ public class SellService {
 //        List<Goods> goodsList = sellsByMemberId.stream().filter(sell -> sell.getGoods().getGoodsStatus() == GoodsStatus.END)
 //                .map(Sell::getGoods).collect(Collectors.toList());
 //
-//        List<GoodsDto> goodsDtoList = goodsQueryService.getGoodsList(goodsList);
+//        List<GoodsListDto> goodsDtoList = goodsQueryService.getGoodsList(goodsList);
 //
 //        List<SellInfoDto> sellInfoDtoList = toSellInfoDtoList(goodsList);
 //
@@ -69,24 +69,4 @@ public class SellService {
 //
 //        return sellHistoryDto;
 //    }
-
-    private GoodsDto toGoodsDto(Goods goods) {
-        Member hostMember = goods.getSell().getMember();
-        int hostSellCount = sellRepository.countSellByMemberId(hostMember.getId());
-        GoodsDto goodsDto = new GoodsDto().builder()
-                .goodsId(goods.getId())
-                .goodsName(goods.getName())
-                .goodsStatus(goods.getGoodsStatus())
-                .goodsPrice(goods.getGoodsPrice())
-                .goodsOrderCount(goods.getCurrentOrderCount())
-                .goodsDeliveryPrice(goods.getDeliveryFee())
-                .hostNickName(hostMember.getNickname())
-                .hostSellCount(hostSellCount)
-                .repImgUrl(goodsImagesRepository.findGoodsImageByGoodsIdAndRepimgYn(goods.getId(), true)
-                        .get().getGoodsImgUrl())
-                .categoryId(goods.getCategory().getId())
-                .build();
-
-        return goodsDto;
-    }
 }

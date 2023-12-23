@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GoodsSliceDto {
 
-    private List<GoodsDto> goodsDtoList;
+    private List<GoodsListDto> goodsListDtoList;
 
     private boolean hasNext;
 }
