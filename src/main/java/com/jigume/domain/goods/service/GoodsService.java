@@ -41,10 +41,11 @@ public class GoodsService {
                         GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, goodsImgUrl, isRepImg);
                         goodsImagesRepository.save(goodsImage);
                     });
-        } else {
-            GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, ImageUrl.defaultImageUrl, true);
-            goodsImagesRepository.save(goodsImage);
+            return;
         }
+
+        GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, ImageUrl.defaultImageUrl, true);
+        goodsImagesRepository.save(goodsImage);
     }
 
     @Transactional

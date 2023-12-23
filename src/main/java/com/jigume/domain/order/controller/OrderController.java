@@ -34,7 +34,7 @@ public class OrderController {
 //        }
 //
 //        //TODO: 진행 중인 주문 내역을 누르면 보여줄 걸 다시 생각 GoodsId만 알려주면 될듯
-//        List<GoodsDto> orderProcessingHistory = orderService.getOrderProcessingHistory();
+//        List<GoodsListDto> orderProcessingHistory = orderService.getOrderProcessingHistory();
 //
 //        return new ResponseEntity(orderProcessingHistory, OK);
 //    }

@@ -4,10 +4,8 @@ import com.jigume.domain.board.dto.*;
 import com.jigume.domain.board.exception.exception.BoardNotFoundException;
 import com.jigume.domain.board.exception.exception.CommentNotFoundException;
 import com.jigume.domain.board.service.CommentService;
-import com.jigume.domain.goods.dto.GoodsDto;
 import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
-import com.jigume.global.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
