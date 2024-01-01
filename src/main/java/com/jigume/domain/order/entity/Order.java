@@ -2,11 +2,13 @@ package com.jigume.domain.order.entity;
 
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.member.entity.Member;
-import com.jigume.domain.order.exception.OrderOverCountException;
+import com.jigume.domain.order.exception.order.OrderException;
 import com.jigume.global.audit.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_OVER_COUNT;
 
 @Entity
 @NoArgsConstructor
@@ -37,7 +39,7 @@ public class Order extends BaseTimeEntity {
         Order order = new Order();
 
         if (goods.getGoodsLimitCount() - (goods.getCurrentOrderGoodsCount() + orderGoodsCount) < 0) {
-            throw new OrderOverCountException();
+            throw new OrderException(ORDER_OVER_COUNT);
         }
 
         order.orderGoodsCount = orderGoodsCount;

@@ -19,4 +19,6 @@ public interface SellRepository extends JpaRepository<Sell, Long> {
     List<Sell> findSellsByMemberIdAndGoodsGoodsStatus(Long memberId, GoodsStatus goodsStatus);
 
     Optional<Sell> findSellByGoodsId(Long goodsId);
+
+    Optional<Sell> findSellById(Long sellId);
 }

@@ -16,6 +16,8 @@ public class Sell {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Boolean isDelete;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id")
     private Goods goods;
@@ -27,9 +29,14 @@ public class Sell {
 
     public static Sell createSell(Member member, Goods goods) {
         Sell sell = new Sell();
+        sell.isDelete = false;
         sell.goods = goods;
         sell.member = member;
 
         return sell;
+    }
+
+    public void deleteSell() {
+        this.isDelete = true;
     }
 }
