@@ -1,15 +1,12 @@
 package com.jigume.domain.member.service;
 
 import com.jigume.config.JwtFactory;
-import com.jigume.domain.member.service.MemberService;
 import com.jigume.global.jwt.JwtProperties;
 import com.jigume.global.jwt.TokenProvider;
 import com.jigume.domain.member.dto.MemberInfoDto;
 import com.jigume.domain.member.dto.TokenDto;
 import com.jigume.domain.member.entity.BaseRole;
 import com.jigume.domain.member.entity.Member;
-import com.jigume.domain.member.exception.auth.exception.AuthExpiredTokenException;
-import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
 import com.jigume.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

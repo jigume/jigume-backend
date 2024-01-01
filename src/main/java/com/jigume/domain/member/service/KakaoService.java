@@ -1,7 +1,7 @@
 package com.jigume.domain.member.service;
 
 import com.jigume.domain.member.dto.*;
-import com.jigume.domain.member.exception.auth.exception.InvalidAuthorizationCodeException;
+import com.jigume.domain.member.exception.auth.AuthException;
 import com.jigume.global.exception.GlobalServerErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +13,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import static com.jigume.domain.member.exception.auth.AuthExceptionCode.INVALID_AUTHORIZATION_CODE;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +48,7 @@ public class KakaoService implements OAuthService{
                 .body(BodyInserters.fromFormData(params))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new InvalidAuthorizationCodeException()))
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new AuthException(INVALID_AUTHORIZATION_CODE)))
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new GlobalServerErrorException()))
                 .bodyToMono(KakaoTokenResponseDto.class)
                 .block();

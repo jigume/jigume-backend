@@ -4,10 +4,8 @@ import com.jigume.domain.member.dto.*;
 import com.jigume.domain.member.entity.BaseRole;
 import com.jigume.domain.member.entity.LoginProvider;
 import com.jigume.domain.member.entity.Member;
-import com.jigume.domain.member.exception.auth.exception.AuthExpiredTokenException;
-import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
-import com.jigume.domain.member.exception.member.DuplicateNicknameException;
-import com.jigume.domain.member.exception.member.InvalidNicknameException;
+import com.jigume.domain.member.exception.auth.AuthException;
+import com.jigume.domain.member.exception.member.MemberException;
 import com.jigume.domain.member.repository.MemberRepository;
 import com.jigume.global.aws.s3.S3FileUploadService;
 import com.jigume.global.image.ImageUrl;
@@ -24,6 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.util.Map;
+
+import static com.jigume.domain.member.exception.auth.AuthExceptionCode.*;
+import static com.jigume.domain.member.exception.member.MemberExceptionCode.MEMBER_DUPLICATE_ERROR;
+import static com.jigume.domain.member.exception.member.MemberExceptionCode.MEMBER_INVALID_NICKNAME;
 
 @Service
 @RequiredArgsConstructor
@@ -59,9 +61,9 @@ public class MemberService {
     @Transactional
     public TokenDto reissueToken(String refreshToken) {
         if (!tokenProvider.validToken(refreshToken)) {
-            throw new AuthExpiredTokenException();
+            throw new AuthException(EXPIRED_TOKEN);
         }
-        Member memberByRefreshToken = memberRepository.findMemberByRefreshToken(refreshToken).orElseThrow(() -> new AuthMemberNotFoundException());
+        Member memberByRefreshToken = memberRepository.findMemberByRefreshToken(refreshToken).orElseThrow(() -> new AuthException(NOT_AUTHORIZATION_USER));
         String accessToken = tokenProvider.generateToken(memberByRefreshToken, Duration.ofHours(2));
         refreshToken = tokenProvider.generateToken(memberByRefreshToken, Duration.ofDays(14));
 
@@ -97,7 +99,7 @@ public class MemberService {
         String socialId = getAuthenticatedUser().getUsername();
 
         return memberRepository.findMemberBySocialId(socialId)
-                .orElseThrow(() -> new AuthMemberNotFoundException());
+                .orElseThrow(() -> new AuthException(AUTH_MEMBER_NOT_FOUND));
     }
 
     private Member loginMember(String socialId) {
@@ -114,7 +116,7 @@ public class MemberService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
-            throw new AuthMemberNotFoundException();
+            throw new AuthException(AUTH_MEMBER_NOT_FOUND);
         }
 
         return (UserDetails) authentication.getPrincipal();
@@ -145,15 +147,15 @@ public class MemberService {
 
     public void checkDuplicateNickname(String nickname) {
         if (nickname.length() < 2 && nickname.length() > 10) {
-            throw new InvalidNicknameException();
+            throw new MemberException(MEMBER_INVALID_NICKNAME);
         }
 
         if (!nickname.matches(regex)) {
-            throw new InvalidNicknameException();
+            throw new MemberException(MEMBER_INVALID_NICKNAME);
         }
 
         if (memberRepository.findMemberByNickname(nickname).isPresent()) {
-            throw new DuplicateNicknameException();
+            throw new MemberException(MEMBER_DUPLICATE_ERROR);
         }
     }
 }

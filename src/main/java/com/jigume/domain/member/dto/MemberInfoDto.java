@@ -1,6 +1,5 @@
 package com.jigume.domain.member.dto;
 
-import com.jigume.domain.member.entity.Member;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

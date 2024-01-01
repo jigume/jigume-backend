@@ -1,6 +1,5 @@
 package com.jigume.global.config;
 
-import com.jigume.domain.member.repository.MemberRepository;
 import com.jigume.global.jwt.JwtAuthenticationEntryPoint;
 import com.jigume.global.jwt.JwtAuthenticationProcessingFilter;
 import com.jigume.global.jwt.TokenProvider;
