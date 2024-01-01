@@ -1,5 +1,6 @@
 package com.jigume.domain.member.exception.member;
 
+import com.jigume.global.exception.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,38 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @RequiredArgsConstructor
 public class MemberExceptionHandler {
 
-    @ExceptionHandler(LoginMemberException.class)
-    public ResponseEntity failLoginException(
-            LoginMemberException exception
+    @ExceptionHandler(MemberException.class)
+    public ResponseEntity memberException(
+            MemberException exception
     ) {
         log.error("{}", exception.getMessage());
 
         return new ResponseEntity<>(
-                exception.getMessage(),
-                exception.getExceptionCode().getHttpStatus()
-        );
-    }
-
-    @ExceptionHandler(DuplicateNicknameException.class)
-    public ResponseEntity duplicateNicknameException(
-            DuplicateNicknameException exception
-    ) {
-        log.error("{}", exception.getMessage());
-
-        return new ResponseEntity<>(
-                exception.getMessage(),
-                exception.getExceptionCode().getHttpStatus()
-        );
-    }
-
-    @ExceptionHandler(InvalidNicknameException.class)
-    public ResponseEntity invalidNicknameException(
-            InvalidNicknameException exception
-    ) {
-        log.error("{}", exception.getMessage());
-
-        return new ResponseEntity<>(
-                exception.getMessage(),
+                new ExceptionResponse(exception.getExceptionCode()),
                 exception.getExceptionCode().getHttpStatus()
         );
     }

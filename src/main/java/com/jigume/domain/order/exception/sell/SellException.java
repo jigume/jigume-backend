@@ -1,14 +1,14 @@
-package com.jigume.domain.member.exception.member;
+package com.jigume.domain.order.exception.sell;
 
 import com.jigume.global.exception.ExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class MemberException extends RuntimeException {
+public class SellException extends RuntimeException {
 
     private final ExceptionCode exceptionCode;
 
-    public MemberException(ExceptionCode exceptionCode) {
+    public SellException(ExceptionCode exceptionCode) {
         super(exceptionCode.getMessage());
         this.exceptionCode = exceptionCode;
     }

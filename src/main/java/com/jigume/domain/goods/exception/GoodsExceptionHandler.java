@@ -1,5 +1,6 @@
 package com.jigume.domain.goods.exception;
 
+import com.jigume.global.exception.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +12,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class GoodsExceptionHandler {
 
-    @ExceptionHandler(GoodsNotFoundException.class)
-    public ResponseEntity goodsNotFoundException(
-            GoodsNotFoundException exception
+    @ExceptionHandler(GoodsException.class)
+    public ResponseEntity<ExceptionResponse> goodsNotFoundException(
+            GoodsException exception
     ) {
-        log.error("{}", exception.getMessage());
+        log.error("{handle GoodsException} - {}", exception.getMessage());
 
         return new ResponseEntity<>(
-                exception.getMessage(),
+                new ExceptionResponse(exception.getExceptionCode()),
                 exception.getExceptionCode().getHttpStatus()
         );
     }

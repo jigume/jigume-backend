@@ -1,14 +1,14 @@
-package com.jigume.domain.member.exception.member;
+package com.jigume.domain.board.exception.exception;
 
 import com.jigume.global.exception.ExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class MemberException extends RuntimeException {
+public class BoardException extends RuntimeException {
 
     private final ExceptionCode exceptionCode;
 
-    public MemberException(ExceptionCode exceptionCode) {
+    public BoardException(ExceptionCode exceptionCode) {
         super(exceptionCode.getMessage());
         this.exceptionCode = exceptionCode;
     }

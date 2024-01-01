@@ -1,7 +1,6 @@
 package com.jigume.domain.member.exception.auth;
 
 
-import com.jigume.domain.member.exception.auth.exception.*;
 import com.jigume.global.exception.ExceptionCode;
 import com.jigume.global.exception.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,74 +14,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class AuthExceptionHandler {
 
-    @ExceptionHandler(AuthInvalidTokenException.class)
-    public ResponseEntity<ExceptionResponse> authInvalidTokenException(
-            AuthInvalidTokenException e
-    ) {
-        ExceptionCode exceptionCode = e.getExceptionCode();
-        log.error("{}", exceptionCode.getMessage());
-
-        return new ResponseEntity<>(
-                new ExceptionResponse(exceptionCode),
-                exceptionCode.getHttpStatus()
-        );
-    }
-
-    @ExceptionHandler(AuthExpiredTokenException.class)
-    public ResponseEntity<ExceptionResponse> authExpiredTokenException(
-            AuthExpiredTokenException e
-    ) {
-        ExceptionCode exceptionCode = e.getExceptionCode();
-        log.error("{}", exceptionCode.getMessage());
-
-        return new ResponseEntity<>(
-                new ExceptionResponse(exceptionCode),
-                exceptionCode.getHttpStatus()
-        );
-    }
-
-    @ExceptionHandler(AuthInvalidRefreshToken.class)
-    public ResponseEntity<ExceptionResponse> authInvalidRefreshToken(
-            AuthInvalidRefreshToken e
-    ) {
-        ExceptionCode exceptionCode = e.getExceptionCode();
-        log.error("{}", exceptionCode.getMessage());
-
-        return new ResponseEntity<>(
-                new ExceptionResponse(exceptionCode),
-                exceptionCode.getHttpStatus()
-        );
-    }
-
-    @ExceptionHandler(AuthTokenNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> authNoRefreshToken(
-            AuthTokenNotFoundException e
-    ) {
-        ExceptionCode exceptionCode = e.getExceptionCode();
-        log.error("{}", exceptionCode.getMessage());
-
-        return new ResponseEntity<>(
-                new ExceptionResponse(exceptionCode),
-                exceptionCode.getHttpStatus()
-        );
-    }
-
-    @ExceptionHandler(AuthNotAuthorizationMemberException.class)
-    public ResponseEntity<ExceptionResponse> authNotAuthorizationMemberException(
-            AuthNotAuthorizationMemberException e
-    ) {
-        ExceptionCode exceptionCode = e.getExceptionCode();
-        log.error("{}", exceptionCode.getMessage());
-
-        return new ResponseEntity<>(
-                new ExceptionResponse(exceptionCode),
-                exceptionCode.getHttpStatus()
-        );
-    }
-
-    @ExceptionHandler(InvalidAuthorizationCodeException.class)
+    @ExceptionHandler(AuthException.class)
     public ResponseEntity<ExceptionResponse> InvalidAuthorizationCodeException(
-            InvalidAuthorizationCodeException e
+            AuthException e
     ) {
         ExceptionCode exceptionCode = e.getExceptionCode();
         log.error("{}", exceptionCode.getMessage());

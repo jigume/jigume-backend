@@ -1,5 +1,6 @@
-package com.jigume.domain.order.exception;
+package com.jigume.domain.order.exception.order;
 
+import com.jigume.global.exception.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @RequiredArgsConstructor
 public class OrderExceptionHandler {
 
-    @ExceptionHandler(OrderOverCountException.class)
-    public ResponseEntity orderOverCountException(
-            OrderOverCountException exception
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity orderException(
+            OrderException exception
     ) {
         log.error("{}", exception.getMessage());
 
         return new ResponseEntity<>(
-                exception.getMessage(),
+                new ExceptionResponse(exception.getExceptionCode()),
                 exception.getExceptionCode().getHttpStatus()
         );
     }

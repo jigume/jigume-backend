@@ -1,5 +1,6 @@
 package com.jigume.domain.board.exception.exception;
 
+import com.jigume.global.exception.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,26 +12,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class BoardExceptionHandler {
 
-    @ExceptionHandler(CommentNotFoundException.class)
-    public ResponseEntity commentNotFoundException(
-            CommentNotFoundException exception
+    @ExceptionHandler(BoardException.class)
+    public ResponseEntity boardException(
+            BoardException exception
     ) {
-        log.error("{}", exception.getMessage());
+        log.error("{handle BoardException} - {}", exception.getMessage());
 
         return new ResponseEntity<>(
-                exception.getMessage(),
-                exception.getExceptionCode().getHttpStatus()
-        );
-    }
-
-    @ExceptionHandler(BoardNotFoundException.class)
-    public ResponseEntity boardNotFoundException(
-            BoardNotFoundException exception
-    ) {
-        log.error("{}", exception.getMessage());
-
-        return new ResponseEntity<>(
-                exception.getMessage(),
+                new ExceptionResponse(exception.getExceptionCode()),
                 exception.getExceptionCode().getHttpStatus()
         );
     }
