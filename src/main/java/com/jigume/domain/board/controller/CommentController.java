@@ -1,11 +1,12 @@
 package com.jigume.domain.board.controller;
 
-import com.jigume.domain.board.dto.*;
-import com.jigume.domain.board.exception.exception.BoardNotFoundException;
-import com.jigume.domain.board.exception.exception.CommentNotFoundException;
+import com.jigume.domain.board.dto.CreateCommentDto;
+import com.jigume.domain.board.dto.CreateReplyComment;
+import com.jigume.domain.board.dto.GetCommentsDto;
+import com.jigume.domain.board.dto.UpdateCommentDto;
+import com.jigume.domain.board.exception.exception.BoardException;
 import com.jigume.domain.board.service.CommentService;
-import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
-import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
+import com.jigume.domain.member.exception.auth.AuthException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,9 +29,9 @@ public class CommentController {
     @Operation(summary = "댓글을 생성한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 저장된다."),
-            @ApiResponse(responseCode = "401", description = "댓글을 작성할 권한이 없음. (판매자나 주문자가 아님)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthNotAuthorizationMemberException.class))),
-            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class))),
-            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardNotFoundException.class)))
+            @ApiResponse(responseCode = "401", description = "댓글을 작성할 권한이 없음. (판매자나 주문자가 아님)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @PostMapping("/{boardId}/comment")
     public ResponseEntity createComment(@PathVariable Long boardId,
@@ -43,10 +44,10 @@ public class CommentController {
     @Operation(summary = "답글을 생성한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "답글이 성공적으로 저장된다."),
-            @ApiResponse(responseCode = "401", description = "답글을 작성할 권한이 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthNotAuthorizationMemberException.class))),
-            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class))),
-            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardNotFoundException.class))),
-            @ApiResponse(responseCode = "404", description = "답글을 달 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentNotFoundException.class)))
+            @ApiResponse(responseCode = "401", description = "답글을 작성할 권한이 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class))),
+            @ApiResponse(responseCode = "404", description = "답글을 달 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @PostMapping("/{boardId}/comment/reply")
     public ResponseEntity createReplyComment(@PathVariable Long boardId,
@@ -59,10 +60,10 @@ public class CommentController {
     @Operation(summary = "댓글을 수정한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 수정된다."),
-            @ApiResponse(responseCode = "401", description = "댓글을 수정할 권한이 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthNotAuthorizationMemberException.class))),
-            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class))),
-            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardNotFoundException.class))),
-            @ApiResponse(responseCode = "404", description = "수정할 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentNotFoundException.class)))
+            @ApiResponse(responseCode = "401", description = "댓글을 수정할 권한이 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class))),
+            @ApiResponse(responseCode = "404", description = "수정할 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @PostMapping("/{boardId}/comment/{commentId}")
     public ResponseEntity updateComment(@PathVariable Long boardId,
@@ -76,9 +77,9 @@ public class CommentController {
     @Operation(summary = "댓글을 가져온다. 삭제된 댓글일 경우 댓글 내용은 보내지 않고 나머지를 보낸다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글을 성공적으로 가져온다", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetCommentsDto.class))),
-            @ApiResponse(responseCode = "401", description = "댓글을 가져올 권한이 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthNotAuthorizationMemberException.class))),
-            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class))),
-            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardNotFoundException.class))),
+            @ApiResponse(responseCode = "401", description = "댓글을 가져올 권한이 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class))),
     })
     @GetMapping("/{boardId}/comment")
     public ResponseEntity getComment(@PathVariable Long boardId,
@@ -91,10 +92,10 @@ public class CommentController {
     @Operation(summary = "댓글을 삭제한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 삭제된다."),
-            @ApiResponse(responseCode = "401", description = "댓글을 삭제할 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthNotAuthorizationMemberException.class))),
-            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class))),
-            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardNotFoundException.class))),
-            @ApiResponse(responseCode = "404", description = "삭제할 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentNotFoundException.class)))
+            @ApiResponse(responseCode = "401", description = "댓글을 삭제할 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class))),
+            @ApiResponse(responseCode = "404", description = "삭제할 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @DeleteMapping("/{boardId}/comment/{commentId}")
     public ResponseEntity deleteComment(@PathVariable Long boardId,

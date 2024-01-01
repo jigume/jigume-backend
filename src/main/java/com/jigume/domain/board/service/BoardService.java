@@ -3,15 +3,18 @@ package com.jigume.domain.board.service;
 import com.jigume.domain.board.dto.BoardDto;
 import com.jigume.domain.board.dto.UpdateBoardDto;
 import com.jigume.domain.board.entity.Board;
-import com.jigume.domain.board.exception.exception.BoardNotFoundException;
+import com.jigume.domain.board.exception.exception.BoardException;
 import com.jigume.domain.board.repository.BoardRepository;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.member.entity.Member;
-import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
+import com.jigume.domain.member.exception.auth.AuthException;
 import com.jigume.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;
+import static com.jigume.domain.member.exception.auth.AuthExceptionCode.NOT_AUTHORIZATION_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -31,13 +34,13 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardDto getBoard(Long boardId) {
         Board board = boardRepository.findBoardByBoardId(boardId)
-                .orElseThrow(() -> new BoardNotFoundException());
+                .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
 
         Goods goods = board.getGoods();
 
         Member member = memberService.getMember();
         if (goods.isOrder(member) || goods.isSell(member)) {
-            throw new AuthNotAuthorizationMemberException();
+            throw new AuthException(NOT_AUTHORIZATION_USER);
         }
 
         return toBoardDto(board);
@@ -46,7 +49,7 @@ public class BoardService {
     @Transactional
     public BoardDto updateBoard(Long boardId, UpdateBoardDto updateBoardDto) {
         Board board = boardRepository.findBoardByBoardId(boardId)
-                .orElseThrow(() -> new BoardNotFoundException());
+                .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
         Member member = memberService.getMember();
         isHost(board, member);
 
@@ -59,7 +62,7 @@ public class BoardService {
 
     private void isHost(Board board, Member member) {
         if (board.getGoods().getSell().getMember().equals(member)) {
-            throw new AuthNotAuthorizationMemberException();
+            throw new AuthException(NOT_AUTHORIZATION_USER);
         }
     }
 

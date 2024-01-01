@@ -3,13 +3,12 @@ package com.jigume.domain.board.service;
 import com.jigume.domain.board.dto.*;
 import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.board.entity.Comment;
-import com.jigume.domain.board.exception.exception.BoardNotFoundException;
-import com.jigume.domain.board.exception.exception.CommentNotFoundException;
+import com.jigume.domain.board.exception.exception.BoardException;
 import com.jigume.domain.board.repository.BoardRepository;
 import com.jigume.domain.board.repository.CommentRepository;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.member.entity.Member;
-import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
+import com.jigume.domain.member.exception.auth.AuthException;
 import com.jigume.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;
+import static com.jigume.domain.board.exception.exception.BoardExceptionCode.COMMENT_NOT_FOUND;
+import static com.jigume.domain.member.exception.auth.AuthExceptionCode.AUTHENTICATION_ERROR;
+import static com.jigume.domain.member.exception.auth.AuthExceptionCode.NOT_AUTHORIZATION_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +52,7 @@ public class CommentService {
         isOrderSell(board.getGoods(), member);
 
         Comment parentComment = commentRepository.findById(createReplyComment.getParentCommentId())
-                .orElseThrow(() -> new CommentNotFoundException());
+                .orElseThrow(() -> new BoardException(COMMENT_NOT_FOUND));
 
         Comment comment = Comment.createReplyComment(member, board, parentComment
                 , createReplyComment.getContent());
@@ -63,12 +67,12 @@ public class CommentService {
         getBoard(boardId);
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException());
+                .orElseThrow(() -> new BoardException(COMMENT_NOT_FOUND));
 
         Member member = memberService.getMember();
 
         if (!comment.getMember().equals(member)) {
-            throw new AuthNotAuthorizationMemberException();
+            throw new AuthException(NOT_AUTHORIZATION_USER);
         }
 
         comment.updateContent(commentContent);
@@ -78,10 +82,10 @@ public class CommentService {
     public void deleteComment(Long commentId) {
         Member member = memberService.getMember();
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException());
+                .orElseThrow(() -> new BoardException(COMMENT_NOT_FOUND));
 
         if (comment.getMember().equals(member)) {
-            throw new AuthNotAuthorizationMemberException();
+            throw new AuthException(AUTHENTICATION_ERROR);
         }
 
         comment.deleteComment();
@@ -115,13 +119,13 @@ public class CommentService {
 
     private void isOrderSell(Goods goods, Member member) {
         if (goods.isOrder(member) || goods.isSell(member)) {
-            throw new AuthNotAuthorizationMemberException();
+            throw new AuthException(NOT_AUTHORIZATION_USER);
         }
     }
 
     private Board getBoard(Long boardId) {
         Board board = boardRepository.findBoardByBoardId(boardId)
-                .orElseThrow(() -> new BoardNotFoundException());
+                .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
         return board;
     }
 
