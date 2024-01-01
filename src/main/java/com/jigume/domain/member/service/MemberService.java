@@ -71,10 +71,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberInfo(MemberInfoDto memberInfoDto) {
+    public void updateMemberInfo(UpdateMemberInfoDto updateMemberInfoDto) {
         Member member = getMember();
 
-        member.updateMemberInfo(memberInfoDto.getNickname(), memberInfoDto.getMapX(), memberInfoDto.getMapY());
+        member.updateMemberInfo(updateMemberInfoDto.getNickname(), updateMemberInfoDto.getMapX(), updateMemberInfoDto.getMapY());
         if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
     }
 

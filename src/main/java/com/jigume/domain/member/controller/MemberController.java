@@ -3,6 +3,7 @@ package com.jigume.domain.member.controller;
 import com.jigume.domain.member.dto.LoginResponseDto;
 import com.jigume.domain.member.dto.MemberInfoDto;
 import com.jigume.domain.member.dto.TokenDto;
+import com.jigume.domain.member.dto.UpdateMemberInfoDto;
 import com.jigume.domain.member.entity.LoginProvider;
 import com.jigume.domain.member.exception.auth.AuthException;
 import com.jigume.domain.member.exception.member.MemberException;
@@ -75,8 +76,8 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "멤버를 찾을 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
     })
     @PostMapping("/info")
-    public ResponseEntity updateMemberInfo(@Valid @RequestBody MemberInfoDto memberInfoDto) {
-        memberService.updateMemberInfo(memberInfoDto);
+    public ResponseEntity updateMemberInfo(@Valid @RequestBody UpdateMemberInfoDto updateMemberInfoDto) {
+        memberService.updateMemberInfo(updateMemberInfoDto);
 
         return new ResponseEntity(OK);
     }

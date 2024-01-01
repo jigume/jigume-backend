@@ -3,6 +3,7 @@ package com.jigume.domain.member.service;
 import com.jigume.config.JwtFactory;
 import com.jigume.domain.member.dto.MemberInfoDto;
 import com.jigume.domain.member.dto.TokenDto;
+import com.jigume.domain.member.dto.UpdateMemberInfoDto;
 import com.jigume.domain.member.entity.BaseRole;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.exception.auth.AuthException;
@@ -100,9 +101,8 @@ class MemberServiceTest {
 
     @Test
     void updateInfo() {
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
+        UpdateMemberInfoDto memberInfoDto = new UpdateMemberInfoDto();
         memberInfoDto.setNickname("test");
-        memberInfoDto.setProfileImgUrl("test");
         memberInfoDto.setMapX(1.0);
         memberInfoDto.setMapY(3.0);
 
@@ -115,9 +115,8 @@ class MemberServiceTest {
 
     @Test
     void updateUserInfo() {
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
+        UpdateMemberInfoDto memberInfoDto = new UpdateMemberInfoDto();
         memberInfoDto.setNickname("test");
-        memberInfoDto.setProfileImgUrl("test");
         memberInfoDto.setMapX(1.0);
         memberInfoDto.setMapY(3.0);
 
