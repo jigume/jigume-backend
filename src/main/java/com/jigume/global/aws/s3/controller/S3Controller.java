@@ -1,7 +1,7 @@
 package com.jigume.global.aws.s3.controller;
 
 import com.jigume.domain.goods.service.GoodsService;
-import com.jigume.domain.member.exception.auth.exception.AuthMemberNotFoundException;
+import com.jigume.domain.member.exception.auth.AuthException;
 import com.jigume.domain.member.service.MemberService;
 import com.jigume.global.image.dto.ImageUploadRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +39,7 @@ public class S3Controller {
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이미지 저장 성공"),
-            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
     })
     @PostMapping("/{goodsId}/image")
     public ResponseEntity updateImage(@RequestParam(value = "images", required = false) List<MultipartFile> multipartFiles,
@@ -54,7 +54,7 @@ public class S3Controller {
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이미지 저장 성공"),
-            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthMemberNotFoundException.class)))
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
     })
     @PostMapping("/member/image")
     public ResponseEntity saveMemberImage(ImageUploadRequest request) {
