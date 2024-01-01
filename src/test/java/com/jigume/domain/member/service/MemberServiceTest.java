@@ -1,13 +1,14 @@
 package com.jigume.domain.member.service;
 
 import com.jigume.config.JwtFactory;
-import com.jigume.global.jwt.JwtProperties;
-import com.jigume.global.jwt.TokenProvider;
 import com.jigume.domain.member.dto.MemberInfoDto;
 import com.jigume.domain.member.dto.TokenDto;
 import com.jigume.domain.member.entity.BaseRole;
 import com.jigume.domain.member.entity.Member;
+import com.jigume.domain.member.exception.auth.AuthException;
 import com.jigume.domain.member.repository.MemberRepository;
+import com.jigume.global.jwt.JwtProperties;
+import com.jigume.global.jwt.TokenProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -86,14 +87,14 @@ class MemberServiceTest {
         String refreshToken = JwtFactory.builder()
                 .build()
                 .createToken(jwtProperties, testMember);
-        assertThatThrownBy(() -> memberService.reissueToken(refreshToken)).isInstanceOf(AuthMemberNotFoundException.class);
+        assertThatThrownBy(() -> memberService.reissueToken(refreshToken)).isInstanceOf(AuthException.class);
     }
 
     @Test
     @DisplayName("토큰 재발급 - 실패")
     void reissueToken_fail_token_invalid() {
         String refreshToken = "token";
-        assertThatThrownBy(() -> memberService.reissueToken(refreshToken)).isInstanceOf(AuthExpiredTokenException.class);
+        assertThatThrownBy(() -> memberService.reissueToken(refreshToken)).isInstanceOf(AuthException.class);
     }
 
 
@@ -136,7 +137,7 @@ class MemberServiceTest {
     @Test
     void getMember_fail() {
         SecurityContextHolder.clearContext();
-        assertThatThrownBy(() -> memberService.getMember()).isInstanceOf(AuthMemberNotFoundException.class);
+        assertThatThrownBy(() -> memberService.getMember()).isInstanceOf(AuthException.class);
     }
 
 }

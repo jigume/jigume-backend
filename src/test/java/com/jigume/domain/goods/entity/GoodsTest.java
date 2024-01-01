@@ -6,6 +6,7 @@ import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.repository.MemberRepository;
 import com.jigume.domain.order.entity.Order;
 import com.jigume.domain.order.entity.Sell;
+import com.jigume.domain.order.exception.order.OrderException;
 import com.jigume.domain.order.repository.SellRepository;
 import com.jigume.fixture.GoodsFixture;
 import com.jigume.fixture.UserFixture;
@@ -174,7 +175,7 @@ class GoodsTest {
 
         //when
         assertThatThrownBy(() -> goods.updateGoodsOrder(3))
-                .isInstanceOf(OrderOverCountException.class);
+                .isInstanceOf(OrderException.class);
     }
 
     @DisplayName("주문 시 상품 종료 조건 및 주문 조건에 충족하는지 판단한다.")
@@ -191,6 +192,6 @@ class GoodsTest {
 
         //when
         assertThatThrownBy(() -> goods.updateGoodsOrder(2))
-                .isInstanceOf(OrderOverCountException.class);
+                .isInstanceOf(OrderException.class);
     }
 }

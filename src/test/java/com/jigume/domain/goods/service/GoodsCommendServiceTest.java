@@ -9,6 +9,7 @@ import com.jigume.domain.goods.entity.GoodsStatus;
 import com.jigume.domain.goods.repository.CategoryRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
 import com.jigume.domain.member.entity.Member;
+import com.jigume.domain.member.exception.auth.AuthException;
 import com.jigume.domain.member.repository.MemberRepository;
 import com.jigume.domain.order.entity.Sell;
 import com.jigume.domain.order.repository.SellRepository;
@@ -111,6 +112,6 @@ class GoodsCommendServiceTest {
         UserFixture.setUpCustomAuth(member);
 
         assertThatThrownBy(() -> goodsCommendService.endGoodsSelling(l))
-                .isInstanceOf(AuthNotAuthorizationMemberException.class);
+                .isInstanceOf(AuthException.class);
     }
 }
