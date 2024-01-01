@@ -3,8 +3,7 @@ package com.jigume.domain.goods.service;
 import com.jigume.domain.goods.entity.Category;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.entity.GoodsImage;
-import com.jigume.domain.goods.exception.CategoryNotFoundException;
-import com.jigume.domain.goods.exception.GoodsNotFoundException;
+import com.jigume.domain.goods.exception.GoodsException;
 import com.jigume.domain.goods.repository.CategoryRepository;
 import com.jigume.domain.goods.repository.GoodsImagesRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
@@ -18,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.IntStream;
+
+import static com.jigume.domain.goods.exception.GoodsExceptionCode.CATEGORY_NOT_FOUND;
+import static com.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FOUND;
 
 @Service
 @Slf4j
@@ -54,10 +56,12 @@ public class GoodsService {
     }
 
     public Goods getGoods(Long goodsId) {
-        return goodsRepository.findGoodsById(goodsId).orElseThrow(() -> new GoodsNotFoundException());
+        return goodsRepository.findGoodsById(goodsId).orElseThrow(() ->
+                new GoodsException(GOODS_NOT_FOUND));
     }
 
     public Category getCategory(Long categoryId) {
-        return categoryRepository.findCategoryById(categoryId).orElseThrow(() -> new CategoryNotFoundException());
+        return categoryRepository.findCategoryById(categoryId).orElseThrow(() ->
+                new GoodsException(CATEGORY_NOT_FOUND));
     }
 }

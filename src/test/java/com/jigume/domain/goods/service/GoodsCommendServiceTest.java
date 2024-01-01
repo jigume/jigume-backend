@@ -9,13 +9,11 @@ import com.jigume.domain.goods.entity.GoodsStatus;
 import com.jigume.domain.goods.repository.CategoryRepository;
 import com.jigume.domain.goods.repository.GoodsRepository;
 import com.jigume.domain.member.entity.Member;
-import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
 import com.jigume.domain.member.repository.MemberRepository;
 import com.jigume.domain.order.entity.Sell;
 import com.jigume.domain.order.repository.SellRepository;
 import com.jigume.fixture.GoodsFixture;
 import com.jigume.fixture.UserFixture;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,12 +23,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -70,7 +68,7 @@ class GoodsCommendServiceTest {
 
         Long l = goodsCommendService.saveGoods(goodsSaveDto, image, 1);
         Optional<Sell> sellByGoodsId = sellRepository.findSellByGoodsId(l);
-        Board boardByGoodsId = boardRepository.findBoardByGoodsId(l);
+        Board boardByGoodsId = boardRepository.findBoardByGoodsId(l).get();
 
 
         Optional<Goods> goodsById = goodsRepository.findGoodsById(l);

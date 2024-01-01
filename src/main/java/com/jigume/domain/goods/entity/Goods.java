@@ -4,7 +4,7 @@ import com.jigume.domain.board.entity.Board;
 import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.order.entity.Order;
 import com.jigume.domain.order.entity.Sell;
-import com.jigume.domain.order.exception.OrderOverCountException;
+import com.jigume.domain.order.exception.order.OrderException;
 import com.jigume.global.audit.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.jigume.domain.goods.entity.GoodsStatus.END;
 import static com.jigume.domain.goods.entity.GoodsStatus.PROCESSING;
+import static com.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_NOT_FOUND;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -61,6 +62,8 @@ public class Goods extends BaseTimeEntity {
 
     private Integer currentOrderGoodsCount;
 
+    private Boolean isDelete;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -95,6 +98,7 @@ public class Goods extends BaseTimeEntity {
         goods.goodsLimitTime = goodsLimitTime;
         goods.currentOrderCount = 1;
         goods.currentOrderGoodsCount = 0;
+        goods.isDelete = false;
         goods.category = category;
 
         return goods;
@@ -121,7 +125,7 @@ public class Goods extends BaseTimeEntity {
         this.currentOrderGoodsCount += orderGoodsCount;
 
         if (this.currentOrderGoodsCount > this.goodsLimitCount) {
-            throw new OrderOverCountException();
+            throw new OrderException(ORDER_NOT_FOUND);
         }
 
         if (this.currentOrderGoodsCount == this.goodsLimitCount) {
@@ -148,5 +152,9 @@ public class Goods extends BaseTimeEntity {
 
     public void updateGoodsIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public void deleteGoods() {
+        this.isDelete = true;
     }
 }

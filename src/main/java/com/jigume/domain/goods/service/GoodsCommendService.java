@@ -7,10 +7,11 @@ import com.jigume.domain.goods.entity.Category;
 import com.jigume.domain.goods.entity.Goods;
 import com.jigume.domain.goods.repository.GoodsRepository;
 import com.jigume.domain.member.entity.Member;
-import com.jigume.domain.member.exception.auth.exception.AuthNotAuthorizationMemberException;
+import com.jigume.domain.member.exception.auth.AuthException;
+import com.jigume.domain.member.exception.auth.AuthExceptionCode;
 import com.jigume.domain.member.service.MemberService;
 import com.jigume.domain.order.entity.Sell;
-import com.jigume.domain.order.service.SellService;
+import com.jigume.domain.order.service.sell.SellCommendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,15 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class GoodsCommendService {
 
     private final GoodsRepository goodsRepository;
     private final MemberService memberService;
-    private final SellService sellService;
+    private final SellCommendService sellCommendService;
     private final BoardService boardService;
     private final GoodsService goodsService;
 
-    @Transactional
     public Long saveGoods(GoodsSaveDto goodsSaveDto, List<MultipartFile> imageList, Integer repImg) {
         log.info("{}", repImg);
         Member member = memberService.getMember();
@@ -45,7 +46,7 @@ public class GoodsCommendService {
         Long goodsId = goodsRepository.save(goods).getId();
         Board board = boardService.createBoard(goodsSaveDto.getBoardContent(), goods);
         goods.setBoard(board);
-        Sell sell = sellService.createSell(member, goods);
+        Sell sell = sellCommendService.createSell(member, goods);
         goods.setSell(sell);
         goodsService.updateImage(imageList, goodsId, repImg);
 
@@ -53,7 +54,6 @@ public class GoodsCommendService {
         return goodsId;
     }
 
-    @Transactional
     public void endGoodsSelling(Long goodsId) {
         Member member = memberService.getMember();
         Goods goods = goodsService.getGoods(goodsId);
@@ -63,13 +63,12 @@ public class GoodsCommendService {
         goods.updateEnd();
     }
 
-    @Transactional
     public void updateGoodsIntroduction(Long goodsId, String introduction) {
         Member member = memberService.getMember();
         Goods goods = goodsService.getGoods(goodsId);
 
         if (!goods.isSell(member)) {
-            throw new AuthNotAuthorizationMemberException();
+            throw new AuthException(AuthExceptionCode.NOT_AUTHORIZATION_USER);
         }
 
         goods.updateGoodsIntroduction(introduction);
@@ -77,7 +76,7 @@ public class GoodsCommendService {
 
     private void checkGoodsSeller(Goods goods, Member member) {
         if (!goods.isSell(member)) {
-            throw new AuthNotAuthorizationMemberException();
+            throw new AuthException(AuthExceptionCode.NOT_AUTHORIZATION_USER);
         }
     }
 }

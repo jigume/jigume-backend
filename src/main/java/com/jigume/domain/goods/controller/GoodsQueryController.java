@@ -1,8 +1,8 @@
 package com.jigume.domain.goods.controller;
 
 import com.jigume.domain.goods.dto.*;
+import com.jigume.domain.goods.exception.GoodsException;
 import com.jigume.domain.goods.service.GoodsQueryService;
-import com.jigume.global.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -32,7 +32,7 @@ public class GoodsQueryController {
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "굿즈 상세 페이지 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDetailPageDto.class))),
-            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
     @GetMapping("/{goodsId}/page")
     public ResponseEntity getGoodsPage(@PathVariable("goodsId") Long goodsId) {
@@ -47,7 +47,7 @@ public class GoodsQueryController {
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsListDto.class))),
-            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
     @GetMapping("/{categoryId}/list")
     public ResponseEntity getGoodsList(@PathVariable("categoryId") Long categoryId,
@@ -68,7 +68,7 @@ public class GoodsQueryController {
     @Operation(summary = "해당 범위의 상품들을 모두 반환한다. 바텀시트 올릴 시")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsListDto.class))),
-            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
     @GetMapping("/list")
     public ResponseEntity getGoodsList(@RequestParam("minX") double minX,
@@ -88,7 +88,7 @@ public class GoodsQueryController {
     @Operation(summary = "해당 지도 범위의 상품들을 모두 반환한다 - 마커용")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarkerListDto.class))),
-            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
     @GetMapping("/marker/list")
     public ResponseEntity getGoodsMarker(@RequestParam("minX") double minX,
@@ -103,7 +103,7 @@ public class GoodsQueryController {
     @Operation(summary = "해당 마커의 상품들을 전부 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsListDto.class))),
-            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
     @GetMapping("/marker")
     public ResponseEntity getMarkerGoods(@RequestParam List<Long> goodsIds, Pageable pageable) {

@@ -6,7 +6,6 @@ import com.jigume.domain.member.entity.Member;
 import com.jigume.domain.member.repository.MemberRepository;
 import com.jigume.domain.order.entity.Order;
 import com.jigume.domain.order.entity.Sell;
-import com.jigume.domain.order.exception.OrderOverCountException;
 import com.jigume.domain.order.repository.SellRepository;
 import com.jigume.fixture.GoodsFixture;
 import com.jigume.fixture.UserFixture;
