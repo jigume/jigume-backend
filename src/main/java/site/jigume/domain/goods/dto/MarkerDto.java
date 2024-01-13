@@ -19,7 +19,7 @@ public class MarkerDto {
 
         markerDto.setGoodsId(goods.getId());
         markerDto.setCategoryId(goods.getCategory().getId());
-//        markerDto.setAddress(goods.getPoint());
+        markerDto.setAddress(goods.getAddress());
 
         String goodsRepImgUrl = goods.getGoodsImageList()
                 .stream()

@@ -51,7 +51,7 @@ public class Goods extends BaseTimeEntity {
     private Integer realDeliveryFee;
 
     @Embedded
-    @Column(nullable = false, columnDefinition = "GEOMETRY")
+    @Column(nullable = false)
     private Address address;
 
     @Enumerated(EnumType.STRING)

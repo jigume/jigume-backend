@@ -58,7 +58,7 @@ public class GoodsPageDto {
         goodsPageDto.link = goods.getLink();
         goodsPageDto.goodsPrice = goods.getGoodsPrice();
         goodsPageDto.deliveryFee = goods.getDeliveryFee();
-//        goodsPageDto.address = goods.getPoint();
+        goodsPageDto.address = goods.getAddress();
         goodsPageDto.goodsLimitCount = goodsPageDto.getGoodsLimitCount();
         goodsPageDto.goodsLimitTime = goodsPageDto.getGoodsLimitTime();
         goodsPageDto.categoryId = goods.getCategory().getId();
