@@ -16,7 +16,7 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
     @Query("select g from Goods g where g.id =:goodsId")
     Optional<Goods> findGoodsById(@Param("goodsId") Long goodsId);
 
-    @Query("select distinct g from Goods g join fetch Order where g.id = :goodsId")
+    @Query("select distinct g from Goods g join fetch g.orderList where g.id = :goodsId")
     Optional<Goods> findGoodsByIdWithOrderList(@Param("goodsId") Long goodsId);
 
     @Query("select g from  Goods g where g.address.mapX >= :minX and g.address.mapX <= :maxX " +
