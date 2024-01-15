@@ -9,11 +9,13 @@ import site.jigume.domain.board.entity.Board;
 import site.jigume.domain.board.exception.exception.BoardException;
 import site.jigume.domain.board.repository.BoardRepository;
 import site.jigume.domain.goods.entity.Goods;
+import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.member.service.MemberService;
 
 import static site.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;
+import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FOUND;
 import static site.jigume.domain.member.exception.auth.AuthExceptionCode.NOT_AUTHORIZATION_USER;
 
 @Service
@@ -24,11 +26,13 @@ public class BoardService {
     private final MemberService memberService;
 
     @Transactional(readOnly = true)
-    public BoardDto getBoard(Long boardId) {
+    public BoardDto getBoard(Long goodsId, Long boardId) {
         Board board = boardRepository.findBoardByBoardId(boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
 
         Goods goods = board.getGoods();
+
+        checkBoardInGoods(goodsId, goods);
 
         Member member = memberService.getMember();
         if (goods.isOrder(member) || goods.isSell(member)) {
@@ -39,9 +43,10 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDto updateBoard(Long boardId, BoardUpdateDto boardUpdateDto) {
+    public BoardDto updateBoard(Long goodsId, Long boardId, BoardUpdateDto boardUpdateDto) {
         Board board = boardRepository.findBoardByBoardId(boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
+        checkBoardInGoods(goodsId, board.getGoods());
         Member member = memberService.getMember();
         isHost(board, member);
 
@@ -65,5 +70,11 @@ public class BoardService {
                 .created_at(board.getCreatedDate())
                 .modified_at(board.getModifiedDate())
                 .build();
+    }
+
+    private void checkBoardInGoods(Long goodsId, Goods goods) {
+        if (goodsId.equals(goods.getId())) {
+            throw new GoodsException(GOODS_NOT_FOUND);
+        }
     }
 }

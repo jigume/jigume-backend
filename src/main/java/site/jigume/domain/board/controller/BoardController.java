@@ -17,7 +17,7 @@ import site.jigume.domain.member.exception.auth.AuthException;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/api/goods/{goodsId}/board")
 @RequiredArgsConstructor
 public class BoardController {
 
@@ -31,8 +31,8 @@ public class BoardController {
             @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @GetMapping("/{boardId}")
-    public ResponseEntity getBoard(@PathVariable Long boardId) {
-        BoardDto board = boardService.getBoard(boardId);
+    public ResponseEntity getBoard(@PathVariable Long goodsId, @PathVariable Long boardId) {
+        BoardDto board = boardService.getBoard(goodsId, boardId);
 
         return new ResponseEntity<>(board, OK);
     }
@@ -45,8 +45,9 @@ public class BoardController {
             @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @PostMapping("/{boardId}")
-    public ResponseEntity updateBoardContent(@PathVariable Long boardId, @RequestBody BoardUpdateDto boardUpdateDto) {
-        BoardDto boardDto = boardService.updateBoard(boardId, boardUpdateDto);
+    public ResponseEntity updateBoardContent(@PathVariable Long goodsId, @PathVariable Long boardId,
+                                             @RequestBody BoardUpdateDto boardUpdateDto) {
+        BoardDto boardDto = boardService.updateBoard(goodsId ,boardId, boardUpdateDto);
 
         return new ResponseEntity(boardDto, OK);
     }
