@@ -30,9 +30,12 @@ public class Board extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Comment> commentList = new ArrayList<>();
 
+    private boolean isDelete;
+
     public static Board createBoard(String boardContent,Goods goods) {
         Board board = new Board();
         board.boardName = goods.getName();
+        board.isDelete = false;
         board.boardContent = boardContent;
         board.goods = goods;
 

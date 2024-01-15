@@ -47,9 +47,6 @@ public class Goods extends BaseTimeEntity {
     @Column(name = "delivery_fee")
     private Integer deliveryFee;
 
-    @Column(name = "real_delivery_fee")
-    private Integer realDeliveryFee;
-
     @Embedded
     @Column(nullable = false)
     private Address address;
@@ -62,11 +59,7 @@ public class Goods extends BaseTimeEntity {
 
     private LocalDateTime goodsLimitTime;
 
-    private Integer currentOrderCount;
-
-    private Integer currentOrderGoodsCount;
-
-    private Boolean isDelete;
+    private boolean isDelete;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
@@ -95,28 +88,22 @@ public class Goods extends BaseTimeEntity {
         goods.link = link;
         goods.goodsPrice = goodsPrice;
         goods.deliveryFee = deliveryFee;
-        goods.realDeliveryFee = deliveryFee;
         goods.address = new Address(mapX, mapY);
         goods.goodsStatus = PROCESSING;
         goods.goodsLimitCount = goodsLimitCount;
         goods.goodsLimitTime = goodsLimitTime;
-        goods.currentOrderCount = 1;
-        goods.currentOrderGoodsCount = 0;
         goods.isDelete = false;
         goods.category = category;
 
         return goods;
     }
 
-    public void setSell(Sell sell) {
+    public void initGoods(Sell sell, Board board) {
         this.sell = sell;
-    }
-
-    public void setBoard(Board board) {
         this.board = board;
     }
 
-    public void setOrder(Order order) {
+    public void addOrder(Order order) {
         this.orderList.add(order);
     }
 
@@ -156,9 +143,5 @@ public class Goods extends BaseTimeEntity {
 
     public void updateGoodsIntroduction(String introduction) {
         this.introduction = introduction;
-    }
-
-    public void deleteGoods() {
-        this.isDelete = true;
     }
 }

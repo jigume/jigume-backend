@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.jigume.domain.board.dto.BoardDto;
-import site.jigume.domain.board.dto.UpdateBoardDto;
+import site.jigume.domain.board.dto.BoardUpdateDto;
 import site.jigume.domain.board.entity.Board;
 import site.jigume.domain.board.exception.exception.BoardException;
 import site.jigume.domain.board.repository.BoardRepository;
@@ -23,14 +23,6 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberService memberService;
 
-    public Board createBoard(String boardContent, Goods goods) {
-        Board board = Board.createBoard(boardContent, goods);
-
-        boardRepository.save(board);
-
-        return board;
-    }
-
     @Transactional(readOnly = true)
     public BoardDto getBoard(Long boardId) {
         Board board = boardRepository.findBoardByBoardId(boardId)
@@ -47,13 +39,13 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDto updateBoard(Long boardId, UpdateBoardDto updateBoardDto) {
+    public BoardDto updateBoard(Long boardId, BoardUpdateDto boardUpdateDto) {
         Board board = boardRepository.findBoardByBoardId(boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
         Member member = memberService.getMember();
         isHost(board, member);
 
-        String boardContent = updateBoardDto.getBoardContent();
+        String boardContent = boardUpdateDto.getBoardContent();
 
         board.updateBoardContent(boardContent);
 

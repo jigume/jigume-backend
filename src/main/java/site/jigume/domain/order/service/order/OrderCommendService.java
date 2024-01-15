@@ -24,7 +24,7 @@ public class OrderCommendService {
         Member member = memberService.getMember();
         Goods goods = goodsService.getGoods(orderDto.getGoodsId());
 
-        Order order = Order.createBuyOrder(orderDto.getOrderGoodsCount(),
+        Order order = Order.createOrder(orderDto.getOrderGoodsCount(),
                 goods, member);
 
         goods.updateGoodsOrder(order.getOrderGoodsCount());

@@ -1,4 +1,4 @@
-package site.jigume.domain.goods.controller;
+package site.jigume.domain.goods.controller.query;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.jigume.domain.goods.dto.*;
 import site.jigume.domain.goods.exception.GoodsException;
-import site.jigume.domain.goods.service.GoodsQueryService;
+import site.jigume.domain.goods.service.query.GoodsQueryService;
 
 import java.util.List;
 

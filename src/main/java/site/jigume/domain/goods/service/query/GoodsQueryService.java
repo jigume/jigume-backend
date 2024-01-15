@@ -1,4 +1,4 @@
-package site.jigume.domain.goods.service;
+package site.jigume.domain.goods.service.query;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,8 @@ import site.jigume.domain.goods.dto.*;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.goods.repository.GoodsRepository;
+import site.jigume.domain.goods.service.GoodsService;
+import site.jigume.domain.goods.service.constant.GoodsMemberAuth;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.service.MemberService;
 
@@ -34,7 +36,7 @@ public class GoodsQueryService {
 
         checkTime(goods);
 
-        MemberStatus isOrderOrSell = isOrderOrSell(member, goods);
+        GoodsMemberAuth isOrderOrSell = isOrderOrSell(member, goods);
 
         return new GoodsDetailPageDto(isOrderOrSell,
                 GoodsPageDto.toGoodsPageDto(goods));
@@ -123,12 +125,12 @@ public class GoodsQueryService {
         return goodsListDtoList;
     }
 
-    private MemberStatus isOrderOrSell(Member member, Goods goods) {
+    private GoodsMemberAuth isOrderOrSell(Member member, Goods goods) {
         if (goods.isSell(member)) {
-            return MemberStatus.SELLER;
+            return GoodsMemberAuth.SELLER;
         } else if (goods.isOrder(member)) {
-            return MemberStatus.ORDER;
+            return GoodsMemberAuth.ORDER;
         }
-        return MemberStatus.NONE;
+        return GoodsMemberAuth.NONE;
     }
 }

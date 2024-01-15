@@ -16,7 +16,7 @@ public class Sell {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Boolean isDelete;
+    private boolean isDelete;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id")

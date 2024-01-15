@@ -11,6 +11,7 @@ import site.jigume.global.audit.BaseTimeEntity;
 import static site.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_OVER_COUNT;
 
 @Entity
+@Table(name = "orders")
 @NoArgsConstructor
 @Getter
 public class Order extends BaseTimeEntity {
@@ -26,6 +27,8 @@ public class Order extends BaseTimeEntity {
     @Column(name = "order_price")
     private Integer orderPrice;
 
+    private boolean isDelete;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id")
     private Goods goods;
@@ -34,7 +37,7 @@ public class Order extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static Order createBuyOrder(Integer orderGoodsCount,
+    public static Order createOrder(Integer orderGoodsCount,
                                        Goods goods, Member member) {
         Order order = new Order();
 
@@ -44,6 +47,7 @@ public class Order extends BaseTimeEntity {
 
         order.orderGoodsCount = orderGoodsCount;
         order.orderPrice = (goods.getGoodsPrice() * orderGoodsCount) + (goods.getDeliveryFee() / (goods.getCurrentOrderCount() + 1));
+        order.isDelete = false;
         order.goods = goods;
         order.member = member;
 

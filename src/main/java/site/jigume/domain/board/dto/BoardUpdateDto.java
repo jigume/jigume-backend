@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class UpdateBoardDto {
+public class BoardUpdateDto {
 
     private String boardContent;
 

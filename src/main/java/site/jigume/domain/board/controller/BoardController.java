@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.jigume.domain.board.dto.BoardDto;
-import site.jigume.domain.board.dto.UpdateBoardDto;
+import site.jigume.domain.board.dto.BoardUpdateDto;
 import site.jigume.domain.board.exception.exception.BoardException;
 import site.jigume.domain.board.service.BoardService;
 import site.jigume.domain.member.exception.auth.AuthException;
@@ -45,8 +45,8 @@ public class BoardController {
             @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @PostMapping("/{boardId}")
-    public ResponseEntity updateBoardContent(@PathVariable Long boardId, @RequestBody UpdateBoardDto updateBoardDto) {
-        BoardDto boardDto = boardService.updateBoard(boardId, updateBoardDto);
+    public ResponseEntity updateBoardContent(@PathVariable Long boardId, @RequestBody BoardUpdateDto boardUpdateDto) {
+        BoardDto boardDto = boardService.updateBoard(boardId, boardUpdateDto);
 
         return new ResponseEntity(boardDto, OK);
     }
