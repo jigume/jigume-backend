@@ -47,6 +47,15 @@ public class OrderQueryService {
         return new OrderHistoryDto(goodsListDtoList);
     }
 
+    public OrderInfo getOrder(Long goodsId) {
+        Member member = memberService.getMember();
+
+        Order order = orderRepository.findOrderByMemberIdAndGoodsId(member.getId(), goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+
+        return OrderInfo.toOrderInfo(order);
+    }
+
     public OrderInfoList getOrderInfoList(Long goodsId) {
         Member member = memberService.getMember();
 

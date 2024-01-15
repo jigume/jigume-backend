@@ -7,7 +7,6 @@ import site.jigume.domain.board.entity.Board;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.order.entity.Order;
 import site.jigume.domain.order.entity.Sell;
-import site.jigume.domain.order.exception.order.OrderException;
 import site.jigume.global.audit.BaseTimeEntity;
 
 import java.time.LocalDateTime;
@@ -17,7 +16,6 @@ import java.util.List;
 import static jakarta.persistence.FetchType.LAZY;
 import static site.jigume.domain.goods.entity.GoodsStatus.END;
 import static site.jigume.domain.goods.entity.GoodsStatus.PROCESSING;
-import static site.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_NOT_FOUND;
 
 @Entity
 @Table(name = "Goods", indexes = {
@@ -104,15 +102,12 @@ public class Goods extends BaseTimeEntity {
     }
 
     public void addOrder(Order order) {
+        this.currentOrderCount += 1;
         this.orderList.add(order);
     }
 
     public void updateEnd() {
         this.goodsStatus = END;
-    }
-
-    public void updateCurrentOrderCount() {
-        this.currentOrderCount += 1;
     }
 
     public boolean isSell(Member member) {

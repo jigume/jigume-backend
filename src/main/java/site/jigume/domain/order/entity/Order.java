@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.order.exception.order.OrderException;
-import site.jigume.domain.order.exception.order.OrderExceptionCode;
 import site.jigume.global.audit.BaseTimeEntity;
 
 import static site.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_OVER_COUNT;

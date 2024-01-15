@@ -38,9 +38,9 @@ public class OrderCreateService {
         Order order = Order.createOrder(orderDto.getOrderGoodsCount(),
                 goods, member);
 
-        goods.updateCurrentOrderCount();
-
         orderRepository.save(order);
+
+        goods.addOrder(order);
     }
 
     private boolean checkEndTime(Goods goods) {
