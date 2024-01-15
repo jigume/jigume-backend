@@ -32,7 +32,8 @@ public class GoodsListDto {
         goodsListDto.goodsPrice = goods.getGoodsPrice();
         goodsListDto.goodsDeliveryPrice = goods.getDeliveryFee();
         goodsListDto.goodsOrderCount = goods.getCurrentOrderCount();
-        goodsListDto.discountDeliveryPrice = goods.getDeliveryFee() - goods.getRealDeliveryFee();
+        goodsListDto.discountDeliveryPrice = goods.getDeliveryFee() -
+                (goods.getDeliveryFee() / goods.getCurrentOrderCount());
 
         goodsListDto.repImgUrl = goods.getGoodsImageList()
                 .stream()

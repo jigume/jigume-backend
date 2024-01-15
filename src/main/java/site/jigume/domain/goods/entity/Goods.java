@@ -41,11 +41,11 @@ public class Goods extends BaseTimeEntity {
     @Column(name = "goods_link")
     private String link;
 
-    @Column(name = "goods_price")
     private Integer goodsPrice;
 
-    @Column(name = "delivery_fee")
     private Integer deliveryFee;
+
+    private Integer currentOrderCount;
 
     @Embedded
     @Column(nullable = false)
@@ -111,19 +111,8 @@ public class Goods extends BaseTimeEntity {
         this.goodsStatus = END;
     }
 
-    public void updateGoodsOrder(Integer orderGoodsCount) {
+    public void updateCurrentOrderCount() {
         this.currentOrderCount += 1;
-        this.currentOrderGoodsCount += orderGoodsCount;
-
-        if (this.currentOrderGoodsCount > this.goodsLimitCount) {
-            throw new OrderException(ORDER_NOT_FOUND);
-        }
-
-        if (this.currentOrderGoodsCount == this.goodsLimitCount) {
-            this.goodsStatus = END;
-        }
-
-        this.realDeliveryFee = this.deliveryFee / this.currentOrderCount;
     }
 
     public boolean isSell(Member member) {

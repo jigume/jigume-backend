@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.order.exception.order.OrderException;
+import site.jigume.domain.order.exception.order.OrderExceptionCode;
 import site.jigume.global.audit.BaseTimeEntity;
 
 import static site.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_OVER_COUNT;
@@ -41,20 +42,20 @@ public class Order extends BaseTimeEntity {
                                        Goods goods, Member member) {
         Order order = new Order();
 
-        if (goods.getGoodsLimitCount() - (goods.getCurrentOrderGoodsCount() + orderGoodsCount) < 0) {
+        int totalOrderCount = goods.getOrderList().stream()
+                .mapToInt(o -> o.getOrderGoodsCount())
+                .sum();
+
+        if(goods.getGoodsLimitCount() - (totalOrderCount + orderGoodsCount) < 0) {
             throw new OrderException(ORDER_OVER_COUNT);
         }
 
         order.orderGoodsCount = orderGoodsCount;
-        order.orderPrice = (goods.getGoodsPrice() * orderGoodsCount) + (goods.getDeliveryFee() / (goods.getCurrentOrderCount() + 1));
+        order.orderPrice = goods.getGoodsPrice() * orderGoodsCount;
         order.isDelete = false;
         order.goods = goods;
         order.member = member;
 
         return order;
-    }
-
-    public void updateOrderPrice(Goods goods) {
-        this.orderPrice = (goods.getGoodsPrice() * orderGoodsCount) + (goods.getDeliveryFee() / (goods.getCurrentOrderCount() + 1));
     }
 }

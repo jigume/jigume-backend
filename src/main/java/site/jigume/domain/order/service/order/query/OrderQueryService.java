@@ -1,4 +1,4 @@
-package site.jigume.domain.order.service.order;
+package site.jigume.domain.order.service.order.query;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public class OrderQueryService {
     public OrderInfoList getOrderInfoList(Long goodsId) {
         Member member = memberService.getMember();
 
-        Goods goods = goodsRepository.findGoodsByIdFetchJoinOrderList(goodsId)
+        Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
 
         if (goods.isSell(member)) {

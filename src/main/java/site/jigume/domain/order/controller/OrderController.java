@@ -16,8 +16,8 @@ import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.order.dto.OrderDto;
 import site.jigume.domain.order.dto.OrderHistoryDto;
 import site.jigume.domain.order.dto.OrderInfoList;
-import site.jigume.domain.order.service.order.OrderCommendService;
-import site.jigume.domain.order.service.order.OrderQueryService;
+import site.jigume.domain.order.service.order.commend.OrderCreateService;
+import site.jigume.domain.order.service.order.query.OrderQueryService;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/api")
 public class OrderController {
 
-    private final OrderCommendService orderCommendService;
+    private final OrderCreateService orderCreateService;
     private final OrderQueryService orderQueryService;
 
     @Operation(summary = "주문(구매)하는 API")
@@ -37,7 +37,7 @@ public class OrderController {
     })
     @PostMapping("/{goodsId}/new")
     public ResponseEntity newOrder(@RequestBody OrderDto orderDto) {
-        orderCommendService.orderGoods(orderDto);
+        orderCreateService.orderGoods(orderDto);
 
         return new ResponseEntity("주문이 성공적으로 되었습니다.", OK);
     }
