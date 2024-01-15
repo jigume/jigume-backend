@@ -19,6 +19,7 @@ import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.order.dto.OrderHistoryDto;
 import site.jigume.domain.order.dto.OrderInfo;
 import site.jigume.domain.order.dto.OrderInfoList;
+import site.jigume.domain.order.dto.OrderMemberListDto;
 import site.jigume.domain.order.service.order.query.OrderQueryService;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -39,7 +40,7 @@ public class OrderQueryController {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
             @ApiResponse(responseCode = "404", description = "상품을 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class)))
     })
-    @GetMapping("/orders/{status}")
+    @GetMapping("/order/{status}")
     public ResponseEntity getOrderHistory(@PathVariable("status") GoodsStatus goodsStatus) {
         OrderHistoryDto orderHistory = orderQueryService.getOrderHistory(goodsStatus);
 
@@ -55,7 +56,7 @@ public class OrderQueryController {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
             @ApiResponse(responseCode = "404", description = "상품을 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
-    @GetMapping("/orders/{goodsId}/list")
+    @GetMapping("/goods/{goodsId}/order/list")
     public ResponseEntity getOrderInfoList(@PathVariable("goodsId") Long goodsId) {
         OrderInfoList orderInfoList = orderQueryService.getOrderInfoList(goodsId);
 
@@ -67,14 +68,30 @@ public class OrderQueryController {
             @Parameter(name = "goodsId", description = "Goods의 Id", example = "1, 2, 3"),
     })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OrderInfo를 ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderInfoList.class))),
+            @ApiResponse(responseCode = "200", description = "구매자의 예상 결제 금액을 가져옴", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderInfoList.class))),
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
             @ApiResponse(responseCode = "404", description = "상품을 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
-    @GetMapping("/orders/{goodsId}/list")
+    @GetMapping("/goods/{goodsId}/order")
     public ResponseEntity getOrderInfo(@PathVariable("goodsId") Long goodsId) {
         OrderInfo orderInfo = orderQueryService.getOrder(goodsId);
 
         return new ResponseEntity(orderInfo, OK);
+    }
+
+    @Operation(summary = "구매 참여자의 목록을 가져옴")
+    @Parameters(value = {
+            @Parameter(name = "goodsId", description = "Goods의 Id", example = "1, 2, 3"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "구매자의 예상 결제 금액을 가져옴", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderInfoList.class))),
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "상품을 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
+    })
+    @GetMapping("/goods/{goodsId}/order/members")
+    public ResponseEntity getOrderMemberList(@PathVariable("goodsId") Long goodsId) {
+        OrderMemberListDto orderMemberList = orderQueryService.getOrderMemberList(goodsId);
+
+        return new ResponseEntity(orderMemberList, OK);
     }
 }

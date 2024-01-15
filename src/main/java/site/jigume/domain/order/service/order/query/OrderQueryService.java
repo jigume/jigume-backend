@@ -11,10 +11,12 @@ import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
+import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 import site.jigume.domain.order.dto.OrderHistoryDto;
 import site.jigume.domain.order.dto.OrderInfo;
 import site.jigume.domain.order.dto.OrderInfoList;
+import site.jigume.domain.order.dto.OrderMemberListDto;
 import site.jigume.domain.order.entity.Order;
 import site.jigume.domain.order.repository.OrderRepository;
 
@@ -71,5 +73,18 @@ public class OrderQueryService {
                 .collect(Collectors.toList());
 
         return new OrderInfoList(orderInfoList);
+    }
+
+    public OrderMemberListDto getOrderMemberList(Long goodsId) {
+        Member member = memberService.getMember();
+        Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+
+        goods.getOrderList().stream()
+                .filter(order -> order.getMember().equals(member))
+                .findAny()
+                .orElseThrow(() -> new AuthException(NOT_AUTHORIZATION_USER));
+
+        return OrderMemberListDto.toOrderMemberListDto(goods.getOrderList());
     }
 }
