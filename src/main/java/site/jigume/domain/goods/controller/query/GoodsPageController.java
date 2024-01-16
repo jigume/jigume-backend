@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.jigume.domain.goods.dto.*;
 import site.jigume.domain.goods.exception.GoodsException;
-import site.jigume.domain.goods.service.query.GoodsQueryService;
+import site.jigume.domain.goods.service.query.GoodsPageQueryService;
 
 import java.util.List;
 
@@ -22,9 +22,9 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/goods")
-public class GoodsQueryController {
+public class GoodsPageController {
 
-    private final GoodsQueryService goodsQueryService;
+    private final GoodsPageQueryService goodsPageQueryService;
 
     @Operation(summary = "상품 상세 페이지를 반환한다.")
     @Parameters(value = {
@@ -36,7 +36,7 @@ public class GoodsQueryController {
     })
     @GetMapping("/{goodsId}/page")
     public ResponseEntity getGoodsPage(@PathVariable("goodsId") Long goodsId) {
-        GoodsDetailPageDto goodsPage = goodsQueryService.getGoodsPage(goodsId);
+        GoodsDetailPageDto goodsPage = goodsPageQueryService.getGoodsDetailPage(goodsId);
 
         return new ResponseEntity(goodsPage, OK);
     }
@@ -60,7 +60,8 @@ public class GoodsQueryController {
         coordinateDto.setMaxPoint(new Point(maxX, maxY));
         coordinateDto.setMinPoint(new Point(minX, minY));
 
-        GoodsSliceDto goodsSliceDto = goodsQueryService.getGoodsListByCategoryId(categoryId, coordinateDto, pageable);
+        GoodsSliceDto goodsSliceDto = goodsPageQueryService
+                .getGoodsListByCategoryIdInMap(categoryId, coordinateDto, pageable);
 
         return new ResponseEntity(goodsSliceDto, OK);
     }
@@ -80,34 +81,20 @@ public class GoodsQueryController {
         coordinateDto.setMaxPoint(new Point(maxX, maxY));
         coordinateDto.setMinPoint(new Point(minX, minY));
 
-        GoodsSliceDto goodsSliceDto = goodsQueryService.getGoodsList(coordinateDto, pageable);
+        GoodsSliceDto goodsSliceDto = goodsPageQueryService
+                .getGoodsListInMap(coordinateDto, pageable);
 
         return new ResponseEntity(goodsSliceDto, OK);
     }
 
-    @Operation(summary = "해당 지도 범위의 상품들을 모두 반환한다 - 마커용")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarkerListDto.class))),
-            @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
-    })
-    @GetMapping("/marker/list")
-    public ResponseEntity getGoodsMarker(@RequestParam("minX") double minX,
-                                         @RequestParam("maxX") double maxX,
-                                         @RequestParam("minY") double minY,
-                                         @RequestParam("maxY") double maxY) {
-        MarkerListDto mapMarker = goodsQueryService.getMapMarker(minX, maxX, minY, maxY);
-
-        return new ResponseEntity(mapMarker, OK);
-    }
-
-    @Operation(summary = "해당 마커의 상품들을 전부 반환한다.")
+    @Operation(summary = "상품 Id 리스트 안의 상품들을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsListDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
     @GetMapping("/marker")
     public ResponseEntity getMarkerGoods(@RequestParam List<Long> goodsIds, Pageable pageable) {
-        GoodsSliceDto goodsSliceDto = goodsQueryService.getMarkerGoods(goodsIds, pageable);
+        GoodsSliceDto goodsSliceDto = goodsPageQueryService.getGoodsListInIds(goodsIds, pageable);
 
         return new ResponseEntity(goodsSliceDto, OK);
     }

@@ -18,31 +18,4 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
 
     @Query("select distinct g from Goods g join fetch g.orderList where g.id = :goodsId")
     Optional<Goods> findGoodsByIdWithOrderList(@Param("goodsId") Long goodsId);
-
-    @Query("select g from  Goods g where g.address.mapX >= :minX and g.address.mapX <= :maxX " +
-            "and g.address.mapY >= :minY and g.address.mapY <= :maxY and g.category.id = :categoryId and g.goodsStatus = :status " +
-            "order by g.createdDate desc")
-    Slice<Goods> findGoodsByCategoryAndMapRangeOrderByCreatedDate(@Param("categoryId") Long categoryId,
-                                                                  @Param("minX") double minX, @Param("maxX") double maxX,
-                                                                  @Param("minY") double minY, @Param("maxY") double maxY,
-                                                                  @Param("status") GoodsStatus goodsStatus,
-                                                                  Pageable pageable);
-
-    @Query("SELECT g FROM Goods g WHERE g.address.mapX >= :minX AND g.address.mapX <= :maxX " +
-            "AND g.address.mapY >= :minY AND g.address.mapY <= :maxY AND g.goodsStatus = :status " +
-            "order by g.createdDate desc")
-    List<Goods> findGoodsByMapRange(@Param("minX") double minX, @Param("maxX") double maxX,
-                                    @Param("minY") double minY, @Param("maxY") double maxY,
-                                    @Param("status") GoodsStatus goodsStatus);
-
-    @Query("SELECT g FROM Goods g WHERE g.address.mapX >= :minX AND g.address.mapX <= :maxX " +
-            "AND g.address.mapY >= :minY AND g.address.mapY <= :maxY AND g.goodsStatus = :status " +
-            "order by g.createdDate desc")
-    Slice<Goods> findGoodsByMapRange(@Param("minX") double minX, @Param("maxX") double maxX,
-                                    @Param("minY") double minY, @Param("maxY") double maxY,
-                                    @Param("status") GoodsStatus goodsStatus,
-                                    Pageable pageable);
-
-    @Query("select g from Goods g where g.id in :goodsIds")
-    Slice<Goods> findGoodsByIdIn(@Param("goodsIds") List<Long> goodsIds, Pageable pageable);
 }
