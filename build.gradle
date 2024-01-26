@@ -40,7 +40,7 @@ dependencies {
 
     //JPA, DB, SQL
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '6.2.7.Final'
+    implementation 'org.hibernate:hibernate-spatial:6.2.5.Final'
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
