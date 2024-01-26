@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import site.jigume.domain.member.dto.LoginResponseDto;
 import site.jigume.domain.member.dto.MemberInfoDto;
 import site.jigume.domain.member.dto.TokenDto;
@@ -69,7 +70,7 @@ public class MemberController {
 
     @Operation(summary = "Guest 유저에게 주소, 닉네임 받아 업로드하고 User로 바꾼다.")
     @Parameters(value = {
-            @Parameter(name = "memberInfoDto", description = "멤버 정보", schema = @Schema(implementation = MemberInfoDto.class))
+            @Parameter(name = "memberInfoDto", description = "멤버 정보", schema = @Schema(implementation = UpdateMemberInfoDto.class))
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 업데이트 했음"),
@@ -91,8 +92,8 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "멤버를 찾을 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
     })
     @PostMapping("/profile")
-    public ResponseEntity updateMemberProfileImage(ImageUploadRequest imageUploadRequest) {
-        memberService.updateMemberProfileImage(imageUploadRequest);
+    public ResponseEntity updateMemberProfileImage(@RequestParam MultipartFile multipartFile) {
+        memberService.updateMemberProfileImage(multipartFile);
 
         return new ResponseEntity(OK);
     }

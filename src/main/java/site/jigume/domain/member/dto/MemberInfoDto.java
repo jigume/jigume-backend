@@ -4,6 +4,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import site.jigume.domain.member.entity.Member;
+import site.jigume.global.image.ImageUrl;
+
+import java.util.Optional;
+
+import static java.util.Objects.nonNull;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +21,22 @@ public class MemberInfoDto {
 
     private String profileImgUrl;
 
-    private Double mapX;
+    private Double latitude;
 
-    private Double mapY;
+    private Double longitude;
+
+    public static MemberInfoDto from(Member member) {
+        MemberInfoDto memberInfoDto = new MemberInfoDto();
+        memberInfoDto.setNickname(member.getNickname());
+
+        if (Optional.of(member.getProfileImageUrl()).isEmpty()) {
+            memberInfoDto.setProfileImgUrl(member.getProfileImageUrl());
+        } else {
+            memberInfoDto.setProfileImgUrl(ImageUrl.defaultImageUrl);
+        }
+        memberInfoDto.setLongitude(member.getCoordinate().getX());
+        memberInfoDto.setLatitude(member.getCoordinate().getY());
+
+        return memberInfoDto;
+    }
 }

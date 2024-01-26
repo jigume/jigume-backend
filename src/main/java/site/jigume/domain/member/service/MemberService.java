@@ -82,10 +82,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberProfileImage(ImageUploadRequest imageUploadRequest) {
+    public void updateMemberProfileImage(MultipartFile multipartFile) {
         Member member = getMember();
 
-        String imgUrl = s3FileUploadService.uploadFile(imageUploadRequest.multipartFile());
+        String imgUrl = s3FileUploadService.uploadFile(multipartFile);
 
         member.updateMemberProfileImg(imgUrl);
         if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
@@ -94,7 +94,7 @@ public class MemberService {
     public MemberInfoDto getMemberInfo() {
         Member member = getMember();
 
-        return toMemberInfoDto(member);
+        return MemberInfoDto.from(member);
     }
 
 
@@ -131,21 +131,6 @@ public class MemberService {
         String memberProfileImgUrl = s3FileUploadService.uploadFile(multipartFile);
 
         member.updateMemberProfileImg(memberProfileImgUrl);
-    }
-
-    private MemberInfoDto toMemberInfoDto(Member member) {
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
-        memberInfoDto.setNickname(member.getNickname());
-
-        if (!member.getProfileImageUrl().isEmpty()) {
-            memberInfoDto.setProfileImgUrl(member.getProfileImageUrl());
-        } else {
-            memberInfoDto.setProfileImgUrl(ImageUrl.defaultImageUrl);
-        }
-        memberInfoDto.setMapX(member.getCoordinate().getX());
-        memberInfoDto.setMapY(member.getCoordinate().getY());
-
-        return memberInfoDto;
     }
 
     public void checkDuplicateNickname(String nickname) {
