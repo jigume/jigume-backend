@@ -1,6 +1,6 @@
 package site.jigume.domain.board.controller;
 
-import com.jigume.dto.board.BoardCreateDto;
+import site.jigume.domain.board.dto.BoardCreateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

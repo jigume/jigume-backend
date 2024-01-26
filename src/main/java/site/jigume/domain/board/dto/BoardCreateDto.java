@@ -1,4 +1,4 @@
-package com.jigume.dto.board;
+package site.jigume.domain.board.dto;
 
 import site.jigume.domain.board.entity.Board;
 import site.jigume.domain.goods.entity.Goods;

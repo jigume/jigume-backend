@@ -1,6 +1,6 @@
 package site.jigume.domain.board.service;
 
-import com.jigume.dto.board.BoardCreateDto;
+import site.jigume.domain.board.dto.BoardCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,11 +11,9 @@ import site.jigume.domain.board.exception.exception.BoardException;
 import site.jigume.domain.board.repository.BoardRepository;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.exception.GoodsException;
-import site.jigume.domain.goods.exception.GoodsExceptionCode;
 import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
-import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 
 import static site.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;
