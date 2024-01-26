@@ -1,5 +1,6 @@
 package site.jigume.domain.board.service;
 
+import com.jigume.dto.board.BoardCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +11,11 @@ import site.jigume.domain.board.exception.exception.BoardException;
 import site.jigume.domain.board.repository.BoardRepository;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.exception.GoodsException;
+import site.jigume.domain.goods.exception.GoodsExceptionCode;
+import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
+import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 
 import static site.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;
@@ -24,6 +28,24 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final MemberService memberService;
+    private final GoodsRepository goodsRepository;
+
+    @Transactional
+    public Long save(Long goodsId, BoardCreateDto boardCreateDto) {
+        Member member = memberService.getMember();
+
+        Goods goods = goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+
+        if(!goods.isSell(member)) {
+            throw new AuthException(NOT_AUTHORIZATION_USER);
+        }
+
+        Board board = boardCreateDto.toBoard(goods);
+        boardRepository.save(board);
+
+        return board.getId();
+    }
 
     @Transactional(readOnly = true)
     public BoardDto getBoard(Long goodsId, Long boardId) {

@@ -129,19 +129,19 @@ public class CommentService {
     }
 
     private CommentDto toCommentDto(Comment comment) {
-        if (!comment.getIsDelete()) {
+        if (!comment.isDelete()) {
             return new CommentDto().builder()
                     .commentId(comment.getId())
                     .content(comment.getContent())
                     .memberNickname(comment.getMember().getNickname())
                     .created_at(comment.getCreatedDate())
                     .modified_at(comment.getModifiedDate())
-                    .isDelete(comment.getIsDelete())
+                    .isDelete(comment.isDelete())
                     .build();
         }
 
         return new CommentDto().builder().
-                isDelete(comment.getIsDelete())
+                isDelete(comment.isDelete())
                 .commentId(comment.getId())
                 .memberNickname(comment.getMember().getNickname())
                 .created_at(comment.getCreatedDate())

@@ -16,8 +16,6 @@ public class GoodsSaveDto {
     private String link;
     private Integer goodsPrice;
     private Integer deliveryFee;
-    private Double mapX;
-    private Double mapY;
     private Integer goodsLimitCount;
     private LocalDateTime goodsLimitTime;
     private Long categoryId;
@@ -26,8 +24,8 @@ public class GoodsSaveDto {
     public Goods toGoods(Category category) {
         Goods goods = Goods.createGoods(this.getGoodsName(), this.getIntroduction(),
                 this.getLink(), this.getGoodsPrice(),
-                this.getDeliveryFee(), this.getMapX(),
-                this.getMapY(), this.getGoodsLimitCount(),
+                this.getDeliveryFee(),
+                this.getGoodsLimitCount(),
                 this.getGoodsLimitTime(), category);
 
         return goods;

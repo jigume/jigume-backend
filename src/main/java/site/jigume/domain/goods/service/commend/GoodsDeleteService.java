@@ -44,7 +44,7 @@ public class GoodsDeleteService {
         sellRepository.deleteSell(goodsId);
         goodsImagesRepository.deleteGoodsImage(goodsId);
         boardRepository.deleteBoard(goodsId);
-        commentRepository.deleteComment(goods.getBoard().getId());
+//        commentRepository.deleteComment(goods.getBoard().getId());
     }
 
     private void checkGoodsSeller(Goods goods, Member member) {

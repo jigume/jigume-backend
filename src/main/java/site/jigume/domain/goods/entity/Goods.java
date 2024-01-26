@@ -45,10 +45,6 @@ public class Goods extends BaseTimeEntity {
 
     private Integer currentOrderCount;
 
-    @Embedded
-    @Column(nullable = false)
-    private Address address;
-
     @Enumerated(EnumType.STRING)
     private GoodsStatus goodsStatus;
 
@@ -62,7 +58,6 @@ public class Goods extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
 
     @OneToMany(mappedBy = "goods")
     private List<Order> orderList = new ArrayList<>();
@@ -78,27 +73,23 @@ public class Goods extends BaseTimeEntity {
 
 
     public static Goods createGoods(String name, String introduction, String link, Integer goodsPrice,
-                                    Integer deliveryFee, Double mapX, Double mapY, Integer goodsLimitCount,
+                                    Integer deliveryFee, Integer goodsLimitCount,
                                     LocalDateTime goodsLimitTime, Category category) {
         Goods goods = new Goods();
+
         goods.name = name;
         goods.introduction = introduction;
         goods.link = link;
         goods.goodsPrice = goodsPrice;
         goods.deliveryFee = deliveryFee;
-        goods.address = new Address(mapX, mapY);
         goods.goodsStatus = PROCESSING;
+        goods.currentOrderCount = 1;
         goods.goodsLimitCount = goodsLimitCount;
         goods.goodsLimitTime = goodsLimitTime;
-        goods.isDelete = false;
         goods.category = category;
+        goods.isDelete = false;
 
         return goods;
-    }
-
-    public void initGoods(Sell sell, Board board) {
-        this.sell = sell;
-        this.board = board;
     }
 
     public void addOrder(Order order) {

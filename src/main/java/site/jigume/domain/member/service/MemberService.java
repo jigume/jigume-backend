@@ -2,12 +2,14 @@ package site.jigume.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.locationtech.jts.geom.Point;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import site.jigume.domain.goods.util.GeometryGenerator;
 import site.jigume.domain.member.dto.*;
 import site.jigume.domain.member.entity.BaseRole;
 import site.jigume.domain.member.entity.LoginProvider;
@@ -74,7 +76,8 @@ public class MemberService {
     public void updateMemberInfo(UpdateMemberInfoDto updateMemberInfoDto) {
         Member member = getMember();
 
-        member.updateMemberInfo(updateMemberInfoDto.getNickname(), updateMemberInfoDto.getMapX(), updateMemberInfoDto.getMapY());
+        Point coordinate = GeometryGenerator.generatePoint(updateMemberInfoDto.getLatitude(), updateMemberInfoDto.getLongitude());
+        member.updateMemberInfo(updateMemberInfoDto.getNickname(), coordinate);
         if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
     }
 
@@ -139,8 +142,8 @@ public class MemberService {
         } else {
             memberInfoDto.setProfileImgUrl(ImageUrl.defaultImageUrl);
         }
-        memberInfoDto.setMapX(member.getAddress().getMapX());
-        memberInfoDto.setMapY(member.getAddress().getMapY());
+        memberInfoDto.setMapX(member.getCoordinate().getX());
+        memberInfoDto.setMapY(member.getCoordinate().getY());
 
         return memberInfoDto;
     }

@@ -13,7 +13,7 @@ public class UpdateMemberInfoDto {
     @Pattern(regexp = "^[가-힣a-zA-Z0-9]*$", message = "한글, 영어, 숫자만 입력 가능합니다.")
     private String nickname;
 
-    private Double mapX;
+    private Double latitude;
 
-    private Double mapY;
+    private Double longitude;
 }

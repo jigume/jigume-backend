@@ -33,7 +33,9 @@ public class GoodsService {
 
     @Transactional
     public void updateImage(List<MultipartFile> imageList, Long goodsId, Integer repImg) {
-        Goods goods = getGoods(goodsId);
+        Goods goods = goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+
         if (imageList.size() != 0) {
             IntStream.range(0, imageList.size())
                     .forEach(i -> {
@@ -43,11 +45,16 @@ public class GoodsService {
                         GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, goodsImgUrl, isRepImg);
                         goodsImagesRepository.save(goodsImage);
                     });
-            return;
         }
+    }
 
+    @Transactional
+    public Long saveDefaultImage(Goods goods) {
         GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, ImageUrl.defaultImageUrl, true);
+
         goodsImagesRepository.save(goodsImage);
+
+        return goodsImage.getId();
     }
 
     @Transactional

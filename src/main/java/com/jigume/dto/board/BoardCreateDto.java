@@ -1,10 +1,12 @@
 package com.jigume.dto.board;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import site.jigume.domain.board.entity.Board;
+import site.jigume.domain.goods.entity.Goods;
 
 @Data
-@NoArgsConstructor
-public class BoardCreateDto {
-    private String boardContent;
+public record BoardCreateDto(String content) {
+    public Board toBoard(Goods goods) {
+        return Board.createBoard(content, goods);
+    }
 }

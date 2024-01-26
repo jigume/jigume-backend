@@ -10,5 +10,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Page<Comment> findCommentsByBoardId(Long boardId, Pageable pageable);
 
-    void deleteComment(@Param("boardId") Long boardId);
+//    void deleteComment(@Param("boardId") Long boardId);
 }

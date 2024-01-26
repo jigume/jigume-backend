@@ -11,7 +11,7 @@ import site.jigume.global.audit.BaseTimeEntity;
 import static site.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_OVER_COUNT;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "order")
 @NoArgsConstructor
 @Getter
 public class Order extends BaseTimeEntity {

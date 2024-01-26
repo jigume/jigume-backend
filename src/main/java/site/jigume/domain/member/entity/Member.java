@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import site.jigume.domain.goods.entity.Address;
 import site.jigume.domain.order.entity.Sell;
 import site.jigume.global.audit.BaseTimeEntity;
 
@@ -36,7 +36,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private String profileImageUrl;
 
-    private Address address;
+    private Point coordinate;
 
     @Enumerated(EnumType.STRING)
     private BaseRole baseRole;
@@ -52,9 +52,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
         return member;
     }
 
-    public void updateMemberInfo(String nickname, Double mapX, Double mapY) {
+    public void updateMemberInfo(String nickname, Point coordinate) {
         this.nickname = nickname;
-        this.address = new Address(mapX, mapY);
+        this.coordinate = coordinate;
     }
 
     public void updateBaseRole(BaseRole baseRole) {

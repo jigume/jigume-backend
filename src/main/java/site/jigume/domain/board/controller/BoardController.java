@@ -1,5 +1,6 @@
 package site.jigume.domain.board.controller;
 
+import com.jigume.dto.board.BoardCreateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +23,21 @@ import static org.springframework.http.HttpStatus.OK;
 public class BoardController {
 
     private final BoardService boardService;
+
+
+    @Operation(summary = "게시판 내용을 저장한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시판을 가져온다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardDto.class))),
+            @ApiResponse(responseCode = "401", description = "게시판 권한이 없음. (판매자나 주문자가 아님)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+    })
+    @PostMapping
+    public ResponseEntity saveBoard(@PathVariable("goodsId") Long goodsId,
+                                    @RequestBody BoardCreateDto boardCreateDto) {
+        Long boardId = boardService.save(goodsId, boardCreateDto);
+
+        return new ResponseEntity(boardId, OK);
+    }
 
     @Operation(summary = "게시판을 가져온다.")
     @ApiResponses(value = {
@@ -47,7 +63,7 @@ public class BoardController {
     @PostMapping("/{boardId}")
     public ResponseEntity updateBoardContent(@PathVariable Long goodsId, @PathVariable Long boardId,
                                              @RequestBody BoardUpdateDto boardUpdateDto) {
-        BoardDto boardDto = boardService.updateBoard(goodsId ,boardId, boardUpdateDto);
+        BoardDto boardDto = boardService.updateBoard(goodsId, boardId, boardUpdateDto);
 
         return new ResponseEntity(boardDto, OK);
     }

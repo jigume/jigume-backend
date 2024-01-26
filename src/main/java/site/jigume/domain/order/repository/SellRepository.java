@@ -20,6 +20,6 @@ public interface SellRepository extends JpaRepository<Sell, Long> {
     Optional<Sell> findSellByGoodsId(Long goodsId);
 
     @Modifying
-    @Query("update Sell s set s.isDelete = true where s.goods.id = :goodsID")
+    @Query("update Sell s set s.isDelete = true where s.goods.id = :goodsId")
     void deleteSell(@Param("goodsId") Long goodsId);
 }

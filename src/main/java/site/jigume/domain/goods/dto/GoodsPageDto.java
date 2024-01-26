@@ -2,8 +2,9 @@ package site.jigume.domain.goods.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import site.jigume.domain.goods.entity.Address;
+import site.jigume.domain.goods.dto.coordinate.GoodsCoordinateDto;
 import site.jigume.domain.goods.entity.Goods;
+import site.jigume.domain.goods.entity.GoodsCoordinate;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.order.dto.SellerInfoDto;
 
@@ -27,7 +28,7 @@ public class GoodsPageDto {
 
     private Integer deliveryFee;
 
-    private Address address;
+    private GoodsCoordinateDto coordinate;
 
     private Integer goodsLimitCount;
 
@@ -49,7 +50,7 @@ public class GoodsPageDto {
 
     private List<GoodsImagesDto> goodsImagesList = new ArrayList<>();
 
-    public static GoodsPageDto toGoodsPageDto(Goods goods) {
+    public static GoodsPageDto toGoodsPageDto(Goods goods, GoodsCoordinate goodsCoordinate) {
         GoodsPageDto goodsPageDto = new GoodsPageDto();
 
         goodsPageDto.goodsId = goods.getId();
@@ -58,15 +59,14 @@ public class GoodsPageDto {
         goodsPageDto.link = goods.getLink();
         goodsPageDto.goodsPrice = goods.getGoodsPrice();
         goodsPageDto.deliveryFee = goods.getDeliveryFee();
-        goodsPageDto.address = goods.getAddress();
         goodsPageDto.goodsLimitCount = goodsPageDto.getGoodsLimitCount();
         goodsPageDto.goodsLimitTime = goodsPageDto.getGoodsLimitTime();
         goodsPageDto.categoryId = goods.getCategory().getId();
-        goodsPageDto.realDeliveryFee = goods.getRealDeliveryFee();
         goodsPageDto.goodsStatus = goods.getGoodsStatus();
         goodsPageDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(goods.getSell().getMember());
+        goodsPageDto.coordinate = GoodsCoordinateDto.from(goodsCoordinate);
         goodsPageDto.goodsOrderCount = goods.getCurrentOrderCount();
-        goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - goods.getRealDeliveryFee();
+        goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - (goods.getDeliveryFee()/ goods.getCurrentOrderCount());
         goodsPageDto.boardId = goods.getBoard().getId();
         goodsPageDto.goodsImagesList = GoodsImagesDto.toGoodsImagesDto(goods.getGoodsImageList());
 

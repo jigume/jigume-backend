@@ -5,12 +5,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.jigume.domain.goods.dto.*;
+import site.jigume.domain.goods.dto.GoodsDetailPageDto;
+import site.jigume.domain.goods.dto.GoodsListDto;
+import site.jigume.domain.goods.dto.GoodsPageDto;
+import site.jigume.domain.goods.dto.GoodsSliceDto;
 import site.jigume.domain.goods.entity.Goods;
-import site.jigume.domain.goods.entity.GoodsStatus;
+import site.jigume.domain.goods.entity.GoodsCoordinate;
 import site.jigume.domain.goods.exception.GoodsException;
-import site.jigume.domain.goods.repository.GoodsMapRepository;
-import site.jigume.domain.goods.repository.GoodsPageRepository;
+import site.jigume.domain.goods.repository.GoodsCoordinateRepository;
 import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.domain.goods.service.GoodsService;
 import site.jigume.domain.goods.service.constant.GoodsMemberAuth;
@@ -27,13 +29,12 @@ import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FO
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class GoodsPageQueryService {
+public class GoodsQueryService {
 
     private final MemberService memberService;
     private final GoodsService goodsService;
     private final GoodsRepository goodsRepository;
-    private final GoodsMapRepository goodsMapRepository;
-    private final GoodsPageRepository goodsPageRepository;
+    private final GoodsCoordinateRepository goodsCoordinateRepository;
 
     public GoodsDetailPageDto getGoodsDetailPage(Long goodsId) {
         Member member = memberService.getMember();
@@ -42,40 +43,17 @@ public class GoodsPageQueryService {
 
         checkEndTime(goods);
 
+        GoodsCoordinate goodsCoordinate = goodsCoordinateRepository.findGoodsCoordinateByGoodsId(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+
         GoodsMemberAuth isOrderOrSell = isOrderOrSell(member, goods);
 
         return new GoodsDetailPageDto(isOrderOrSell,
-                GoodsPageDto.toGoodsPageDto(goods));
-    }
-
-    public GoodsSliceDto getGoodsListByCategoryIdInMap(Long categoryId, CoordinateDto coordinateDto, Pageable pageable) {
-        Point maxPoint = coordinateDto.getMaxPoint();
-        Point minPoint = coordinateDto.getMinPoint();
-
-        Slice<Goods> goodsSlice = goodsPageRepository
-                .findGoodsByCategoryAndMapRangeOrderByCreatedDate(categoryId, minPoint.x(), maxPoint.x(),
-                        minPoint.y(), maxPoint.y(), GoodsStatus.PROCESSING, pageable);
-
-        GoodsSliceDto goodsSliceDto = getGoodsSliceDto(goodsSlice);
-
-        return goodsSliceDto;
-    }
-
-    public GoodsSliceDto getGoodsListInMap(CoordinateDto coordinateDto, Pageable pageable) {
-        Point maxPoint = coordinateDto.getMaxPoint();
-        Point minPoint = coordinateDto.getMinPoint();
-
-        Slice<Goods> goodsSlice = goodsMapRepository
-                .findGoodsByMapRange(minPoint.x(), maxPoint.x(),
-                        minPoint.y(), maxPoint.y(), GoodsStatus.PROCESSING, pageable);
-
-        GoodsSliceDto goodsSliceDto = getGoodsSliceDto(goodsSlice);
-
-        return goodsSliceDto;
+                GoodsPageDto.toGoodsPageDto(goods, goodsCoordinate));
     }
 
     public GoodsSliceDto getGoodsListInIds(List<Long> goodsIds, Pageable pageable) {
-        Slice<Goods> goodsByIdIn = goodsPageRepository.findGoodsByIdIn(goodsIds, pageable);
+        Slice<Goods> goodsByIdIn = goodsRepository.findGoodsByIdIn(goodsIds, pageable);
 
         List<GoodsListDto> goodsListDtoList = toGoodsListDtoList(goodsByIdIn.getContent());
 
