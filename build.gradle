@@ -172,6 +172,10 @@ sourceSets {
     main.java.srcDir querydslDir
 }
 
+clean.doLast {
+    file(querydslDir).deleteDir()
+}
+
 configurations {
     querydsl.extendsFrom compileClasspath
 }
