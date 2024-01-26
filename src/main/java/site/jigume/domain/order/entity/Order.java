@@ -11,7 +11,7 @@ import site.jigume.global.audit.BaseTimeEntity;
 import static site.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_OVER_COUNT;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @NoArgsConstructor
 @Getter
 public class Order extends BaseTimeEntity {
@@ -38,14 +38,14 @@ public class Order extends BaseTimeEntity {
     private Member member;
 
     public static Order createOrder(Integer orderGoodsCount,
-                                       Goods goods, Member member) {
+                                    Goods goods, Member member) {
         Order order = new Order();
 
         int totalOrderCount = goods.getOrderList().stream()
                 .mapToInt(o -> o.getOrderGoodsCount())
                 .sum();
 
-        if(goods.getGoodsLimitCount() - (totalOrderCount + orderGoodsCount) < 0) {
+        if (goods.getGoodsLimitCount() - (totalOrderCount + orderGoodsCount) < 0) {
             throw new OrderException(ORDER_OVER_COUNT);
         }
 
