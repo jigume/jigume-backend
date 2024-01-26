@@ -23,20 +23,20 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "goods_id")
     private Goods goods;
 
-    private String boardName;
+    private String title;
 
-    private String boardContent;
+    private String content;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
 
     private boolean isDelete;
 
     public static Board createBoard(String boardContent,Goods goods) {
         Board board = new Board();
-        board.boardName = goods.getName();
+        board.title = goods.getName();
         board.isDelete = false;
-        board.boardContent = boardContent;
+        board.content = boardContent;
         board.goods = goods;
 
         return board;
@@ -47,6 +47,6 @@ public class Board extends BaseTimeEntity {
     }
 
     public void updateBoardContent(String boardContent) {
-        this.boardContent = boardContent;
+        this.content = boardContent;
     }
 }

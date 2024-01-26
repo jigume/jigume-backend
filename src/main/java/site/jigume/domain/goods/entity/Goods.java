@@ -33,10 +33,8 @@ public class Goods extends BaseTimeEntity {
     @Column(name = "goods_name")
     private String name;
 
-    @Column(name = "goods_introduction")
     private String introduction;
 
-    @Column(name = "goods_link")
     private String link;
 
     private Integer goodsPrice;
