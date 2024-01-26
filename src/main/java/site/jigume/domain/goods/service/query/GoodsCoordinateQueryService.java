@@ -43,7 +43,7 @@ public class GoodsCoordinateQueryService {
         Polygon area = GeometryGenerator.generatePolygon(coordinateRequestDto);
 
         Slice<Goods> goodsSlice = goodsCoordinateRepository
-                .findGoodsByCategoryAndMapRangeOrderByCreatedDate(area, GoodsStatus.PROCESSING, categoryId, pageable);
+                .findGoodsByCoordinateWithCategory(area, GoodsStatus.PROCESSING, categoryId, pageable);
 
         GoodsSliceDto goodsSliceDto = getGoodsSliceDto(goodsSlice);
 

@@ -31,10 +31,10 @@ public class GoodsCoordinateQueryController {
 
     @Operation(summary = "해당 지도 범위의 상품들을 모두 반환한다 - 마커용")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarkerDto.class))),
+            @ApiResponse(responseCode = "200", description = "마커를 반환한다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarkerDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
-    @GetMapping("/marker/list")
+    @GetMapping("/marker")
     public ResponseEntity getGoodsCoordinateMarker(@RequestParam CoordinateRequestDto coordinateRequestDto) {
         List<MarkerDto> mapMarker = goodsCoordinateQueryService.getMapMarker(coordinateRequestDto);
 
@@ -49,7 +49,7 @@ public class GoodsCoordinateQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsListDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
-    @GetMapping("/{categoryId}/list")
+    @GetMapping("/marker/{categoryId}/list")
     public ResponseEntity getGoodsList(@PathVariable("categoryId") Long categoryId,
                                        @RequestParam CoordinateRequestDto coordinateRequestDto,
                                        Pageable pageable) {
@@ -64,7 +64,7 @@ public class GoodsCoordinateQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsListDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
-    @GetMapping("/list")
+    @GetMapping("/marker/list")
     public ResponseEntity getGoodsList(@RequestParam CoordinateRequestDto coordinateRequestDto,
                                        Pageable pageable) {
 

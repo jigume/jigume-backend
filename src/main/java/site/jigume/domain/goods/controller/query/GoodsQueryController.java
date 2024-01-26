@@ -36,7 +36,7 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 상세 페이지 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsDetailPageDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
-    @GetMapping("/{goodsId}/page")
+    @GetMapping("/{goodsId}")
     public ResponseEntity getGoodsPage(@PathVariable("goodsId") Long goodsId) {
         GoodsDetailPageDto goodsPage = goodsQueryService.getGoodsDetailPage(goodsId);
 
@@ -48,8 +48,8 @@ public class GoodsQueryController {
             @ApiResponse(responseCode = "200", description = "굿즈 리스트 반환", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsListDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
-    @GetMapping("/marker")
-    public ResponseEntity getMarkerGoods(@RequestParam List<Long> goodsIds, Pageable pageable) {
+    @GetMapping("/list")
+    public ResponseEntity getGoodsList(@RequestParam List<Long> goodsIds, Pageable pageable) {
         GoodsSliceDto goodsSliceDto = goodsQueryService.getGoodsListInIds(goodsIds, pageable);
 
         return new ResponseEntity(goodsSliceDto, OK);
