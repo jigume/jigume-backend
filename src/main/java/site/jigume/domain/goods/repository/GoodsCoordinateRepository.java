@@ -21,23 +21,23 @@ public interface GoodsCoordinateRepository extends JpaRepository<GoodsCoordinate
             "ST_X(co.coordinate) as latitude, " +
             "ST_Y(co.coordinate) as longitude " +
             "from GoodsCoordinate co " +
-            "where ST_INTERSECTS(:area, co.coordinate) " +
+            "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status")
     List<MarkerDto> findMarkerListFromCoordinate(@Param("area") final Polygon area,
                                                  @Param("status") GoodsStatus goodsStatus);
 
     @Query("select co.goods from GoodsCoordinate co " +
-            "where ST_INTERSECTS(:area, co.coordinate) " +
+            "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status")
     Slice<Goods> findGoodsByCoordinate(@Param("area") final Polygon area,
                                               @Param("status") GoodsStatus goodsStatus,
                                               Pageable pageable);
 
     @Query("select co.goods from GoodsCoordinate co " +
-            "where ST_INTERSECTS(:area, co.coordinate) " +
+            "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status " +
             "and co.goods.category.id = :categoryId")
-    Slice<Goods> findGoodsByCategoryAndMapRangeOrderByCreatedDate(@Param("area") final Polygon area,
+    Slice<Goods> findGoodsByCoordinateWithCategory(@Param("area") final Polygon area,
                                                                   @Param("status") GoodsStatus goodsStatus,
                                                                   @Param("categoryId") Long categoryId,
                                                                   Pageable pageable);

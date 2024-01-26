@@ -9,7 +9,6 @@ import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsCoordinate;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.repository.GoodsCoordinateRepository;
-import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.domain.goods.service.GoodsService;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
@@ -24,7 +23,6 @@ import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FO
 @Transactional
 public class GoodsUpdateService {
     private final GoodsCoordinateRepository goodsCoordinateRepository;
-    private final GoodsRepository goodsRepository;
 
     private final MemberService memberService;
     private final GoodsService goodsService;
@@ -47,8 +45,8 @@ public class GoodsUpdateService {
         goods.updateEnd();
     }
 
-    public Long updateGoodsCoordinate(Long goodsCoordinateId, GoodsCoordinateDto goodsCoordinateDto) {
-        GoodsCoordinate goodsCoordinate = goodsCoordinateRepository.findById(goodsCoordinateId)
+    public Long updateGoodsCoordinate(Long goodsId, GoodsCoordinateDto goodsCoordinateDto) {
+        GoodsCoordinate goodsCoordinate = goodsCoordinateRepository.findGoodsCoordinateByGoodsId(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
 
         goodsCoordinate.updateCoordinate(goodsCoordinateDto.toPoint());
