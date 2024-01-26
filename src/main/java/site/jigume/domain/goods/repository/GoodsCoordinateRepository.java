@@ -33,7 +33,7 @@ public interface GoodsCoordinateRepository extends JpaRepository<GoodsCoordinate
                                               @Param("status") GoodsStatus goodsStatus,
                                               Pageable pageable);
 
-    @Query("select co, co.goods from GoodsCoordinate co " +
+    @Query("select co.goods from GoodsCoordinate co " +
             "where ST_INTERSECTS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status " +
             "and co.goods.category.id = :categoryId")

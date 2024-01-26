@@ -20,7 +20,7 @@ public class GoodsImagesDto {
         this.repimgYn = repimgYn;
     }
 
-    public static List<GoodsImagesDto> toGoodsImagesDto(List<GoodsImage> goodsImageList) {
+    public static List<GoodsImagesDto> from(List<GoodsImage> goodsImageList) {
         return goodsImageList.stream()
                 .map(goodsImage ->
                         new GoodsImagesDto(goodsImage.getGoodsImgUrl(), goodsImage.isRepimgYn()))

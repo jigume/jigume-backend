@@ -59,8 +59,8 @@ public class GoodsPageDto {
         goodsPageDto.link = goods.getLink();
         goodsPageDto.goodsPrice = goods.getGoodsPrice();
         goodsPageDto.deliveryFee = goods.getDeliveryFee();
-        goodsPageDto.goodsLimitCount = goodsPageDto.getGoodsLimitCount();
-        goodsPageDto.goodsLimitTime = goodsPageDto.getGoodsLimitTime();
+        goodsPageDto.goodsLimitCount = goods.getGoodsLimitCount();
+        goodsPageDto.goodsLimitTime = goods.getGoodsLimitTime();
         goodsPageDto.categoryId = goods.getCategory().getId();
         goodsPageDto.goodsStatus = goods.getGoodsStatus();
         goodsPageDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(goods.getSell().getMember());
@@ -68,7 +68,7 @@ public class GoodsPageDto {
         goodsPageDto.goodsOrderCount = goods.getCurrentOrderCount();
         goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - (goods.getDeliveryFee()/ goods.getCurrentOrderCount());
         goodsPageDto.boardId = goods.getBoard().getId();
-        goodsPageDto.goodsImagesList = GoodsImagesDto.toGoodsImagesDto(goods.getGoodsImageList());
+        goodsPageDto.goodsImagesList = GoodsImagesDto.from(goods.getGoodsImageList());
 
         return goodsPageDto;
     }
