@@ -84,8 +84,8 @@ public class BoardService {
     }
 
     private BoardDto toBoardDto(Board board) {
-        return new BoardDto().builder().boardName(board.getBoardName())
-                .boardContent(board.getBoardContent())
+        return new BoardDto().builder().boardName(board.getTitle())
+                .boardContent(board.getContent())
                 .hostName(board.getGoods().getSell().getMember().getNickname())
                 .created_at(board.getCreatedDate())
                 .modified_at(board.getModifiedDate())
