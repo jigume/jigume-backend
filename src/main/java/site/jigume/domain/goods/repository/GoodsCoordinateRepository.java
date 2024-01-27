@@ -19,8 +19,8 @@ public interface GoodsCoordinateRepository extends JpaRepository<GoodsCoordinate
 
     @Query("select co.goods.id as goodsId, " +
             "co.goods.category.id as categoryId, " +
-            "ST_X(co.coordinate) as latitude, " +
-            "ST_Y(co.coordinate) as longitude " +
+            "ST_Y(co.coordinate) as latitude, " +
+            "ST_X(co.coordinate) as longitude " +
             "from GoodsCoordinate co " +
             "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status")
