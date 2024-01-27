@@ -30,7 +30,6 @@ public class Goods extends BaseTimeEntity {
     @Column(name = "goods_id")
     private Long id;
 
-    @Column(name = "goods_name")
     private String name;
 
     private String introduction;
