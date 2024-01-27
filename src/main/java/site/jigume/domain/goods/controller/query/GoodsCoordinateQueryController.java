@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.jigume.domain.goods.dto.GoodsListDto;
 import site.jigume.domain.goods.dto.GoodsSliceDto;
-import site.jigume.domain.goods.dto.MarkerDto;
+import site.jigume.domain.goods.dto.MarkerResponseDto;
 import site.jigume.domain.goods.dto.coordinate.CoordinateRequestDto;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.service.query.GoodsCoordinateQueryService;
@@ -31,12 +31,12 @@ public class GoodsCoordinateQueryController {
 
     @Operation(summary = "해당 지도 범위의 상품들을 모두 반환한다 - 마커용")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "마커를 반환한다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarkerDto.class))),
+            @ApiResponse(responseCode = "200", description = "마커를 반환한다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarkerResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 리소스를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
     @GetMapping("/marker")
     public ResponseEntity getGoodsCoordinateMarker(@ModelAttribute CoordinateRequestDto coordinateRequestDto) {
-        List<MarkerDto> mapMarker = goodsCoordinateQueryService.getMapMarker(coordinateRequestDto);
+        List<MarkerResponseDto> mapMarker = goodsCoordinateQueryService.getMapMarker(coordinateRequestDto);
 
         return new ResponseEntity(mapMarker, OK);
     }

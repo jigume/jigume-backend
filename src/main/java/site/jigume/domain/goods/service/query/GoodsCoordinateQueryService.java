@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.jigume.domain.goods.dto.GoodsListDto;
 import site.jigume.domain.goods.dto.GoodsSliceDto;
-import site.jigume.domain.goods.dto.MarkerDto;
+import site.jigume.domain.goods.dto.MarkerResponseDto;
 import site.jigume.domain.goods.dto.coordinate.CoordinateRequestDto;
+import site.jigume.domain.goods.dto.coordinate.MarkerDto;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.goods.repository.GoodsCoordinateRepository;
@@ -31,12 +32,14 @@ public class GoodsCoordinateQueryService {
     private final GoodsCoordinateRepository goodsCoordinateRepository;
     private final GoodsService goodsService;
 
-    public List<MarkerDto> getMapMarker(CoordinateRequestDto coordinateRequestDto) {
+    public List<MarkerResponseDto> getMapMarker(CoordinateRequestDto coordinateRequestDto) {
         List<MarkerDto> markerListFromCoordinate = goodsCoordinateRepository
                 .findMarkerListFromCoordinate(generatePolygon(coordinateRequestDto),
                         GoodsStatus.PROCESSING);
 
-        return markerListFromCoordinate;
+        return markerListFromCoordinate.stream()
+                .map(m -> MarkerResponseDto.from(m))
+                .collect(Collectors.toList());
     }
 
     public GoodsSliceDto getGoodsListByCategoryIdInMap(Long categoryId, CoordinateRequestDto coordinateRequestDto, Pageable pageable) {
