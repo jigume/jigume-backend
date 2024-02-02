@@ -33,7 +33,7 @@ public class SellQueryService {
 
         List<GoodsListDto> goodsListDtoList = sellsByMemberId.stream()
                 .map(sell -> sell.getGoods())
-                .map(goods -> GoodsListDto.toGoodsListDto(goods))
+                .map(goods -> GoodsListDto.from(goods))
                 .collect(Collectors.toList());
 
         return new SellHistoryDto(goodsListDtoList);

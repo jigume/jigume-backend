@@ -2,6 +2,7 @@ package site.jigume.domain.goods.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import site.jigume.domain.board.entity.Board;
 import site.jigume.domain.goods.dto.coordinate.GoodsCoordinateDto;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsCoordinate;
@@ -50,7 +51,7 @@ public class GoodsPageDto {
 
     private List<GoodsImagesDto> goodsImagesList = new ArrayList<>();
 
-    public static GoodsPageDto toGoodsPageDto(Goods goods, GoodsCoordinate goodsCoordinate) {
+    public static GoodsPageDto from(Goods goods, GoodsCoordinate goodsCoordinate, Board board) {
         GoodsPageDto goodsPageDto = new GoodsPageDto();
 
         goodsPageDto.goodsId = goods.getId();
@@ -67,7 +68,7 @@ public class GoodsPageDto {
         goodsPageDto.coordinate = GoodsCoordinateDto.from(goodsCoordinate);
         goodsPageDto.goodsOrderCount = goods.getCurrentOrderCount();
         goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - (goods.getDeliveryFee()/ goods.getCurrentOrderCount());
-        goodsPageDto.boardId = goods.getBoard().getId();
+        goodsPageDto.boardId = board.getId();
         goodsPageDto.goodsImagesList = GoodsImagesDto.from(goods.getGoodsImageList());
 
         return goodsPageDto;

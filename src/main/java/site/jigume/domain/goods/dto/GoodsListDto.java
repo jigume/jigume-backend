@@ -6,6 +6,7 @@ import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsImage;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.order.dto.SellerInfoDto;
+import site.jigume.global.image.ImageUrl;
 
 @NoArgsConstructor
 @Data
@@ -23,7 +24,7 @@ public class GoodsListDto {
     private Long categoryId;
 
 
-    public static GoodsListDto toGoodsListDto(Goods goods) {
+    public static GoodsListDto from(Goods goods) {
         GoodsListDto goodsListDto = new GoodsListDto();
 
         goodsListDto.goodsId = goods.getId();
@@ -38,7 +39,9 @@ public class GoodsListDto {
         goodsListDto.repImgUrl = goods.getGoodsImageList()
                 .stream()
                 .filter(GoodsImage::isRepimgYn)
-                .findAny().get().getGoodsImgUrl();
+                .findAny()
+                .orElseGet(() -> GoodsImage.createGoodsImage(goods, ImageUrl.defaultImageUrl, true))
+                .getGoodsImgUrl();
 
         goodsListDto.goodsStatus = goods.getGoodsStatus();
         goodsListDto.categoryId = goods.getCategory().getId();

@@ -47,49 +47,38 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardDto getBoard(Long goodsId, Long boardId) {
-        Board board = boardRepository.findBoardByBoardId(boardId)
+        Board board = boardRepository.findBoardByGoodsIdAndBoardId(goodsId, boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
 
         Goods goods = board.getGoods();
-
-        checkBoardInGoods(goodsId, goods);
 
         Member member = memberService.getMember();
         if (goods.isOrder(member) || goods.isSell(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
 
-        return toBoardDto(board);
+        return BoardDto.from(board);
     }
 
     @Transactional
     public BoardDto updateBoard(Long goodsId, Long boardId, BoardUpdateDto boardUpdateDto) {
-        Board board = boardRepository.findBoardByBoardId(boardId)
+        Board board = boardRepository.findBoardByGoodsIdAndBoardId(goodsId, boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
         checkBoardInGoods(goodsId, board.getGoods());
         Member member = memberService.getMember();
         isHost(board, member);
 
-        String boardContent = boardUpdateDto.getBoardContent();
+        String content = boardUpdateDto.getBoardContent();
 
-        board.updateBoardContent(boardContent);
+        board.updateBoardContent(content);
 
-        return toBoardDto(board);
+        return BoardDto.from(board);
     }
 
     private void isHost(Board board, Member member) {
         if (board.getGoods().getSell().getMember().equals(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
-    }
-
-    private BoardDto toBoardDto(Board board) {
-        return new BoardDto().builder().boardName(board.getTitle())
-                .boardContent(board.getContent())
-                .hostName(board.getGoods().getSell().getMember().getNickname())
-                .created_at(board.getCreatedDate())
-                .modified_at(board.getModifiedDate())
-                .build();
     }
 
     private void checkBoardInGoods(Long goodsId, Goods goods) {

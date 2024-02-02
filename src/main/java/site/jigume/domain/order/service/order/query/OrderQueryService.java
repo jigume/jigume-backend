@@ -11,7 +11,6 @@ import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
-import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 import site.jigume.domain.order.dto.OrderHistoryDto;
 import site.jigume.domain.order.dto.OrderInfo;
@@ -43,7 +42,7 @@ public class OrderQueryService {
 
         List<GoodsListDto> goodsListDtoList = findOrders.stream()
                 .map(order -> order.getGoods())
-                .map(goods -> GoodsListDto.toGoodsListDto(goods))
+                .map(goods -> GoodsListDto.from(goods))
                 .collect(Collectors.toList());
 
         return new OrderHistoryDto(goodsListDtoList);
