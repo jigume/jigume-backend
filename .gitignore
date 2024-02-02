@@ -35,4 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
 src/main/resources/application-API-KEY.properties
+src/main/java/site/jigume/global/image/ImageUrl.java
+src/main/generated/**/
