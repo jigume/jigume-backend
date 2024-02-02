@@ -123,7 +123,7 @@ public class CommentService {
     }
 
     private Board getBoard(Long boardId) {
-        Board board = boardRepository.findBoardByBoardId(boardId)
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
         return board;
     }

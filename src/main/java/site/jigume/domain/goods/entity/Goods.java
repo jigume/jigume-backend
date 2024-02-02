@@ -18,9 +18,7 @@ import static site.jigume.domain.goods.entity.GoodsStatus.END;
 import static site.jigume.domain.goods.entity.GoodsStatus.PROCESSING;
 
 @Entity
-@Table(name = "Goods", indexes = {
-        @Index(name = "idx_goods", columnList = "")
-})
+@Table(name = "goods")
 @NoArgsConstructor
 @Getter
 public class Goods extends BaseTimeEntity {
@@ -56,16 +54,13 @@ public class Goods extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "goods")
+    @OneToMany(mappedBy = "goods", fetch = LAZY)
     private List<Order> orderList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "goods")
+    @OneToOne(mappedBy = "goods", fetch = LAZY)
     private Sell sell;
 
-    @OneToOne(mappedBy = "goods")
-    private Board board;
-
-    @OneToMany(mappedBy = "goods")
+    @OneToMany(mappedBy = "goods", fetch = LAZY)
     private List<GoodsImage> goodsImageList = new ArrayList<>();
 
 

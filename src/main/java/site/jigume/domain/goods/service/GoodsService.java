@@ -57,16 +57,6 @@ public class GoodsService {
         return goodsImage.getId();
     }
 
-    @Transactional
-    public void timeEnd(Goods goods) {
-        goods.updateEnd();
-    }
-
-    public Goods getGoods(Long goodsId) {
-        return goodsRepository.findGoodsById(goodsId).orElseThrow(() ->
-                new GoodsException(GOODS_NOT_FOUND));
-    }
-
     public Category getCategory(Long categoryId) {
         return categoryRepository.findCategoryById(categoryId).orElseThrow(() ->
                 new GoodsException(CATEGORY_NOT_FOUND));

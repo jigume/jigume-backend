@@ -13,12 +13,13 @@ import java.util.Optional;
 
 public interface GoodsRepository extends JpaRepository<Goods, Long> {
 
-    @Query("select g from Goods g where g.id =:goodsId")
-    Optional<Goods> findGoodsById(@Param("goodsId") Long goodsId);
-
-    @Query("select distinct g from Goods g left join fetch g.orderList where g.id = :goodsId")
+    @Query("select distinct g from Goods g " +
+            "left join fetch g.orderList " +
+            "join fetch g.sell " +
+            "where g.id = :goodsId")
     Optional<Goods> findGoodsByIdWithOrderList(@Param("goodsId") Long goodsId);
 
-    @Query("select g from Goods g where g.id in :goodsIds")
+    @Query("select g from Goods g " +
+            "where g.id in :goodsIds")
     Slice<Goods> findGoodsByIdIn(@Param("goodsIds") List<Long> goodsIds, Pageable pageable);
 }

@@ -6,7 +6,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import site.jigume.domain.goods.dto.MarkerResponseDto;
 import site.jigume.domain.goods.dto.coordinate.MarkerDto;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsCoordinate;
@@ -28,20 +27,21 @@ public interface GoodsCoordinateRepository extends JpaRepository<GoodsCoordinate
                                                  @Param("status") GoodsStatus goodsStatus);
 
     @Query("select co.goods from GoodsCoordinate co " +
+            "join fetch co.goods.sell " +
             "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status")
     Slice<Goods> findGoodsByCoordinate(@Param("area") final Polygon area,
-                                              @Param("status") GoodsStatus goodsStatus,
-                                              Pageable pageable);
+                                       @Param("status") GoodsStatus goodsStatus,
+                                       Pageable pageable);
 
     @Query("select co.goods from GoodsCoordinate co " +
+            "join fetch co.goods.sell " +
             "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status " +
             "and co.goods.category.id = :categoryId")
     Slice<Goods> findGoodsByCoordinateWithCategory(@Param("area") final Polygon area,
-                                                                  @Param("status") GoodsStatus goodsStatus,
-                                                                  @Param("categoryId") Long categoryId,
-                                                                  Pageable pageable);
+                                                   @Param("status") GoodsStatus goodsStatus,
+                                                   @Param("categoryId") Long categoryId, Pageable pageable);
 
     Optional<GoodsCoordinate> findGoodsCoordinateByGoodsId(Long goodsId);
 }

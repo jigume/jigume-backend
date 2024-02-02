@@ -33,7 +33,6 @@ import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FO
 public class GoodsQueryService {
 
     private final MemberService memberService;
-    private final GoodsService goodsService;
     private final GoodsRepository goodsRepository;
     private final BoardRepository boardRepository;
     private final GoodsCoordinateRepository goodsCoordinateRepository;
@@ -45,8 +44,6 @@ public class GoodsQueryService {
 
         Board board = boardRepository.findBoardByGoodsId(goodsId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
-
-        checkEndTime(goods);
 
         GoodsCoordinate goodsCoordinate = goodsCoordinateRepository.findGoodsCoordinateByGoodsId(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
@@ -61,17 +58,6 @@ public class GoodsQueryService {
         Slice<Goods> goodsByIdIn = goodsRepository.findGoodsByIdIn(goodsIds, pageable);
 
         return GoodsSliceDto.from(goodsByIdIn);
-    }
-
-    private boolean checkEndTime(Goods goods) {
-        LocalDateTime now = LocalDateTime.now();
-
-        if (!goods.getGoodsLimitTime().isAfter(now)) {
-            goodsService.timeEnd(goods);
-            return true;
-        }
-
-        return false;
     }
 
     private GoodsMemberAuth isOrderOrSell(Member member, Goods goods) {

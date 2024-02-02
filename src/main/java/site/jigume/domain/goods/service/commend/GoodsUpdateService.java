@@ -9,7 +9,7 @@ import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsCoordinate;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.repository.GoodsCoordinateRepository;
-import site.jigume.domain.goods.service.GoodsService;
+import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.member.exception.auth.AuthExceptionCode;
@@ -22,14 +22,15 @@ import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FO
 @RequiredArgsConstructor
 @Transactional
 public class GoodsUpdateService {
+    private final GoodsRepository goodsRepository;
     private final GoodsCoordinateRepository goodsCoordinateRepository;
 
     private final MemberService memberService;
-    private final GoodsService goodsService;
 
     public void updateGoodsIntroduction(Long goodsId, String introduction) {
         Member member = memberService.getMember();
-        Goods goods = goodsService.getGoods(goodsId);
+        Goods goods = goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
 
         checkGoodsSeller(goods, member);
 
@@ -38,7 +39,8 @@ public class GoodsUpdateService {
 
     public void endGoodsSelling(Long goodsId) {
         Member member = memberService.getMember();
-        Goods goods = goodsService.getGoods(goodsId);
+        Goods goods = goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
 
         checkGoodsSeller(goods, member);
 
