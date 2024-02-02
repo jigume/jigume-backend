@@ -9,6 +9,7 @@ import site.jigume.domain.member.entity.Member;
 import site.jigume.global.audit.BaseTimeEntity;
 
 @Entity
+@Table(name = "sells")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Sell extends BaseTimeEntity {

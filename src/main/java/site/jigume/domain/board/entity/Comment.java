@@ -12,7 +12,7 @@ import java.util.List;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Table(name = "Comment")
+@Table(name = "comments")
 @NoArgsConstructor
 @Getter
 public class Comment extends BaseTimeEntity {

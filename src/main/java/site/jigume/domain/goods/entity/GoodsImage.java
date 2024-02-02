@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import site.jigume.global.audit.BaseTimeEntity;
 
 @Entity
+@Table(name = "goods_images")
 @NoArgsConstructor
 @Getter
 public class GoodsImage extends BaseTimeEntity {

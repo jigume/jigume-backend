@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "MEMBER")
+@Table(name = "members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Member extends BaseTimeEntity implements UserDetails {
