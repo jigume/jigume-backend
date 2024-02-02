@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import site.jigume.domain.order.entity.Sell;
 import site.jigume.global.audit.BaseTimeEntity;
+import site.jigume.global.image.ImageUrl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +49,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         Member member = new Member();
         member.socialId = socialId;
         member.baseRole = BaseRole.GUEST;
+        member.profileImageUrl = ImageUrl.defaultImageUrl;
 
         return member;
     }
