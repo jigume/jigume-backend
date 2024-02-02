@@ -4,14 +4,16 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
+import site.jigume.global.audit.BaseTimeEntity;
 
 @Table(name = "coordinates")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GoodsCoordinate {
+public class GoodsCoordinate extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "coordinate_id")
     private Long id;
 
     @Column(columnDefinition = "POINT SRID 5181")
