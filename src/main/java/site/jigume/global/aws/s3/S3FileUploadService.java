@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import site.jigume.global.aws.s3.exception.exception.S3InvalidImageException;
+import site.jigume.global.aws.s3.repository.FileRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +28,9 @@ public class S3FileUploadService {
 
     private final AmazonS3Client amazonS3Client;
 
-    public String uploadFile(MultipartFile uploadFile) {
+    private final FileRepository fileRepository;
+
+    public site.jigume.global.aws.s3.entity.File uploadFile(MultipartFile uploadFile) {
 
         String origName = uploadFile.getOriginalFilename();
 
@@ -59,7 +62,14 @@ public class S3FileUploadService {
 
         file.delete();
 
+        site.jigume.global.aws.s3.entity.File imgFile =
+                new site.jigume.global.aws.s3.entity.
+                        File().builder().url(imageUrl)
+                        .name(saveFileName)
+                        .type(ext).build();
 
-        return imageUrl;
+        site.jigume.global.aws.s3.entity.File save = fileRepository.save(imgFile);
+
+        return save;
     }
 }
