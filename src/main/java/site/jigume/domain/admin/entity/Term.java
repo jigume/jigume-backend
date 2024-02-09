@@ -19,4 +19,12 @@ public class Term extends BaseTimeEntity {
     private String detail;
 
     private boolean requiredYn;
+
+    public static Term createTerm(String detail, boolean requiredYn) {
+        Term term = new Term();
+        term.detail = detail;
+        term.requiredYn = requiredYn;
+
+        return term;
+    }
 }
