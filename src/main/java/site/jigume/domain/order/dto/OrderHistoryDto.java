@@ -11,6 +11,7 @@ import site.jigume.domain.order.entity.Order;
 public class OrderHistoryDto {
 
     private Long goodsId;
+    private String goodsLink;
     private String goodsName;
     private SellerInfoDto sellerInfoDto;
     private Integer goodsPrice;
@@ -27,6 +28,7 @@ public class OrderHistoryDto {
         OrderHistoryDto orderHistoryDto = new OrderHistoryDto();
 
         orderHistoryDto.goodsId = order.getGoods().getId();
+        orderHistoryDto.goodsLink = order.getGoods().getLink();
         orderHistoryDto.goodsName = order.getGoods().getName();
         orderHistoryDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(order.getGoods().getSell().getMember());
         orderHistoryDto.goodsPrice = order.getGoods().getGoodsPrice();

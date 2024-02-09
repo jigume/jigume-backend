@@ -51,7 +51,7 @@ public class GoodsPageDto {
 
     private List<GoodsImagesDto> goodsImagesList = new ArrayList<>();
 
-    public static GoodsPageDto from(Goods goods, GoodsCoordinate goodsCoordinate, Board board) {
+    public static GoodsPageDto from(Goods goods, GoodsCoordinate goodsCoordinate) {
         GoodsPageDto goodsPageDto = new GoodsPageDto();
 
         goodsPageDto.goodsId = goods.getId();
@@ -68,7 +68,7 @@ public class GoodsPageDto {
         goodsPageDto.coordinate = GoodsCoordinateDto.from(goodsCoordinate);
         goodsPageDto.goodsOrderCount = goods.getCurrentOrderCount();
         goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - (goods.getDeliveryFee()/ goods.getCurrentOrderCount());
-        goodsPageDto.boardId = board.getId();
+        goodsPageDto.boardId = goods.getBoard().getId();
         goodsPageDto.goodsImagesList = GoodsImagesDto.from(goods.getGoodsImageList());
 
         return goodsPageDto;

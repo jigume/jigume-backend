@@ -32,16 +32,12 @@ public class GoodsQueryService {
 
     private final MemberService memberService;
     private final GoodsRepository goodsRepository;
-    private final BoardRepository boardRepository;
     private final GoodsCoordinateRepository goodsCoordinateRepository;
 
     public GoodsDetailPageDto getGoodsDetailPage(Long goodsId) {
         Member member = memberService.getMember();
-        Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
+        Goods goods = goodsRepository.findGoodsByIdWithOrderListAndBoard(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
-
-        Board board = boardRepository.findBoardByGoodsId(goodsId)
-                .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
 
         GoodsCoordinate goodsCoordinate = goodsCoordinateRepository.findGoodsCoordinateByGoodsId(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
@@ -49,7 +45,7 @@ public class GoodsQueryService {
         GoodsMemberAuth isOrderOrSell = isOrderOrSell(member, goods);
 
         return new GoodsDetailPageDto(isOrderOrSell,
-                GoodsPageDto.from(goods, goodsCoordinate, board));
+                GoodsPageDto.from(goods, goodsCoordinate));
     }
 
     public GoodsSliceDto getGoodsListInIds(List<Long> goodsIds, Pageable pageable) {
