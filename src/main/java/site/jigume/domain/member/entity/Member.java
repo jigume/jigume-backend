@@ -38,7 +38,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private Point coordinate;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
     private File file;
 

@@ -12,6 +12,8 @@ import site.jigume.domain.board.exception.exception.BoardException;
 import site.jigume.domain.board.repository.BoardRepository;
 import site.jigume.domain.board.repository.CommentRepository;
 import site.jigume.domain.goods.entity.Goods;
+import site.jigume.domain.goods.exception.GoodsException;
+import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.member.exception.auth.AuthExceptionCode;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static site.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;
 import static site.jigume.domain.board.exception.exception.BoardExceptionCode.COMMENT_NOT_FOUND;
+import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +33,15 @@ public class CommentService {
     private final MemberService memberService;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final GoodsRepository goodsRepository;
 
     @Transactional
-    public void createComment(Long boardId, CreateCommentDto commentDto) {
+    public void createComment(Long goodsId, Long boardId, CreateCommentDto commentDto) {
         Member member = memberService.getMember();
         Board board = getBoard(boardId);
+        Goods goods = getGoods(goodsId);
 
-        isOrderSell(board.getGoods(), member);
+        isOrderSell(goods, member);
 
         Comment comment = Comment.createComment(member, board, commentDto.getContent());
         board.addComment(comment);
@@ -44,11 +49,12 @@ public class CommentService {
     }
 
     @Transactional
-    public void createReplyComment(Long boardId, CreateReplyComment createReplyComment) {
+    public void createReplyComment(Long goodsId, Long boardId, CreateReplyComment createReplyComment) {
         Member member = memberService.getMember();
         Board board = getBoard(boardId);
+        Goods goods = getGoods(goodsId);
 
-        isOrderSell(board.getGoods(), member);
+        isOrderSell(goods, member);
 
         Comment parentComment = commentRepository.findById(createReplyComment.getParentCommentId())
                 .orElseThrow(() -> new BoardException(COMMENT_NOT_FOUND));
@@ -60,15 +66,16 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(Long boardId, Long commentId, UpdateCommentDto updateCommentDto) {
+    public void updateComment(Long goodsId, Long boardId, Long commentId, UpdateCommentDto updateCommentDto) {
+        Member member = memberService.getMember();
+        Goods goods = getGoods(goodsId);
+
         String commentContent = updateCommentDto.getCommentContent();
 
         getBoard(boardId);
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BoardException(COMMENT_NOT_FOUND));
-
-        Member member = memberService.getMember();
 
         if (!comment.getMember().equals(member)) {
             throw new AuthException(AuthExceptionCode.NOT_AUTHORIZATION_USER);
@@ -78,8 +85,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long goodsId, Long commentId) {
         Member member = memberService.getMember();
+        Goods goods = getGoods(goodsId);
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BoardException(COMMENT_NOT_FOUND));
 
@@ -91,10 +99,10 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public GetCommentsDto getComments(Long boardId, Pageable pageable) {
+    public GetCommentsDto getComments(Long goodsId, Long boardId, Pageable pageable) {
         Member member = memberService.getMember();
         Board board = getBoard(boardId);
-        Goods goods = board.getGoods();
+        Goods goods = getGoods(goodsId);
 
         isOrderSell(goods, member);
 
@@ -147,5 +155,11 @@ public class CommentService {
                 .created_at(comment.getCreatedDate())
                 .modified_at(comment.getModifiedDate())
                 .build();
+    }
+
+    private Goods getGoods(Long goodsId) {
+        Goods goods = goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        return goods;
     }
 }

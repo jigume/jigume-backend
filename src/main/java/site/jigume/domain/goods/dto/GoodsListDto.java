@@ -6,7 +6,6 @@ import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsImage;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.order.dto.SellerInfoDto;
-import site.jigume.global.image.ImageUrl;
 
 @NoArgsConstructor
 @Data

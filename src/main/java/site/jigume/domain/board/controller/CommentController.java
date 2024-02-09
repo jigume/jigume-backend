@@ -20,7 +20,7 @@ import site.jigume.domain.member.exception.auth.AuthException;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/api/goods/{goodsId}/board")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -34,9 +34,10 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @PostMapping("/{boardId}/comment")
-    public ResponseEntity createComment(@PathVariable Long boardId,
+    public ResponseEntity createComment(@PathVariable Long goodsId,
+                                        @PathVariable Long boardId,
                                         @RequestBody CreateCommentDto commentDto) {
-        commentService.createComment(boardId, commentDto);
+        commentService.createComment(goodsId, boardId, commentDto);
 
         return new ResponseEntity(OK);
     }
@@ -50,9 +51,10 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "답글을 달 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @PostMapping("/{boardId}/comment/reply")
-    public ResponseEntity createReplyComment(@PathVariable Long boardId,
+    public ResponseEntity createReplyComment(@PathVariable Long goodsId,
+                                             @PathVariable Long boardId,
                                              @RequestBody CreateReplyComment createReplyComment) {
-        commentService.createReplyComment(boardId, createReplyComment);
+        commentService.createReplyComment(goodsId, boardId, createReplyComment);
 
         return new ResponseEntity(OK);
     }
@@ -66,10 +68,11 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "수정할 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @PostMapping("/{boardId}/comment/{commentId}")
-    public ResponseEntity updateComment(@PathVariable Long boardId,
+    public ResponseEntity updateComment(@PathVariable Long goodsId,
+                                        @PathVariable Long boardId,
                                         @PathVariable Long commentId,
                                         @RequestBody UpdateCommentDto updateCommentDto) {
-        commentService.updateComment(boardId, commentId, updateCommentDto);
+        commentService.updateComment(goodsId, boardId, commentId, updateCommentDto);
 
         return new ResponseEntity(OK);
     }
@@ -82,9 +85,10 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "보드를 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class))),
     })
     @GetMapping("/{boardId}/comment")
-    public ResponseEntity getComment(@PathVariable Long boardId,
+    public ResponseEntity getComment(@PathVariable Long goodsId,
+                                     @PathVariable Long boardId,
                                      Pageable pageable) {
-        GetCommentsDto comments = commentService.getComments(boardId, pageable);
+        GetCommentsDto comments = commentService.getComments(goodsId, boardId, pageable);
 
         return new ResponseEntity(comments, OK);
     }
@@ -98,9 +102,10 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "삭제할 댓글을 찾을 수 없음.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BoardException.class)))
     })
     @DeleteMapping("/{boardId}/comment/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable Long boardId,
+    public ResponseEntity deleteComment(@PathVariable Long goodsId,
+                                        @PathVariable Long boardId,
                                         @PathVariable Long commentId) {
-        commentService.deleteComment(commentId);
+        commentService.deleteComment(goodsId, commentId);
 
         return new ResponseEntity(OK);
     }

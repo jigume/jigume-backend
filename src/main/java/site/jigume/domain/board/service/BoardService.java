@@ -1,9 +1,9 @@
 package site.jigume.domain.board.service;
 
-import site.jigume.domain.board.dto.BoardCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.jigume.domain.board.dto.BoardCreateDto;
 import site.jigume.domain.board.dto.BoardDto;
 import site.jigume.domain.board.dto.BoardUpdateDto;
 import site.jigume.domain.board.entity.Board;
@@ -32,10 +32,9 @@ public class BoardService {
     public Long save(Long goodsId, BoardCreateDto boardCreateDto) {
         Member member = memberService.getMember();
 
-        Goods goods = goodsRepository.findById(goodsId)
-                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        Goods goods = getGoods(goodsId);
 
-        if(!goods.isSell(member)) {
+        if (!goods.isSell(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
 
@@ -50,33 +49,36 @@ public class BoardService {
         Board board = boardRepository.findBoardByGoodsIdAndBoardId(goodsId, boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
 
-        Goods goods = board.getGoods();
+        Goods goods = getGoods(goodsId);
 
         Member member = memberService.getMember();
         if (goods.isOrder(member) || goods.isSell(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
 
-        return BoardDto.from(board);
+        return BoardDto.from(board, goods);
     }
 
     @Transactional
     public BoardDto updateBoard(Long goodsId, Long boardId, BoardUpdateDto boardUpdateDto) {
         Board board = boardRepository.findBoardByGoodsIdAndBoardId(goodsId, boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
-        checkBoardInGoods(goodsId, board.getGoods());
+
+        Goods goods = getGoods(goodsId);
+
+        checkBoardInGoods(goodsId, goods);
         Member member = memberService.getMember();
-        isHost(board, member);
+        isHost(goods, member);
 
         String content = boardUpdateDto.getBoardContent();
 
         board.updateBoardContent(content);
 
-        return BoardDto.from(board);
+        return BoardDto.from(board, goods);
     }
 
-    private void isHost(Board board, Member member) {
-        if (board.getGoods().getSell().getMember().equals(member)) {
+    private void isHost(Goods goods, Member member) {
+        if (goods.getSell().getMember().equals(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
     }
@@ -85,5 +87,11 @@ public class BoardService {
         if (goodsId.equals(goods.getId())) {
             throw new GoodsException(GOODS_NOT_FOUND);
         }
+    }
+
+    private Goods getGoods(Long goodsId) {
+        Goods goods = goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        return goods;
     }
 }

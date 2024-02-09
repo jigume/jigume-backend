@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.jigume.domain.goods.dto.GoodsListDto;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.goods.exception.GoodsException;
@@ -35,17 +34,14 @@ public class OrderQueryService {
     private final MemberService memberService;
     private final GoodsRepository goodsRepository;
 
-    public OrderHistoryDto getOrderHistory(GoodsStatus goodsStatus) {
+    public List<OrderHistoryDto> getOrderHistory(GoodsStatus goodsStatus) {
         Member member = memberService.getMember();
         List<Order> findOrders = orderRepository
                 .findOrdersByMemberIdAndGoodsGoodsStatus(member.getId(), goodsStatus);
 
-        List<GoodsListDto> goodsListDtoList = findOrders.stream()
-                .map(order -> order.getGoods())
-                .map(goods -> GoodsListDto.from(goods))
+        return findOrders.stream()
+                .map(order -> OrderHistoryDto.from(order))
                 .collect(Collectors.toList());
-
-        return new OrderHistoryDto(goodsListDtoList);
     }
 
     public OrderInfo getOrder(Long goodsId) {

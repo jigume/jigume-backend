@@ -60,6 +60,10 @@ public class Goods extends BaseTimeEntity {
     @OneToOne(mappedBy = "goods", fetch = LAZY)
     private Sell sell;
 
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
+
     @OneToMany(mappedBy = "goods", fetch = LAZY)
     private List<GoodsImage> goodsImageList = new ArrayList<>();
 

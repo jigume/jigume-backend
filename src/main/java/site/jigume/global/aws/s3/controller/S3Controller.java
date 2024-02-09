@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import site.jigume.domain.goods.service.GoodsService;
 import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.member.service.MemberService;
-import site.jigume.global.image.dto.ImageUploadRequest;
 
 import java.util.List;
 

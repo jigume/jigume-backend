@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.jigume.domain.board.repository.BoardRepository;
-import site.jigume.domain.board.repository.CommentRepository;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.repository.GoodsImagesRepository;
@@ -26,7 +25,6 @@ public class GoodsDeleteService {
     private final MemberService memberService;
     private final GoodsRepository goodsRepository;
     private final BoardRepository boardRepository;
-    private final CommentRepository commentRepository;
     private final SellRepository sellRepository;
     private final GoodsImagesRepository goodsImagesRepository;
 

@@ -44,7 +44,7 @@ public class OrderQueryController {
     })
     @GetMapping("/order/{status}")
     public ResponseEntity getOrderHistory(@PathVariable("status") GoodsStatus goodsStatus) {
-        OrderHistoryDto orderHistory = orderQueryService.getOrderHistory(goodsStatus);
+        List<OrderHistoryDto> orderHistory = orderQueryService.getOrderHistory(goodsStatus);
 
         return new ResponseEntity(orderHistory, OK);
     }

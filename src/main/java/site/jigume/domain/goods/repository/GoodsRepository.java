@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import site.jigume.domain.goods.entity.Goods;
-import site.jigume.domain.goods.entity.GoodsStatus;
 
 import java.util.List;
 import java.util.Optional;

@@ -20,7 +20,6 @@ import site.jigume.global.aws.s3.exception.exception.S3InvalidImageException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor

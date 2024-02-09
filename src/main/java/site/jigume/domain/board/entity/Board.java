@@ -20,10 +20,6 @@ public class Board extends BaseTimeEntity {
     @Column(name = "board_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_id")
-    private Goods goods;
-
     private String title;
 
     private String content;
@@ -33,12 +29,11 @@ public class Board extends BaseTimeEntity {
 
     private boolean isDelete;
 
-    public static Board createBoard(String boardContent,Goods goods) {
+    public static Board createBoard(String boardContent, Goods goods) {
         Board board = new Board();
         board.title = goods.getName();
         board.isDelete = false;
         board.content = boardContent;
-        board.goods = goods;
 
         return board;
     }
