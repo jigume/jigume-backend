@@ -98,6 +98,20 @@ public class MemberController {
         return new ResponseEntity(OK);
     }
 
+    @Operation(summary = "멤버 프로필 이미지 저장")
+    @Parameters(value = {
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이미지 저장 성공"),
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
+    })
+    @PostMapping("/member/image")
+    public ResponseEntity saveMemberImage(ImageUploadRequest request) {
+        Long memberImageId = memberService.saveMemberImage(request.multipartFile());
+
+        return new ResponseEntity(memberImageId, OK);
+    }
+
     @Operation(summary = "User의 닉네임 같은 정보를 가져온다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이미지 파일 업데이트 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemberInfoDto.class))),

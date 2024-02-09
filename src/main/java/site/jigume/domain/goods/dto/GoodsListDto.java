@@ -36,12 +36,12 @@ public class GoodsListDto {
         goodsListDto.discountDeliveryPrice = goods.getDeliveryFee() -
                 (goods.getDeliveryFee() / goods.getCurrentOrderCount());
 
+        //TODO
         goodsListDto.repImgUrl = goods.getGoodsImageList()
                 .stream()
                 .filter(GoodsImage::isRepimgYn)
                 .findAny()
-                .orElseGet(() -> GoodsImage.createGoodsImage(goods, ImageUrl.defaultImageUrl, true))
-                .getGoodsImgUrl();
+                .get().getFile().getUrl();
 
         goodsListDto.goodsStatus = goods.getGoodsStatus();
         goodsListDto.categoryId = goods.getCategory().getId();

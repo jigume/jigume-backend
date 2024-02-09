@@ -15,7 +15,7 @@ import site.jigume.domain.member.service.MemberService;
 import site.jigume.domain.order.dto.OrderHistoryDto;
 import site.jigume.domain.order.dto.OrderInfo;
 import site.jigume.domain.order.dto.OrderInfoList;
-import site.jigume.domain.order.dto.OrderMemberListDto;
+import site.jigume.domain.order.dto.OrderMemberDto;
 import site.jigume.domain.order.entity.Order;
 import site.jigume.domain.order.repository.OrderRepository;
 
@@ -74,7 +74,7 @@ public class OrderQueryService {
         return new OrderInfoList(orderInfoList);
     }
 
-    public OrderMemberListDto getOrderMemberList(Long goodsId) {
+    public List<OrderMemberDto> getOrderMemberList(Long goodsId) {
         Member member = memberService.getMember();
         Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
@@ -84,6 +84,9 @@ public class OrderQueryService {
                 .findAny()
                 .orElseThrow(() -> new AuthException(NOT_AUTHORIZATION_USER));
 
-        return OrderMemberListDto.toOrderMemberListDto(goods.getOrderList());
+        return goods.getOrderList().stream()
+                .map(order -> order.getMember())
+                .map(m -> OrderMemberDto.toOrderMemberDto(member))
+                .toList();
     }
 }

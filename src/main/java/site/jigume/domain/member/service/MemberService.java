@@ -17,9 +17,6 @@ import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.member.exception.member.MemberException;
 import site.jigume.domain.member.repository.MemberRepository;
-import site.jigume.global.aws.s3.S3FileUploadService;
-import site.jigume.global.image.ImageUrl;
-import site.jigume.global.image.dto.ImageUploadRequest;
 import site.jigume.global.jwt.TokenProvider;
 
 import java.time.Duration;
@@ -36,7 +33,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final Map<String, OAuthService> oAuthServiceMap;
-    private final S3FileUploadService s3FileUploadService;
+    private final MemberImageService memberImageService;
     private String regex = "^[가-힣a-zA-Z0-9]*$";
 
     @Transactional
@@ -82,13 +79,14 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberProfileImage(MultipartFile multipartFile) {
+    public Long updateMemberProfileImage(MultipartFile multipartFile) {
         Member member = getMember();
 
-        String imgUrl = s3FileUploadService.uploadFile(multipartFile);
+        Long imgId = memberImageService.update(multipartFile, member);
 
-        member.updateMemberProfileImg(imgUrl);
         if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
+
+        return imgId;
     }
 
     public MemberInfoDto getMemberInfo() {
@@ -107,11 +105,20 @@ public class MemberService {
 
     private Member loginMember(String socialId) {
         Member member = memberRepository.findMemberBySocialId(socialId)
-                .orElseGet(() -> Member.createMember(socialId));
+                .orElseGet(() -> save(socialId));
 
         member.updateRefreshToken(tokenProvider.generateToken(member, Duration.ofDays(14)));
 
         memberRepository.save(member);
+
+        return member;
+    }
+
+    private Member save(String socialId) {
+        Member member = Member.createMember(socialId);
+
+        memberImageService.setDefault(member);
+
         return member;
     }
 
@@ -126,11 +133,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void saveMemberImage(MultipartFile multipartFile) {
+    public Long saveMemberImage(MultipartFile multipartFile) {
         Member member = getMember();
-        String memberProfileImgUrl = s3FileUploadService.uploadFile(multipartFile);
 
-        member.updateMemberProfileImg(memberProfileImgUrl);
+        return memberImageService.update(multipartFile, member);
     }
 
     public void checkDuplicateNickname(String nickname) {

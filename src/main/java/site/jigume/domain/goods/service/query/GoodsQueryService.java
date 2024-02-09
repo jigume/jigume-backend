@@ -16,12 +16,10 @@ import site.jigume.domain.goods.entity.GoodsCoordinate;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.repository.GoodsCoordinateRepository;
 import site.jigume.domain.goods.repository.GoodsRepository;
-import site.jigume.domain.goods.service.GoodsService;
 import site.jigume.domain.goods.service.constant.GoodsMemberAuth;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.service.MemberService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static site.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;

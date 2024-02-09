@@ -16,7 +16,7 @@ public class OrderMemberDto {
         OrderMemberDto orderMemberDto = new OrderMemberDto();
         orderMemberDto.memberId = member.getId();
         orderMemberDto.nickname = member.getNickname();
-        orderMemberDto.profileImageUrl = member.getProfileImageUrl();
+        orderMemberDto.profileImageUrl = member.getFile().getUrl();
 
         return orderMemberDto;
     }

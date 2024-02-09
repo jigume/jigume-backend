@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.jigume.global.audit.BaseTimeEntity;
+import site.jigume.global.aws.s3.entity.File;
 
 @Entity
 @Table(name = "goods_images")
@@ -20,16 +21,18 @@ public class GoodsImage extends BaseTimeEntity {
     @JoinColumn(name = "goods_id")
     private Goods goods;
 
-    private String goodsImgUrl;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private File file;
 
     private boolean repimgYn; //대표 이미지 여부
 
     private boolean isDelete;
 
-    public static GoodsImage createGoodsImage(Goods goods, String goodsImgUrl, boolean repimgYn) {
+    public static GoodsImage createGoodsImage(Goods goods, File file, boolean repimgYn) {
         GoodsImage goodsImage = new GoodsImage();
         goodsImage.goods = goods;
-        goodsImage.goodsImgUrl = goodsImgUrl;
+        goodsImage.file = file;
         goodsImage.repimgYn = repimgYn;
         goodsImage.isDelete = false;
         goods.getGoodsImageList().add(goodsImage);

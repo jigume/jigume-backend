@@ -13,6 +13,8 @@ import site.jigume.domain.goods.repository.CategoryRepository;
 import site.jigume.domain.goods.repository.GoodsImagesRepository;
 import site.jigume.domain.goods.repository.GoodsRepository;
 import site.jigume.global.aws.s3.S3FileUploadService;
+import site.jigume.global.aws.s3.entity.File;
+import site.jigume.global.aws.s3.repository.FileRepository;
 import site.jigume.global.image.ImageUrl;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public class GoodsService {
     private final CategoryRepository categoryRepository;
     private final GoodsImagesRepository goodsImagesRepository;
     private final S3FileUploadService s3FileUploadService;
+    private final FileRepository fileRepository;
 
     @Transactional
     public void updateImage(List<MultipartFile> imageList, Long goodsId, Integer repImg) {
@@ -39,10 +42,10 @@ public class GoodsService {
         if (imageList.size() != 0) {
             IntStream.range(0, imageList.size())
                     .forEach(i -> {
-                        String goodsImgUrl = s3FileUploadService.uploadFile(imageList.get(i));
+                        File file = s3FileUploadService.uploadFile(imageList.get(i));
                         boolean isRepImg = (repImg != null && i == repImg);
                         log.info("{}", isRepImg);
-                        GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, goodsImgUrl, isRepImg);
+                        GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, file, isRepImg);
                         goodsImagesRepository.save(goodsImage);
                     });
         }
@@ -50,7 +53,8 @@ public class GoodsService {
 
     @Transactional
     public Long saveDefaultImage(Goods goods) {
-        GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, ImageUrl.defaultImageUrl, true);
+        File fileByUrl = fileRepository.findFileByUrl(ImageUrl.defaultImageUrl);
+        GoodsImage goodsImage = GoodsImage.createGoodsImage(goods, fileByUrl, true);
 
         goodsImagesRepository.save(goodsImage);
 

@@ -23,7 +23,7 @@ public class GoodsImagesDto {
     public static List<GoodsImagesDto> from(List<GoodsImage> goodsImageList) {
         return goodsImageList.stream()
                 .map(goodsImage ->
-                        new GoodsImagesDto(goodsImage.getGoodsImgUrl(), goodsImage.isRepimgYn()))
+                        new GoodsImagesDto(goodsImage.getFile().getUrl(), goodsImage.isRepimgYn()))
                 .collect(Collectors.toList());
     }
 }

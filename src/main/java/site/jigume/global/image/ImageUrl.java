@@ -1,9 +1,7 @@
 package site.jigume.global.image;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class ImageUrl {
 
-    @Value("${cloud.aws.s3.bucket.default.image}")
-    public static String defaultImageUrl;
+    public static final String defaultImageUrl = "https://jigumi.s3.ap-northeast-2.amazonaws.com/jigume_logo.png";
+
 }

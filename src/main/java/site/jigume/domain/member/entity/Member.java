@@ -10,13 +10,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import site.jigume.domain.order.entity.Sell;
 import site.jigume.global.audit.BaseTimeEntity;
-import site.jigume.global.image.ImageUrl;
+import site.jigume.global.aws.s3.entity.File;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity(name = "MEMBER")
+@Entity
 @Table(name = "members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -36,9 +36,11 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(unique = true)
     private String refreshToken;
 
-    private String profileImageUrl;
-
     private Point coordinate;
+
+    @OneToOne
+    @JoinColumn(name = "file_id")
+    private File file;
 
     @Enumerated(EnumType.STRING)
     private BaseRole baseRole;
@@ -50,7 +52,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
         Member member = new Member();
         member.socialId = socialId;
         member.baseRole = BaseRole.GUEST;
-        member.profileImageUrl = ImageUrl.defaultImageUrl;
 
         return member;
     }
@@ -60,13 +61,14 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.coordinate = coordinate;
     }
 
+    public void updateProfileImage(File file) {
+        this.file = file;
+    }
+
     public void updateBaseRole(BaseRole baseRole) {
         this.baseRole = baseRole;
     }
 
-    public void updateMemberProfileImg(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
