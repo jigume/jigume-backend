@@ -21,7 +21,7 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
     @Query("select distinct g from Goods g " +
             "left join fetch g.orderList " +
             "join fetch g.sell " +
-            "join fetch g.board" +
+            "join fetch g.board " +
             "where g.id = :goodsId")
     Optional<Goods> findGoodsByIdWithOrderListAndBoard(@Param("goodsId") Long goodsId);
 

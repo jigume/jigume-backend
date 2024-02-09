@@ -46,10 +46,10 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardDto getBoard(Long goodsId, Long boardId) {
-        Board board = boardRepository.findBoardByGoodsIdAndBoardId(goodsId, boardId)
-                .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
-
         Goods goods = getGoods(goodsId);
+        Board board = goods.getBoard();
+
+        validBoard(boardId, board);
 
         Member member = memberService.getMember();
         if (goods.isOrder(member) || goods.isSell(member)) {
@@ -61,10 +61,10 @@ public class BoardService {
 
     @Transactional
     public BoardDto updateBoard(Long goodsId, Long boardId, BoardUpdateDto boardUpdateDto) {
-        Board board = boardRepository.findBoardByGoodsIdAndBoardId(goodsId, boardId)
-                .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
-
         Goods goods = getGoods(goodsId);
+        Board board = goods.getBoard();
+
+        validBoard(boardId, board);
 
         checkBoardInGoods(goodsId, goods);
         Member member = memberService.getMember();
@@ -93,5 +93,11 @@ public class BoardService {
         Goods goods = goodsRepository.findById(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
         return goods;
+    }
+
+    private void validBoard(Long boardId, Board board) {
+        if(board.getId() != boardId) {
+            throw new BoardException(BOARD_NOT_FOUND);
+        }
     }
 }

@@ -41,7 +41,7 @@ public class GoodsDeleteService {
 
         sellRepository.deleteSell(goodsId);
         goodsImagesRepository.deleteGoodsImage(goodsId);
-        boardRepository.deleteBoard(goodsId);
+        boardRepository.deleteBoard(goods.getBoard().getId());
 //        commentRepository.deleteComment(goods.getBoard().getId());
     }
 

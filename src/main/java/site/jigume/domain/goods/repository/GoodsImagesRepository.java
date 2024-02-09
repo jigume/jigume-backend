@@ -8,7 +8,7 @@ import site.jigume.domain.goods.entity.GoodsImage;
 
 public interface GoodsImagesRepository extends JpaRepository<GoodsImage, Long> {
 
-    @Query("select gi from GoodsImage gi where gi.goodsImgUrl = :defaultImgUrl")
+    @Query("select gi from GoodsImage gi where gi.file.url = :defaultImgUrl")
     GoodsImage findDefalutGoodsImage(@Param("defaultImgUrl") String defaultImgUrl);
 
     @Modifying
