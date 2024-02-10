@@ -44,6 +44,14 @@ public class OrderQueryService {
                 .collect(Collectors.toList());
     }
 
+    public OrderInfo getOrderInfoBeforePay(Long goodsId, Integer orderGoodsCount) {
+        Member member = memberService.getMember();
+
+        Order order = Order.createOrder(orderGoodsCount, getGoods(goodsId), member);
+
+        return OrderInfo.toOrderInfo(order);
+    }
+
     public OrderInfo getOrder(Long goodsId) {
         Member member = memberService.getMember();
 
@@ -56,8 +64,7 @@ public class OrderQueryService {
     public OrderInfoList getOrderInfoList(Long goodsId) {
         Member member = memberService.getMember();
 
-        Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
-                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        Goods goods = getGoodsWithOrderList(goodsId);
 
         if (goods.isSell(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
@@ -72,8 +79,7 @@ public class OrderQueryService {
 
     public List<OrderMemberDto> getOrderMemberList(Long goodsId) {
         Member member = memberService.getMember();
-        Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
-                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        Goods goods = getGoodsWithOrderList(goodsId);
 
         goods.getOrderList().stream()
                 .filter(order -> order.getMember().equals(member))
@@ -84,5 +90,16 @@ public class OrderQueryService {
                 .map(order -> order.getMember())
                 .map(m -> OrderMemberDto.toOrderMemberDto(member))
                 .toList();
+    }
+
+    private Goods getGoodsWithOrderList(Long goodsId) {
+        Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        return goods;
+    }
+
+    private Goods getGoods(Long goodsId) {
+        return goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
     }
 }

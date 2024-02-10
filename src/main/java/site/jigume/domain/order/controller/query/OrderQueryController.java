@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.member.exception.auth.AuthException;
@@ -65,7 +62,24 @@ public class OrderQueryController {
         return new ResponseEntity(orderInfoList, OK);
     }
 
-    @Operation(summary = "구매자의 예상 결제 금액을 가져오는 API")
+    @Operation(summary = "구매자의 예상 결제 금액을 가져오는 API - 결제 전")
+    @Parameters(value = {
+            @Parameter(name = "goodsId", description = "Goods의 Id", example = "1, 2, 3"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "구매자의 예상 결제 금액을 가져옴", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderInfoList.class))),
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "상품을 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
+    })
+    @GetMapping("/goods/{goodsId}/order")
+    public ResponseEntity getOrderInfoBeforePay(@PathVariable("goodsId") Long goodsId,
+                                                @RequestParam("orderGoodsCount") Integer orderGoodsCount) {
+        OrderInfo orderInfo = orderQueryService.getOrderInfoBeforePay(goodsId, orderGoodsCount);
+
+        return new ResponseEntity(orderInfo, OK);
+    }
+
+    @Operation(summary = "구매자의 예상 결제 금액을 가져오는 API - 결제 후")
     @Parameters(value = {
             @Parameter(name = "goodsId", description = "Goods의 Id", example = "1, 2, 3"),
     })
