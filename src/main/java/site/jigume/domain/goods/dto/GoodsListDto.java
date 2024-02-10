@@ -16,6 +16,7 @@ public class GoodsListDto {
     private SellerInfoDto sellerInfoDto;
     private Integer goodsPrice;
     private Integer goodsDeliveryPrice;
+    private Integer goodsDeposit;
     private Integer goodsOrderCount;
     private Integer discountDeliveryPrice;
     private String repImgUrl;
@@ -31,6 +32,7 @@ public class GoodsListDto {
         goodsListDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(goods.getSell().getMember());
         goodsListDto.goodsPrice = goods.getGoodsPrice();
         goodsListDto.goodsDeliveryPrice = goods.getDeliveryFee();
+        goodsListDto.goodsDeposit = goods.getDeposit();
         goodsListDto.goodsOrderCount = goods.getCurrentOrderCount();
         goodsListDto.discountDeliveryPrice = goods.getDeliveryFee() -
                 (goods.getDeliveryFee() / goods.getCurrentOrderCount());

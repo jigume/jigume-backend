@@ -2,7 +2,6 @@ package site.jigume.domain.goods.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import site.jigume.domain.board.entity.Board;
 import site.jigume.domain.goods.dto.coordinate.GoodsCoordinateDto;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsCoordinate;
@@ -28,6 +27,8 @@ public class GoodsPageDto {
     private Integer goodsPrice;
 
     private Integer deliveryFee;
+
+    private Integer goodsDeposit;
 
     private GoodsCoordinateDto coordinate;
 
@@ -60,6 +61,7 @@ public class GoodsPageDto {
         goodsPageDto.link = goods.getLink();
         goodsPageDto.goodsPrice = goods.getGoodsPrice();
         goodsPageDto.deliveryFee = goods.getDeliveryFee();
+        goodsPageDto.goodsDeposit = goods.getDeposit();
         goodsPageDto.goodsLimitCount = goods.getGoodsLimitCount();
         goodsPageDto.goodsLimitTime = goods.getGoodsLimitTime();
         goodsPageDto.categoryId = goods.getCategory().getId();
@@ -67,7 +69,7 @@ public class GoodsPageDto {
         goodsPageDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(goods.getSell().getMember());
         goodsPageDto.coordinate = GoodsCoordinateDto.from(goodsCoordinate);
         goodsPageDto.goodsOrderCount = goods.getCurrentOrderCount();
-        goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - (goods.getDeliveryFee()/ goods.getCurrentOrderCount());
+        goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - (goods.getDeliveryFee() / goods.getCurrentOrderCount());
         goodsPageDto.boardId = goods.getBoard().getId();
         goodsPageDto.goodsImagesList = GoodsImagesDto.from(goods.getGoodsImageList());
 

@@ -39,6 +39,9 @@ public class Goods extends BaseTimeEntity {
 
     private Integer deliveryFee;
 
+    @Column(name = "goods_deposit")
+    private Integer deposit;
+
     private Integer currentOrderCount;
 
     @Enumerated(EnumType.STRING)
@@ -79,6 +82,7 @@ public class Goods extends BaseTimeEntity {
         goods.link = link;
         goods.goodsPrice = goodsPrice;
         goods.deliveryFee = deliveryFee;
+        goods.deposit = goods.calculateDeposit();
         goods.goodsStatus = PROCESSING;
         goods.currentOrderCount = 1;
         goods.goodsLimitCount = goodsLimitCount;
@@ -115,5 +119,13 @@ public class Goods extends BaseTimeEntity {
 
     public void updateGoodsIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    private int calculateDeposit() {
+        if (this.goodsPrice >= DepositPolicy.GOODS_PRICE_THRESHOLD.getValue()) {
+            return this.goodsPrice / DepositPolicy.RATE.getValue();
+        }
+
+        return DepositPolicy.DEFAULT_DEPOSIT.getValue();
     }
 }

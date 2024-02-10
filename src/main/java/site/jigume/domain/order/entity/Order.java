@@ -27,6 +27,9 @@ public class Order extends BaseTimeEntity {
     @Column(name = "order_price")
     private Integer orderPrice;
 
+    @Column(name = "order_deposit")
+    private Integer deposit;
+
     private boolean isDelete;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,6 +54,7 @@ public class Order extends BaseTimeEntity {
 
         order.orderGoodsCount = orderGoodsCount;
         order.orderPrice = goods.getGoodsPrice() * orderGoodsCount;
+        order.deposit = goods.getDeposit() * orderGoodsCount;
         order.isDelete = false;
         order.goods = goods;
         order.member = member;

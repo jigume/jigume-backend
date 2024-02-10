@@ -13,6 +13,7 @@ public class OrderInfo {
     private String nickName;
     private Integer orderPrice;
     private Integer deliveryFee;
+    private Integer orderDeposit;
     private Integer totalPrice;
     private Integer orderGoodsCount;
 
@@ -24,7 +25,8 @@ public class OrderInfo {
         orderInfo.nickName = order.getMember().getNickname();
         orderInfo.orderPrice = order.getOrderPrice();
         orderInfo.deliveryFee = (goods.getDeliveryFee() / goods.getCurrentOrderCount());
-        orderInfo.totalPrice = orderInfo.orderPrice + orderInfo.deliveryFee;
+        orderInfo.orderDeposit = order.getDeposit();
+        orderInfo.totalPrice = order.getOrderPrice() + orderInfo.deliveryFee + order.getDeposit();
         orderInfo.orderGoodsCount = order.getOrderGoodsCount();
 
         return orderInfo;
