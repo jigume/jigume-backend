@@ -1,6 +1,5 @@
-package site.jigume.domain.goods.dto;
+package site.jigume.domain.goods.dto.coordinate;
 
-import site.jigume.domain.goods.dto.coordinate.MarkerDto;
 import site.jigume.domain.goods.entity.GoodsCoordinate;
 
 public record MarkerResponseDto(Long goodsId, Long categoryId, double latitude, double longitude) {

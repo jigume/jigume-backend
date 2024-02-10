@@ -7,7 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.jigume.domain.goods.dto.GoodsSliceDto;
-import site.jigume.domain.goods.dto.MarkerResponseDto;
+import site.jigume.domain.goods.dto.coordinate.MarkerResponseDto;
 import site.jigume.domain.goods.dto.coordinate.CoordinateRequestDto;
 import site.jigume.domain.goods.dto.coordinate.MarkerDto;
 import site.jigume.domain.goods.entity.Goods;

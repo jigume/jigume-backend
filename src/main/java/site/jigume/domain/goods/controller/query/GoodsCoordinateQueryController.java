@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.jigume.domain.goods.dto.GoodsListDto;
 import site.jigume.domain.goods.dto.GoodsSliceDto;
-import site.jigume.domain.goods.dto.MarkerResponseDto;
+import site.jigume.domain.goods.dto.coordinate.MarkerResponseDto;
 import site.jigume.domain.goods.dto.coordinate.CoordinateRequestDto;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.service.query.GoodsCoordinateQueryService;
