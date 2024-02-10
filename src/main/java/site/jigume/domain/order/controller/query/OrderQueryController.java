@@ -71,7 +71,7 @@ public class OrderQueryController {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
             @ApiResponse(responseCode = "404", description = "상품을 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
     })
-    @GetMapping("/goods/{goodsId}/order")
+    @GetMapping("/goods/{goodsId}/order/expected")
     public ResponseEntity getOrderInfoBeforePay(@PathVariable("goodsId") Long goodsId,
                                                 @RequestParam("orderGoodsCount") Integer orderGoodsCount) {
         OrderInfo orderInfo = orderQueryService.getOrderInfoBeforePay(goodsId, orderGoodsCount);

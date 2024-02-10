@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.jigume.domain.board.entity.Board;
+import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.order.entity.Order;
 import site.jigume.domain.order.entity.Sell;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static site.jigume.domain.goods.entity.GoodsStatus.*;
+import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_INVALID_LIMIT_TIME;
 
 @Entity
 @Table(name = "goods")
@@ -124,15 +126,23 @@ public class Goods extends BaseTimeEntity {
         this.introduction = introduction;
     }
 
+    public void delete() {
+        this.isDelete = true;
+    }
+
+    public void updateGoodsLimitTime(LocalDateTime goodsLimitTime) {
+        if (this.goodsLimitTime.isBefore(goodsLimitTime)) {
+            throw new GoodsException(GOODS_INVALID_LIMIT_TIME);
+        }
+
+        this.goodsLimitTime = goodsLimitTime;
+    }
+
     private int calculateDeposit() {
         if (this.goodsPrice >= DepositPolicy.GOODS_PRICE_THRESHOLD.getValue()) {
             return this.goodsPrice / DepositPolicy.RATE.getValue();
         }
 
         return DepositPolicy.DEFAULT_DEPOSIT.getValue();
-    }
-
-    public void delete() {
-        this.isDelete = true;
     }
 }

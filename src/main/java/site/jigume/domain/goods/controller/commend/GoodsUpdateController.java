@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import site.jigume.domain.goods.dto.GoodsLimitTimeDto;
 import site.jigume.domain.goods.dto.coordinate.GoodsCoordinateDto;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.service.commend.GoodsUpdateService;
@@ -69,6 +70,14 @@ public class GoodsUpdateController {
     @PostMapping("/finished")
     public ResponseEntity finishGoods(@PathVariable Long goodsId) {
         goodsUpdateService.finishGoods(goodsId);
+
+        return new ResponseEntity(OK);
+    }
+
+    @PostMapping("/time")
+    public ResponseEntity updateLimitTime(@PathVariable Long goodsId,
+                                          @RequestBody GoodsLimitTimeDto goodsLimitTimeDto) {
+        goodsUpdateService.updateGoodsLimitTime(goodsId, goodsLimitTimeDto);
 
         return new ResponseEntity(OK);
     }

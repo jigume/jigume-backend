@@ -2,9 +2,9 @@ package site.jigume.domain.goods.service.commend;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.jigume.domain.goods.dto.GoodsLimitTimeDto;
 import site.jigume.domain.goods.dto.coordinate.GoodsCoordinateDto;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsCoordinate;
@@ -17,7 +17,9 @@ import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 import site.jigume.domain.order.entity.OrderStatus;
 
-import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FOUND;
+import java.time.LocalDateTime;
+
+import static site.jigume.domain.goods.exception.GoodsExceptionCode.*;
 
 @Service
 @Slf4j
@@ -32,8 +34,7 @@ public class GoodsUpdateService {
 
     public void updateGoodsIntroduction(Long goodsId, String introduction) {
         Member member = memberService.getMember();
-        Goods goods = goodsRepository.findGoodsByIdWithSell(goodsId)
-                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        Goods goods = getGoods(goodsId);
 
         checkGoodsSeller(goods, member);
 
@@ -42,8 +43,7 @@ public class GoodsUpdateService {
 
     public void endGoodsSelling(Long goodsId) {
         Member member = memberService.getMember();
-        Goods goods = goodsRepository.findGoodsByIdWithSell(goodsId)
-                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        Goods goods = getGoods(goodsId);
 
         checkGoodsSeller(goods, member);
 
@@ -62,9 +62,11 @@ public class GoodsUpdateService {
                 .filter(order -> order.getOrderStatus() == OrderStatus.CONFIRMATION)
                 .count();
 
-        if(goods.getOrderList().size() == count) {
-            goods.updateFinished();
+        if (goods.getOrderList().size() != count) {
+            throw new GoodsException(GOODS_NOT_FINISHED);
         }
+
+        goods.updateFinished();
     }
 
     public Long updateGoodsCoordinate(Long goodsId, GoodsCoordinateDto goodsCoordinateDto) {
@@ -76,9 +78,24 @@ public class GoodsUpdateService {
         return goodsCoordinate.getId();
     }
 
+    public void updateGoodsLimitTime(Long goodsId, GoodsLimitTimeDto goodsLimitTimeDto) {
+        Member member = memberService.getMember();
+        Goods goods = getGoods(goodsId);
+
+        checkGoodsSeller(goods, member);
+
+        goods.updateGoodsLimitTime(goodsLimitTimeDto.goodsLimitTime());
+    }
+
     private void checkGoodsSeller(Goods goods, Member member) {
         if (!goods.isSell(member)) {
             throw new AuthException(AuthExceptionCode.NOT_AUTHORIZATION_USER);
         }
+    }
+
+    private Goods getGoods(Long goodsId) {
+        Goods goods = goodsRepository.findGoodsById(goodsId)
+                .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
+        return goods;
     }
 }
