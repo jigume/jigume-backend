@@ -22,6 +22,7 @@ public class GoodsImagesDto {
 
     public static List<GoodsImagesDto> from(List<GoodsImage> goodsImageList) {
         return goodsImageList.stream()
+                .filter(goodsImage -> goodsImage.isDelete() == false)
                 .map(goodsImage ->
                         new GoodsImagesDto(goodsImage.getFile().getUrl(), goodsImage.isRepimgYn()))
                 .collect(Collectors.toList());

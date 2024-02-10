@@ -38,7 +38,7 @@ public class Sell extends BaseTimeEntity {
         return sell;
     }
 
-    public void deleteSell() {
+    public void delete() {
         this.isDelete = true;
     }
 }

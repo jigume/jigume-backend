@@ -95,7 +95,7 @@ public class CommentService {
             throw new AuthException(AuthExceptionCode.AUTHENTICATION_ERROR);
         }
 
-        comment.deleteComment();
+        comment.delete();
     }
 
     @Transactional(readOnly = true)
@@ -111,12 +111,12 @@ public class CommentService {
         int totalPages = commentsByBoardId.getTotalPages();
 
         List<CommentWithReplyDto> commentWithReplyDtoList = commentsByBoardId.stream()
-                .map(comment -> {
-                    List<CommentDto> childList = comment.getChildren().stream()
-                            .map(this::toCommentDto)
+                .map(parent -> {
+                    List<CommentDto> childList = parent.getChildren().stream()
+                            .map(child -> CommentDto.from(child))
                             .collect(Collectors.toList());
-                    CommentDto parent = toCommentDto(comment);
-                    return new CommentWithReplyDto(parent, childList);
+                    CommentDto parentDto = CommentDto.from(parent);
+                    return new CommentWithReplyDto(parentDto, childList);
                 })
                 .collect(Collectors.toList());
 
@@ -134,27 +134,6 @@ public class CommentService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardException(BOARD_NOT_FOUND));
         return board;
-    }
-
-    private CommentDto toCommentDto(Comment comment) {
-        if (!comment.isDelete()) {
-            return new CommentDto().builder()
-                    .commentId(comment.getId())
-                    .content(comment.getContent())
-                    .memberNickname(comment.getMember().getNickname())
-                    .created_at(comment.getCreatedDate())
-                    .modified_at(comment.getModifiedDate())
-                    .isDelete(comment.isDelete())
-                    .build();
-        }
-
-        return new CommentDto().builder().
-                isDelete(comment.isDelete())
-                .commentId(comment.getId())
-                .memberNickname(comment.getMember().getNickname())
-                .created_at(comment.getCreatedDate())
-                .modified_at(comment.getModifiedDate())
-                .build();
     }
 
     private Goods getGoods(Long goodsId) {

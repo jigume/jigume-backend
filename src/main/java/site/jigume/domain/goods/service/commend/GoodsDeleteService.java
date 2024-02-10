@@ -24,13 +24,10 @@ public class GoodsDeleteService {
 
     private final MemberService memberService;
     private final GoodsRepository goodsRepository;
-    private final BoardRepository boardRepository;
-    private final SellRepository sellRepository;
-    private final GoodsImagesRepository goodsImagesRepository;
 
     public void goodsDelete(Long goodsId) {
         Member member = memberService.getMember();
-        Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
+        Goods goods = goodsRepository.findGoodsByIdForDelete(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
 
         checkGoodsSeller(goods, member);
@@ -39,10 +36,17 @@ public class GoodsDeleteService {
             throw new GoodsException(GOODS_DELETE_IMPOSSIBLE);
         }
 
-        sellRepository.deleteSell(goodsId);
-        goodsImagesRepository.deleteGoodsImage(goodsId);
-        boardRepository.deleteBoard(goods.getBoard().getId());
-//        commentRepository.deleteComment(goods.getBoard().getId());
+        goods.delete();
+        goods.getBoard().delete();
+        goods.getBoard().getCommentList()
+                .stream().forEach(
+                        comment -> comment.delete()
+                );
+        goods.getSell().delete();
+        goods.getGoodsImageList().stream()
+                .forEach(
+                        goodsImage -> goodsImage.delete()
+                );
     }
 
     private void checkGoodsSeller(Goods goods, Member member) {

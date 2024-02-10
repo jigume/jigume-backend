@@ -22,14 +22,16 @@ public interface GoodsCoordinateRepository extends JpaRepository<GoodsCoordinate
             "ST_X(co.coordinate) as longitude " +
             "from GoodsCoordinate co " +
             "where ST_CONTAINS(:area, co.coordinate) " +
-            "and co.goods.goodsStatus = :status")
+            "and co.goods.goodsStatus = :status " +
+            "and co.goods.isDelete = false")
     List<MarkerDto> findMarkerListFromCoordinate(@Param("area") final Polygon area,
                                                  @Param("status") GoodsStatus goodsStatus);
 
     @Query("select co.goods from GoodsCoordinate co " +
             "join fetch co.goods.sell " +
             "where ST_CONTAINS(:area, co.coordinate) " +
-            "and co.goods.goodsStatus = :status")
+            "and co.goods.goodsStatus = :status " +
+            "and co.goods.isDelete = false")
     Slice<Goods> findGoodsByCoordinate(@Param("area") final Polygon area,
                                        @Param("status") GoodsStatus goodsStatus,
                                        Pageable pageable);
@@ -38,7 +40,8 @@ public interface GoodsCoordinateRepository extends JpaRepository<GoodsCoordinate
             "join fetch co.goods.sell " +
             "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status " +
-            "and co.goods.category.id = :categoryId")
+            "and co.goods.category.id = :categoryId " +
+            "and co.goods.isDelete = false")
     Slice<Goods> findGoodsByCoordinateWithCategory(@Param("area") final Polygon area,
                                                    @Param("status") GoodsStatus goodsStatus,
                                                    @Param("categoryId") Long categoryId, Pageable pageable);

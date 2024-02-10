@@ -1,30 +1,31 @@
 package site.jigume.domain.board.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import site.jigume.domain.board.entity.Comment;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-public class CommentDto {
+public record CommentDto(Long commentId, String content, String memberNickname,
+                         LocalDateTime created_at, LocalDateTime modified_at,
+                         Boolean isDelete) {
 
-    private Long commentId;
-    private String content;
-    private String memberNickname;
-    private LocalDateTime created_at;
-    private LocalDateTime modified_at;
-    private Boolean isDelete;
+    public static CommentDto from(Comment comment) {
+        if (!comment.isDelete()) {
+            return new CommentDto(
+                    comment.getId()
+                    , comment.getContent()
+                    , comment.getMember().getNickname()
+                    , comment.getCreatedDate()
+                    , comment.getModifiedDate()
+                    , comment.isDelete());
+        }
 
-    @Builder
-    public CommentDto(Long commentId, String content, String memberNickname,
-                      LocalDateTime created_at, LocalDateTime modified_at, Boolean isDelete) {
-        this.commentId = commentId;
-        this.content = content;
-        this.memberNickname = memberNickname;
-        this.created_at = created_at;
-        this.modified_at = modified_at;
-        this.isDelete = isDelete;
+        return new CommentDto(
+                comment.getId(),
+                null,
+                comment.getMember().getNickname(),
+                comment.getCreatedDate(),
+                comment.getModifiedDate(),
+                comment.isDelete()
+        );
     }
 }

@@ -128,4 +128,8 @@ public class Goods extends BaseTimeEntity {
 
         return DepositPolicy.DEFAULT_DEPOSIT.getValue();
     }
+
+    public void delete() {
+        this.isDelete = true;
+    }
 }

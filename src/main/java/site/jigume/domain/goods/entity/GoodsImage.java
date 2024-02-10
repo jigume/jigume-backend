@@ -40,4 +40,8 @@ public class GoodsImage extends BaseTimeEntity {
         return goodsImage;
     }
 
+    public void delete() {
+        this.isDelete = true;
+    }
+
 }

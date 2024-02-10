@@ -40,6 +40,7 @@ public class GoodsListDto {
         //TODO
         goodsListDto.repImgUrl = goods.getGoodsImageList()
                 .stream()
+                .filter(goodsImage -> goodsImage.isDelete() == false)
                 .filter(GoodsImage::isRepimgYn)
                 .findAny()
                 .get().getFile().getUrl();
