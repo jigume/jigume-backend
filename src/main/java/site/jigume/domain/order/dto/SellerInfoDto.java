@@ -11,13 +11,13 @@ public class SellerInfoDto {
 
     private Integer sellCount;
 
-    public static SellerInfoDto toSellerInfoDto(Member hostMember) {
+    public static SellerInfoDto from(Member hostMember) {
         SellerInfoDto sellerInfoDto = new SellerInfoDto();
 
         sellerInfoDto.sellerNickname = hostMember.getNickname();
         sellerInfoDto.sellCount = (int) hostMember.getSellList()
                 .stream()
-                .filter(sell -> sell.getGoods().getGoodsStatus().equals(GoodsStatus.END))
+                .filter(sell -> sell.getGoods().getGoodsStatus().equals(GoodsStatus.FINISHED))
                 .count();
 
         return sellerInfoDto;

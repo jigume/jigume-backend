@@ -22,6 +22,7 @@ public class OrderHistoryDto {
     private GoodsStatus goodsStatus;
     private Long categoryId;
     private Long boardId;
+    private Long orderId;
 
 
     public static OrderHistoryDto from(Order order) {
@@ -30,7 +31,7 @@ public class OrderHistoryDto {
         orderHistoryDto.goodsId = order.getGoods().getId();
         orderHistoryDto.goodsLink = order.getGoods().getLink();
         orderHistoryDto.goodsName = order.getGoods().getName();
-        orderHistoryDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(order.getGoods().getSell().getMember());
+        orderHistoryDto.sellerInfoDto = SellerInfoDto.from(order.getGoods().getSell().getMember());
         orderHistoryDto.goodsPrice = order.getGoods().getGoodsPrice();
         orderHistoryDto.goodsDeliveryPrice = order.getGoods().getDeliveryFee();
         orderHistoryDto.goodsOrderCount = order.getGoods().getCurrentOrderCount();
@@ -47,6 +48,7 @@ public class OrderHistoryDto {
         orderHistoryDto.goodsStatus = order.getGoods().getGoodsStatus();
         orderHistoryDto.categoryId = order.getGoods().getCategory().getId();
         orderHistoryDto.boardId = order.getGoods().getBoard().getId();
+        orderHistoryDto.orderId = order.getId();
 
         return orderHistoryDto;
     }

@@ -66,7 +66,7 @@ public class GoodsPageDto {
         goodsPageDto.goodsLimitTime = goods.getGoodsLimitTime();
         goodsPageDto.categoryId = goods.getCategory().getId();
         goodsPageDto.goodsStatus = goods.getGoodsStatus();
-        goodsPageDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(goods.getSell().getMember());
+        goodsPageDto.sellerInfoDto = SellerInfoDto.from(goods.getSell().getMember());
         goodsPageDto.coordinate = GoodsCoordinateDto.from(goodsCoordinate);
         goodsPageDto.goodsOrderCount = goods.getCurrentOrderCount();
         goodsPageDto.discountDeliveryPrice = goods.getDeliveryFee() - (goods.getDeliveryFee() / goods.getCurrentOrderCount());

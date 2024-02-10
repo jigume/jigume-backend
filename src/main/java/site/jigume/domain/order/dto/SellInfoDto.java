@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class SellInfoDto {
 
+    private Long sellId;
     private Integer goodsPrice;
     private Integer deliveryFee;
     private Integer goodsOrderCount;

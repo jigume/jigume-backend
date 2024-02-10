@@ -25,17 +25,15 @@ public class SellQueryService {
     private final SellRepository sellRepository;
     private final MemberService memberService;
 
-    public SellHistoryDto getSellHistory(GoodsStatus goodsStatus) {
+    public List<SellHistoryDto> getSellHistory(GoodsStatus goodsStatus) {
         Member member = memberService.getMember();
 
         List<Sell> sellsByMemberId = sellRepository
                 .findSellsByMemberIdAndGoodsGoodsStatus(member.getId(), goodsStatus);
 
-        List<GoodsListDto> goodsListDtoList = sellsByMemberId.stream()
-                .map(sell -> sell.getGoods())
-                .map(goods -> GoodsListDto.from(goods))
-                .collect(Collectors.toList());
-
-        return new SellHistoryDto(goodsListDtoList);
+        return sellsByMemberId.stream()
+                .filter(sell -> sell.getGoods().isDelete() == false)
+                .map(sell -> SellHistoryDto.from(sell))
+                .toList();
     }
 }

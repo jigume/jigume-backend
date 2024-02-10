@@ -30,6 +30,9 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
             "where g.id in :goodsIds")
     Slice<Goods> findGoodsByIdIn(@Param("goodsIds") List<Long> goodsIds, Pageable pageable);
 
+    @EntityGraph(attributePaths = "sell")
+    Optional<Goods> findGoodsByIdWithSell(Long goodsId);
+
     @Query("select distinct g from Goods g " +
             "left join fetch g.orderList " +
             "join fetch g.sell " +

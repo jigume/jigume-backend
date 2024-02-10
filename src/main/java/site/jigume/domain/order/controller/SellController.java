@@ -18,6 +18,8 @@ import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.order.dto.SellHistoryDto;
 import site.jigume.domain.order.service.sell.SellQueryService;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -37,7 +39,7 @@ public class SellController {
     })
     @GetMapping("/sell/{status}")
     public ResponseEntity getSellHistory(@PathVariable("status") GoodsStatus status) {
-        SellHistoryDto sellHistoryDto = sellQueryService.getSellHistory(status);
-        return new ResponseEntity(sellHistoryDto, OK);
+        List<SellHistoryDto> sellHistory = sellQueryService.getSellHistory(status);
+        return new ResponseEntity(sellHistory, OK);
     }
 }

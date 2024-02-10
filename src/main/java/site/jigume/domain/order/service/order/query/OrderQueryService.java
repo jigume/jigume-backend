@@ -88,7 +88,7 @@ public class OrderQueryService {
 
         return goods.getOrderList().stream()
                 .map(order -> order.getMember())
-                .map(m -> OrderMemberDto.toOrderMemberDto(member))
+                .map(m -> OrderMemberDto.from(member))
                 .toList();
     }
 

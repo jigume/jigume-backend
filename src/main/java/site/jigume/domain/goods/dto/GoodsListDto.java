@@ -29,7 +29,7 @@ public class GoodsListDto {
 
         goodsListDto.goodsId = goods.getId();
         goodsListDto.goodsName = goods.getName();
-        goodsListDto.sellerInfoDto = SellerInfoDto.toSellerInfoDto(goods.getSell().getMember());
+        goodsListDto.sellerInfoDto = SellerInfoDto.from(goods.getSell().getMember());
         goodsListDto.goodsPrice = goods.getGoodsPrice();
         goodsListDto.goodsDeliveryPrice = goods.getDeliveryFee();
         goodsListDto.goodsDeposit = goods.getDeposit();

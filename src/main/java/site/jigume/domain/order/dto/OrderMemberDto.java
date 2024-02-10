@@ -12,7 +12,7 @@ public class OrderMemberDto {
     private String nickname;
     private String profileImageUrl;
 
-    public static OrderMemberDto toOrderMemberDto(Member member) {
+    public static OrderMemberDto from(Member member) {
         OrderMemberDto orderMemberDto = new OrderMemberDto();
         orderMemberDto.memberId = member.getId();
         orderMemberDto.nickname = member.getNickname();

@@ -9,6 +9,7 @@ import site.jigume.domain.order.entity.Order;
 @Data
 public class OrderInfo {
 
+    private Long orderId;
     private Long memberId;
     private String nickName;
     private Integer orderPrice;
@@ -21,6 +22,7 @@ public class OrderInfo {
         OrderInfo orderInfo = new OrderInfo();
         Goods goods = order.getGoods();
 
+        orderInfo.orderId = order.getId();
         orderInfo.memberId = order.getMember().getId();
         orderInfo.nickName = order.getMember().getNickname();
         orderInfo.orderPrice = order.getOrderPrice();
