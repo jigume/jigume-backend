@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/goods")
+@RequestMapping("/api/goods/{goodsId}")
 public class GoodsUpdateController {
 
     private final GoodsUpdateService goodsUpdateService;
@@ -29,7 +29,7 @@ public class GoodsUpdateController {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
             @ApiResponse(responseCode = "401", description = "해당 굿즈에 대한 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
     })
-    @PostMapping("/{goodsId}/end")
+    @PostMapping("/end")
     public ResponseEntity endGoodsSelling(@PathVariable Long goodsId) {
         goodsUpdateService.endGoodsSelling(goodsId);
 
@@ -43,7 +43,7 @@ public class GoodsUpdateController {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
             @ApiResponse(responseCode = "401", description = "해당 굿즈에 대한 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
     })
-    @PostMapping("/{goodsId}/intro")
+    @PostMapping("/intro")
     public ResponseEntity updateGoodsIntroduction(@PathVariable Long goodsId,
                                                   @RequestBody String introduction) {
         goodsUpdateService.updateGoodsIntroduction(goodsId, introduction);
@@ -58,11 +58,18 @@ public class GoodsUpdateController {
             @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
             @ApiResponse(responseCode = "401", description = "해당 굿즈에 대한 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
     })
-    @PostMapping("{goodsId}/coordinate")
+    @PostMapping("/coordinate")
     public ResponseEntity updateGoodsCoordinate(@PathVariable Long goodsId,
                                                 @RequestBody GoodsCoordinateDto goodsCoordinateDto) {
         Long goodsCoordinateId = goodsUpdateService.updateGoodsCoordinate(goodsId, goodsCoordinateDto);
 
         return new ResponseEntity(goodsCoordinateId, OK);
+    }
+
+    @PostMapping("/finished")
+    public ResponseEntity finishGoods(@PathVariable Long goodsId) {
+        goodsUpdateService.finishGoods(goodsId);
+
+        return new ResponseEntity(OK);
     }
 }

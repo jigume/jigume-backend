@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
-import static site.jigume.domain.goods.entity.GoodsStatus.END;
-import static site.jigume.domain.goods.entity.GoodsStatus.PROCESSING;
+import static site.jigume.domain.goods.entity.GoodsStatus.*;
 
 @Entity
 @Table(name = "goods")
@@ -100,6 +99,10 @@ public class Goods extends BaseTimeEntity {
 
     public void updateEnd() {
         this.goodsStatus = END;
+    }
+
+    public void updateFinished() {
+        this.goodsStatus = FINISHED;
     }
 
     public boolean isSell(Member member) {

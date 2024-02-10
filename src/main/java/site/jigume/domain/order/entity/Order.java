@@ -30,6 +30,9 @@ public class Order extends BaseTimeEntity {
     @Column(name = "order_deposit")
     private Integer deposit;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
     private boolean isDelete;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -60,5 +63,9 @@ public class Order extends BaseTimeEntity {
         order.member = member;
 
         return order;
+    }
+
+    public void confirmOrder() {
+        this.orderStatus = OrderStatus.CONFIRMATION;
     }
 }
