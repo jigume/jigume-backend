@@ -46,6 +46,7 @@ public class WishListService {
                 .toList();
     }
 
+    @Transactional
     public void delete(Long goodsId) {
         Member member = memberService.getMember();
 
