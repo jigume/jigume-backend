@@ -4,10 +4,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import site.jigume.domain.goods.entity.Goods;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,4 +41,9 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
             "join fetch g.board " +
             "where g.id = :goodsId")
     Optional<Goods> findGoodsByIdForDelete(@Param("goodsId") Long goodsId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update Goods g set g.goodsStatus = site.jigume.domain.goods.entity.GoodsStatus.END " +
+            "where g.goodsLimitTime < :time")
+    void checkGoodsLimitTime(@Param("time") LocalDateTime time);
 }

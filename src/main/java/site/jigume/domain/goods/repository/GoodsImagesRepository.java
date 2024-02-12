@@ -11,7 +11,7 @@ public interface GoodsImagesRepository extends JpaRepository<GoodsImage, Long> {
     @Query("select gi from GoodsImage gi where gi.file.url = :defaultImgUrl")
     GoodsImage findDefalutGoodsImage(@Param("defaultImgUrl") String defaultImgUrl);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update GoodsImage gi set gi.isDelete = true where gi.goods.id = :goodsId")
     void deleteGoodsImage(@Param("goodsId") Long goodsId);
 }
