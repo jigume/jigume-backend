@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.order.entity.Order;
+import site.jigume.domain.order.entity.OrderStatus;
 
 @NoArgsConstructor
 @Data
@@ -12,6 +13,7 @@ public class OrderInfo {
     private Long orderId;
     private Long memberId;
     private String nickName;
+    private OrderStatus orderStatus;
     private Integer orderPrice;
     private Integer deliveryFee;
     private Integer orderDeposit;
@@ -30,6 +32,7 @@ public class OrderInfo {
         orderInfo.orderDeposit = order.getDeposit();
         orderInfo.totalPrice = order.getOrderPrice() + orderInfo.deliveryFee + order.getDeposit();
         orderInfo.orderGoodsCount = order.getOrderGoodsCount();
+        orderInfo.orderStatus = order.getOrderStatus();
 
         return orderInfo;
     }

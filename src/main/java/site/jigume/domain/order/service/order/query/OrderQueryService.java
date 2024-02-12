@@ -13,7 +13,6 @@ import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.member.service.MemberService;
 import site.jigume.domain.order.dto.OrderHistoryDto;
 import site.jigume.domain.order.dto.OrderInfo;
-import site.jigume.domain.order.dto.OrderInfoList;
 import site.jigume.domain.order.dto.OrderMemberDto;
 import site.jigume.domain.order.entity.Order;
 import site.jigume.domain.order.repository.OrderRepository;
@@ -52,7 +51,7 @@ public class OrderQueryService {
         return OrderInfo.toOrderInfo(order);
     }
 
-    public OrderInfo getOrder(Long goodsId) {
+    public OrderInfo getOrderInfo(Long goodsId) {
         Member member = memberService.getMember();
 
         Order order = orderRepository.findOrderByMemberIdAndGoodsId(member.getId(), goodsId)
@@ -61,7 +60,7 @@ public class OrderQueryService {
         return OrderInfo.toOrderInfo(order);
     }
 
-    public OrderInfoList getOrderInfoList(Long goodsId) {
+    public List<OrderInfo> getOrderInfoList(Long goodsId) {
         Member member = memberService.getMember();
 
         Goods goods = getGoodsWithOrderList(goodsId);
@@ -70,11 +69,9 @@ public class OrderQueryService {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
 
-        List<OrderInfo> orderInfoList = goods.getOrderList().stream()
+        return goods.getOrderList().stream()
                 .map(order -> OrderInfo.toOrderInfo(order))
                 .collect(Collectors.toList());
-
-        return new OrderInfoList(orderInfoList);
     }
 
     public List<OrderMemberDto> getOrderMemberList(Long goodsId) {
@@ -87,8 +84,7 @@ public class OrderQueryService {
                 .orElseThrow(() -> new AuthException(NOT_AUTHORIZATION_USER));
 
         return goods.getOrderList().stream()
-                .map(order -> order.getMember())
-                .map(m -> OrderMemberDto.from(member))
+                .map(order -> OrderMemberDto.from(order, order.getMember()))
                 .toList();
     }
 

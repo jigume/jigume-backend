@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import site.jigume.domain.goods.entity.GoodsImage;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.order.entity.Order;
+import site.jigume.domain.order.entity.OrderStatus;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +24,7 @@ public class OrderHistoryDto {
     private Long categoryId;
     private Long boardId;
     private Long orderId;
+    private OrderStatus orderStatus;
 
 
     public static OrderHistoryDto from(Order order) {
@@ -49,6 +51,7 @@ public class OrderHistoryDto {
         orderHistoryDto.categoryId = order.getGoods().getCategory().getId();
         orderHistoryDto.boardId = order.getGoods().getBoard().getId();
         orderHistoryDto.orderId = order.getId();
+        orderHistoryDto.orderStatus = order.getOrderStatus();
 
         return orderHistoryDto;
     }

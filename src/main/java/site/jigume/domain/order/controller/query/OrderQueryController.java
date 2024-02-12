@@ -57,7 +57,7 @@ public class OrderQueryController {
     })
     @GetMapping("/goods/{goodsId}/order/list")
     public ResponseEntity getOrderInfoList(@PathVariable("goodsId") Long goodsId) {
-        OrderInfoList orderInfoList = orderQueryService.getOrderInfoList(goodsId);
+        List<OrderInfo> orderInfoList = orderQueryService.getOrderInfoList(goodsId);
 
         return new ResponseEntity(orderInfoList, OK);
     }
@@ -90,7 +90,7 @@ public class OrderQueryController {
     })
     @GetMapping("/goods/{goodsId}/order")
     public ResponseEntity getOrderInfo(@PathVariable("goodsId") Long goodsId) {
-        OrderInfo orderInfo = orderQueryService.getOrder(goodsId);
+        OrderInfo orderInfo = orderQueryService.getOrderInfo(goodsId);
 
         return new ResponseEntity(orderInfo, OK);
     }

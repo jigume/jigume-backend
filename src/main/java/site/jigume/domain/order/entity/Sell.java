@@ -16,6 +16,7 @@ public class Sell extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "sell_id")
     private Long id;
 
     private boolean isDelete;

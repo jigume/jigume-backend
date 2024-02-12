@@ -8,6 +8,8 @@ import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.order.exception.order.OrderException;
 import site.jigume.global.audit.BaseTimeEntity;
 
+import static site.jigume.domain.order.entity.OrderStatus.CONFIRMATION;
+import static site.jigume.domain.order.entity.OrderStatus.PROCESSING;
 import static site.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_OVER_COUNT;
 
 @Entity
@@ -58,6 +60,7 @@ public class Order extends BaseTimeEntity {
         order.orderGoodsCount = orderGoodsCount;
         order.orderPrice = goods.getGoodsPrice() * orderGoodsCount;
         order.deposit = goods.getDeposit() * orderGoodsCount;
+        order.orderStatus = PROCESSING;
         order.isDelete = false;
         order.goods = goods;
         order.member = member;
@@ -66,6 +69,6 @@ public class Order extends BaseTimeEntity {
     }
 
     public void confirmOrder() {
-        this.orderStatus = OrderStatus.CONFIRMATION;
+        this.orderStatus = CONFIRMATION;
     }
 }
