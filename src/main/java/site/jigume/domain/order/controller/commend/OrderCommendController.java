@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.order.dto.OrderDto;
+import site.jigume.domain.order.exception.order.OrderException;
 import site.jigume.domain.order.service.order.commend.OrderCreateService;
-import site.jigume.domain.order.service.order.query.OrderQueryService;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -36,6 +36,13 @@ public class OrderCommendController {
         return new ResponseEntity("주문이 성공적으로 되었습니다.", OK);
     }
 
+    @Operation(summary = "사용자가 구매를 확정하는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "주문이 성공적으로 되었습니다."),
+            @ApiResponse(responseCode = "400", description = "인가된 사용자가 아닙니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "404", description = "상품을 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
+            @ApiResponse(responseCode = "404", description = "주문을 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderException.class)))
+    })
     @PostMapping("/{orderId}/confirmation")
     public ResponseEntity confirmOrder(@PathVariable Long goodsId,
                                        @PathVariable Long orderId) {

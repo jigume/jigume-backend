@@ -67,6 +67,14 @@ public class GoodsUpdateController {
         return new ResponseEntity(goodsCoordinateId, OK);
     }
 
+    @Operation(summary = "Goods 상태를 완료로 바꾼다.(모든 구매자가 구매 확정을 완료해야 가능)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "완료로 성공적으로 바꿈"),
+            @ApiResponse(responseCode = "404", description = "굿즈를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
+            @ApiResponse(responseCode = "400", description = "모든 구매자가 구매 확정을 하지 않았습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "401", description = "해당 굿즈에 대한 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
+    })
     @PostMapping("/finished")
     public ResponseEntity finishGoods(@PathVariable Long goodsId) {
         goodsUpdateService.finishGoods(goodsId);
@@ -74,6 +82,13 @@ public class GoodsUpdateController {
         return new ResponseEntity(OK);
     }
 
+    @Operation(summary = "상품의 제한 시간을 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 수정"),
+            @ApiResponse(responseCode = "404", description = "굿즈를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoodsException.class))),
+            @ApiResponse(responseCode = "404", description = "토큰이 유효하지 않거나, 토큰의 멤버를 조회할 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class))),
+            @ApiResponse(responseCode = "401", description = "해당 굿즈에 대한 권한이 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
+    })
     @PostMapping("/time")
     public ResponseEntity updateLimitTime(@PathVariable Long goodsId,
                                           @RequestBody GoodsLimitTimeDto goodsLimitTimeDto) {

@@ -14,7 +14,7 @@ public enum TermExceptionCode implements ExceptionCode {
 
     TERM_NOT_FOUND(NOT_FOUND, "TE-C-001", "약관을 찾을 수 없습니다."),
     TERM_REQUIRE_ERROR(BAD_REQUEST, "TE-C-002", "필수 약관은 반드시 동의해야 합니다."),
-    TERM_DUPLICATED_ERROR(NOT_FOUND, "TE-C-003", "약관은 중복 될 수 없습니다.");
+    TERM_DUPLICATED_ERROR(BAD_REQUEST, "TE-C-003", "약관은 중복 될 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
