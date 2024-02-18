@@ -114,7 +114,7 @@ public class MemberController {
 
     @Operation(summary = "User의 닉네임 같은 정보를 가져온다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "이미지 파일 업데이트 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemberInfoDto.class))),
+            @ApiResponse(responseCode = "200", description = "멤버 정보를 가져온다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemberInfoDto.class))),
             @ApiResponse(responseCode = "404", description = "멤버를 찾을 수 없음", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthException.class)))
     })
     @GetMapping("/profile")
