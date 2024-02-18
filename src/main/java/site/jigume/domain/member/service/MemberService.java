@@ -89,6 +89,7 @@ public class MemberService {
         return imgId;
     }
 
+    @Transactional(readOnly = true)
     public MemberInfoDto getMemberInfo() {
         Member member = getMember();
 
