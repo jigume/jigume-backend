@@ -78,17 +78,6 @@ public class MemberService {
         if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
     }
 
-    @Transactional
-    public Long updateMemberProfileImage(MultipartFile multipartFile) {
-        Member member = getMember();
-
-        Long imgId = memberImageService.update(multipartFile, member);
-
-        if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
-
-        return imgId;
-    }
-
     @Transactional(readOnly = true)
     public MemberInfoDto getMemberInfo() {
         Member member = getMember();
@@ -136,8 +125,10 @@ public class MemberService {
     @Transactional
     public Long saveMemberImage(MultipartFile multipartFile) {
         Member member = getMember();
+        Long fileId = memberImageService.update(multipartFile, member);
 
-        return memberImageService.update(multipartFile, member);
+        if(member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
+        return fileId;
     }
 
     public void checkDuplicateNickname(String nickname) {
