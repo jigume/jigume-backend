@@ -94,6 +94,10 @@ public class Goods extends BaseTimeEntity {
         return goods;
     }
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
     public void addOrder(Order order) {
         this.currentOrderCount += 1;
         this.orderList.add(order);

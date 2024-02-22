@@ -40,6 +40,7 @@ public class BoardService {
 
         Board board = boardCreateDto.toBoard(goods);
         boardRepository.save(board);
+        goods.setBoard(board);
 
         return board.getId();
     }
