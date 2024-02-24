@@ -8,6 +8,7 @@ import site.jigume.domain.member.entity.Member;
 public class SellerInfoDto {
 
     private String sellerNickname;
+    private String sellerProfileImage;
 
     private Integer sellCount;
 
@@ -15,6 +16,7 @@ public class SellerInfoDto {
         SellerInfoDto sellerInfoDto = new SellerInfoDto();
 
         sellerInfoDto.sellerNickname = hostMember.getNickname();
+        sellerInfoDto.sellerProfileImage = hostMember.getFile().getUrl();
         sellerInfoDto.sellCount = (int) hostMember.getSellList()
                 .stream()
                 .filter(sell -> sell.getGoods().getGoodsStatus().equals(GoodsStatus.FINISHED))
