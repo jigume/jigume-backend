@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import site.jigume.domain.admin.exception.TermException;
-import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.member.dto.term.TermYnDto;
 import site.jigume.domain.member.exception.auth.AuthException;
 import site.jigume.domain.member.service.TermYnService;
@@ -20,7 +19,6 @@ import site.jigume.domain.member.service.TermYnService;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor

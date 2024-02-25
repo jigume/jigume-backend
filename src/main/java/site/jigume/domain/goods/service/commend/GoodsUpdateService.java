@@ -17,9 +17,8 @@ import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 import site.jigume.domain.order.entity.OrderStatus;
 
-import java.time.LocalDateTime;
-
-import static site.jigume.domain.goods.exception.GoodsExceptionCode.*;
+import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FINISHED;
+import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FOUND;
 
 @Service
 @Slf4j

@@ -9,10 +9,9 @@ import site.jigume.domain.admin.repository.TermRepository;
 import site.jigume.domain.member.entity.BaseRole;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
-import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 
-import static site.jigume.domain.member.exception.auth.AuthExceptionCode.*;
+import static site.jigume.domain.member.exception.auth.AuthExceptionCode.NOT_AUTHORIZATION_USER;
 
 @Service
 @RequiredArgsConstructor

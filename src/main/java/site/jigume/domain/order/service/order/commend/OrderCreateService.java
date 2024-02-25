@@ -6,10 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.goods.repository.GoodsRepository;
-import site.jigume.domain.goods.service.commend.GoodsUpdateService;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.member.exception.auth.AuthException;
-import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 import site.jigume.domain.order.dto.OrderDto;
 import site.jigume.domain.order.entity.Order;
@@ -20,7 +18,7 @@ import java.time.LocalDateTime;
 
 import static site.jigume.domain.goods.exception.GoodsExceptionCode.CATEGORY_NOT_FOUND;
 import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_END_TIME;
-import static site.jigume.domain.member.exception.auth.AuthExceptionCode.*;
+import static site.jigume.domain.member.exception.auth.AuthExceptionCode.NOT_AUTHORIZATION_USER;
 import static site.jigume.domain.order.exception.order.OrderExceptionCode.ORDER_NOT_FOUND;
 
 @Service

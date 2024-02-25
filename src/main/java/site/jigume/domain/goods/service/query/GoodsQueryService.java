@@ -5,9 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.jigume.domain.board.entity.Board;
-import site.jigume.domain.board.exception.exception.BoardException;
-import site.jigume.domain.board.repository.BoardRepository;
 import site.jigume.domain.goods.dto.GoodsDetailPageDto;
 import site.jigume.domain.goods.dto.GoodsPageDto;
 import site.jigume.domain.goods.dto.GoodsSliceDto;
@@ -22,7 +19,6 @@ import site.jigume.domain.member.service.MemberService;
 
 import java.util.List;
 
-import static site.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;
 import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FOUND;
 
 @Service
