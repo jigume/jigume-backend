@@ -21,6 +21,7 @@ public class GoodsListDto {
     private Integer discountDeliveryPrice;
     private String repImgUrl;
     private GoodsStatus goodsStatus;
+    private Integer likesCount;
     private Long categoryId;
 
 
@@ -46,6 +47,7 @@ public class GoodsListDto {
                 .get().getFile().getUrl();
 
         goodsListDto.goodsStatus = goods.getGoodsStatus();
+        goodsListDto.likesCount = Math.toIntExact(goods.getLikes().stream().count());
         goodsListDto.categoryId = goods.getCategory().getId();
 
         return goodsListDto;

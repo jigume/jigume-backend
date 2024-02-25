@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import site.jigume.domain.board.entity.Board;
 import site.jigume.domain.goods.exception.GoodsException;
 import site.jigume.domain.member.entity.Member;
+import site.jigume.domain.member.entity.WishList;
 import site.jigume.domain.order.entity.Order;
 import site.jigume.domain.order.entity.Sell;
 import site.jigume.global.audit.BaseTimeEntity;
@@ -72,6 +73,9 @@ public class Goods extends BaseTimeEntity {
     @OneToMany(mappedBy = "goods", fetch = LAZY)
     private List<GoodsImage> goodsImageList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "goods", fetch = LAZY)
+    private List<WishList> likes = new ArrayList<>();
+
 
     public static Goods createGoods(String name, String introduction, String link, Integer goodsPrice,
                                     Integer deliveryFee, Integer goodsLimitCount,
@@ -94,6 +98,9 @@ public class Goods extends BaseTimeEntity {
         return goods;
     }
 
+    public void addLikes(WishList wishList) {
+        this.likes.add(wishList);
+    }
     public void setBoard(Board board) {
         this.board = board;
     }

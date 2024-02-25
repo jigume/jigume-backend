@@ -32,6 +32,8 @@ public class WishListService {
 
         WishList wishList = WishList.createWishList(member, goods);
 
+        goods.addLikes(wishList);
+
         return wishListRepository.save(wishList).getId();
     }
 
