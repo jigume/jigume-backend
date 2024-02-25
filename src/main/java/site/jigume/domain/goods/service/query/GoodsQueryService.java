@@ -49,9 +49,10 @@ public class GoodsQueryService {
     }
 
     public GoodsSliceDto getGoodsListInIds(List<Long> goodsIds, Pageable pageable) {
+        Member member = memberService.getMemberWithLikes();
         Slice<Goods> goodsByIdIn = goodsRepository.findGoodsByIdIn(goodsIds, pageable);
 
-        return GoodsSliceDto.from(goodsByIdIn);
+        return GoodsSliceDto.from(goodsByIdIn, member);
     }
 
     private GoodsMemberAuth isOrderOrSell(Member member, Goods goods) {

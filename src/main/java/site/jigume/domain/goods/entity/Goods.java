@@ -54,6 +54,8 @@ public class Goods extends BaseTimeEntity {
 
     private LocalDateTime goodsLimitTime;
 
+    private Integer likesCount;
+
     private boolean isDelete;
 
     @ManyToOne(fetch = LAZY)
@@ -63,7 +65,8 @@ public class Goods extends BaseTimeEntity {
     @OneToMany(mappedBy = "goods", fetch = LAZY)
     private List<Order> orderList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "goods", fetch = LAZY)
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "sell_id")
     private Sell sell;
 
     @OneToOne(fetch = LAZY)
@@ -92,6 +95,7 @@ public class Goods extends BaseTimeEntity {
         goods.currentOrderCount = 1;
         goods.goodsLimitCount = goodsLimitCount;
         goods.goodsLimitTime = goodsLimitTime;
+        goods.likesCount = 0;
         goods.category = category;
         goods.isDelete = false;
 
@@ -99,8 +103,10 @@ public class Goods extends BaseTimeEntity {
     }
 
     public void addLikes(WishList wishList) {
+        this.likesCount += 1;
         this.likes.add(wishList);
     }
+
     public void setBoard(Board board) {
         this.board = board;
     }

@@ -48,6 +48,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "member")
     private List<Sell> sellList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<WishList> likes = new ArrayList<>();
+
     public static Member createMember(String socialId) {
         Member member = new Member();
         member.socialId = socialId;

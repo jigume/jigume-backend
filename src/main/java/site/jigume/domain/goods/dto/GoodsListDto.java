@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import site.jigume.domain.goods.entity.Goods;
 import site.jigume.domain.goods.entity.GoodsImage;
 import site.jigume.domain.goods.entity.GoodsStatus;
+import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.order.dto.SellerInfoDto;
 
 @NoArgsConstructor
@@ -22,10 +23,11 @@ public class GoodsListDto {
     private String repImgUrl;
     private GoodsStatus goodsStatus;
     private Integer likesCount;
+    private Boolean isLike;
     private Long categoryId;
 
 
-    public static GoodsListDto from(Goods goods) {
+    public static GoodsListDto from(Goods goods, Member member) {
         GoodsListDto goodsListDto = new GoodsListDto();
 
         goodsListDto.goodsId = goods.getId();
@@ -47,7 +49,10 @@ public class GoodsListDto {
                 .get().getFile().getUrl();
 
         goodsListDto.goodsStatus = goods.getGoodsStatus();
-        goodsListDto.likesCount = Math.toIntExact(goods.getLikes().stream().count());
+        goodsListDto.likesCount = goods.getLikesCount();
+        goodsListDto.isLike = member.getLikes()
+                .stream().filter(wishList -> wishList.getGoods().equals(goods))
+                .findAny().isPresent();
         goodsListDto.categoryId = goods.getCategory().getId();
 
         return goodsListDto;

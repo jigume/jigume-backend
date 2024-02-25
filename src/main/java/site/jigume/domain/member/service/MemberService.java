@@ -93,6 +93,14 @@ public class MemberService {
                 .orElseThrow(() -> new AuthException(AUTH_MEMBER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
+    public Member getMemberWithLikes() {
+        String socialId = getAuthenticatedUser().getUsername();
+
+        return memberRepository.findMemberBySocialIdFetchLikes(socialId)
+                .orElseThrow(() -> new AuthException(AUTH_MEMBER_NOT_FOUND));
+    }
+
     private Member loginMember(String socialId) {
         Member member = memberRepository.findMemberBySocialId(socialId)
                 .orElseGet(() -> save(socialId));

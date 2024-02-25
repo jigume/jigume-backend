@@ -8,7 +8,7 @@ public record WishListDto(Long wishId, GoodsListDto goodsListDto) {
     public static WishListDto from(WishList wish) {
         return new WishListDto(
                 wish.getId(),
-                GoodsListDto.from(wish.getGoods())
+                GoodsListDto.from(wish.getGoods(), wish.getMember())
         );
     }
 }

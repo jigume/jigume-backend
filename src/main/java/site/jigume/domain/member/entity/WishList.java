@@ -30,6 +30,8 @@ public class WishList {
         wishList.member = member;
         wishList.goods = goods;
 
+        goods.addLikes(wishList);
+
         return wishList;
     }
 }
