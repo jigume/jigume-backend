@@ -7,6 +7,8 @@ import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.order.entity.Order;
 import site.jigume.domain.order.entity.OrderStatus;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 public class OrderHistoryDto {
@@ -21,6 +23,7 @@ public class OrderHistoryDto {
     private Integer discountDeliveryPrice;
     private String repImgUrl;
     private GoodsStatus goodsStatus;
+    private LocalDateTime goodsLimitTime;
     private Long categoryId;
     private Long boardId;
     private Long orderId;
@@ -48,6 +51,7 @@ public class OrderHistoryDto {
                 .get().getFile().getUrl();
 
         orderHistoryDto.goodsStatus = order.getGoods().getGoodsStatus();
+        orderHistoryDto.goodsLimitTime = order.getGoods().getGoodsLimitTime();
         orderHistoryDto.categoryId = order.getGoods().getCategory().getId();
         orderHistoryDto.boardId = order.getGoods().getBoard().getId();
         orderHistoryDto.orderId = order.getId();
