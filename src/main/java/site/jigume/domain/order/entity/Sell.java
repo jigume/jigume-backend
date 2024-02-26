@@ -21,8 +21,7 @@ public class Sell extends BaseTimeEntity {
 
     private boolean isDelete;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_id")
+    @OneToOne(mappedBy = "sell", fetch = FetchType.LAZY)
     private Goods goods;
 
     @ManyToOne(fetch = FetchType.LAZY)
