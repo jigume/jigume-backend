@@ -97,7 +97,7 @@ public class BoardService {
     }
 
     private void validBoard(Long boardId, Board board) {
-        if(board.getId() != boardId) {
+        if(board.getId().equals(boardId)) {
             throw new BoardException(BOARD_NOT_FOUND);
         }
     }
