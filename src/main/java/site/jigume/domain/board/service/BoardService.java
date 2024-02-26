@@ -1,6 +1,7 @@
 package site.jigume.domain.board.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.jigume.domain.board.dto.BoardCreateDto;
@@ -21,6 +22,7 @@ import static site.jigume.domain.goods.exception.GoodsExceptionCode.GOODS_NOT_FO
 import static site.jigume.domain.member.exception.auth.AuthExceptionCode.NOT_AUTHORIZATION_USER;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BoardService {
 
@@ -49,11 +51,12 @@ public class BoardService {
     public BoardDto getBoard(Long goodsId, Long boardId) {
         Goods goods = getGoods(goodsId);
         Board board = goods.getBoard();
-
+        log.info("{}, {}, {}", boardId.equals(board.getId()), board.getId(), boardId);
         validBoard(boardId, board);
 
         Member member = memberService.getMember();
-        if (goods.isOrder(member) || goods.isSell(member)) {
+        log.info("{}", goods.isSell(member));
+        if (!goods.isOrder(member) && !goods.isSell(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
 
@@ -79,25 +82,25 @@ public class BoardService {
     }
 
     private void isHost(Goods goods, Member member) {
-        if (goods.getSell().getMember().equals(member)) {
+        if (!goods.getSell().getMember().equals(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
     }
 
     private void checkBoardInGoods(Long goodsId, Goods goods) {
-        if (goodsId.equals(goods.getId())) {
+        if (!goodsId.equals(goods.getId())) {
             throw new GoodsException(GOODS_NOT_FOUND);
         }
     }
 
     private Goods getGoods(Long goodsId) {
-        Goods goods = goodsRepository.findById(goodsId)
+        Goods goods = goodsRepository.findGoodsByIdWithOrderList(goodsId)
                 .orElseThrow(() -> new GoodsException(GOODS_NOT_FOUND));
         return goods;
     }
 
     private void validBoard(Long boardId, Board board) {
-        if(board.getId().equals(boardId)) {
+        if(!board.getId().equals(boardId)) {
             throw new BoardException(BOARD_NOT_FOUND);
         }
     }

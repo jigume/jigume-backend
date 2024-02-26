@@ -65,7 +65,7 @@ public class OrderQueryService {
 
         Goods goods = getGoodsWithOrderList(goodsId);
 
-        if (goods.isSell(member)) {
+        if (!goods.isSell(member)) {
             throw new AuthException(NOT_AUTHORIZATION_USER);
         }
 

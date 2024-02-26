@@ -125,7 +125,7 @@ public class CommentService {
     }
 
     private void isOrderSell(Goods goods, Member member) {
-        if (goods.isOrder(member) || goods.isSell(member)) {
+        if (!goods.isOrder(member) && !goods.isSell(member)) {
             throw new AuthException(AuthExceptionCode.NOT_AUTHORIZATION_USER);
         }
     }
