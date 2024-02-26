@@ -45,6 +45,7 @@ public class GoodsCreateService {
         Category category = goodsService.getCategory(goodsSaveDto.getCategoryId());
         Goods goods = goodsSaveDto.toGoods(category);
         Sell sell = Sell.createSell(member, goods);
+        goods.setSell(sell);
 
         goodsRepository.save(goods);
         sellRepository.save(sell);

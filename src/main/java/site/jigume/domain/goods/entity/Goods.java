@@ -162,4 +162,8 @@ public class Goods extends BaseTimeEntity {
 
         return DepositPolicy.DEFAULT_DEPOSIT.getValue();
     }
+
+    public void setSell(Sell sell) {
+        this.sell = sell;
+    }
 }
