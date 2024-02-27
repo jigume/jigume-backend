@@ -20,6 +20,7 @@ import site.jigume.domain.member.exception.auth.AuthExceptionCode;
 import site.jigume.domain.member.service.MemberService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static site.jigume.domain.board.exception.exception.BoardExceptionCode.BOARD_NOT_FOUND;
@@ -111,6 +112,7 @@ public class CommentService {
         int totalPages = commentsByBoardId.getTotalPages();
 
         List<CommentWithReplyDto> commentWithReplyDtoList = commentsByBoardId.stream()
+                .filter(parent -> Optional.ofNullable(parent.getParent()).isEmpty())
                 .map(parent -> {
                     List<CommentDto> childList = parent.getChildren().stream()
                             .map(child -> CommentDto.from(child))
