@@ -11,7 +11,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findMemberBySocialId(String socialId);
 
-    @Query("select m from Member m join fetch m.likes where m.socialId = :socialId")
+    @Query("select m from Member m left join fetch m.likes where m.socialId = :socialId")
     Optional<Member> findMemberBySocialIdFetchLikes(@Param("socialId") String socialId);
     Optional<Member> findMemberByNickname(String nickname);
 
