@@ -18,7 +18,7 @@ import static site.jigume.domain.member.exception.auth.AuthExceptionCode.INVALID
 
 @Service
 @RequiredArgsConstructor
-public class KakaoService implements OAuthService{
+public class KakaoService implements OAuthService {
 
     @Value("${KAKAO_CLIENT_SECRET_KEY}")
     private String kakaoClientSecretKey;
@@ -39,9 +39,9 @@ public class KakaoService implements OAuthService{
     private final WebClient webClient;
 
     @Override
-    public OAuthTokenResponseDto getOAuthToken(String authorizationCode) {
-        KakaoTokenRequestDto kakaoTokenRequestDto = new KakaoTokenRequestDto("authorization_code", kakaoClientId, kakaoRedirectUri, authorizationCode, kakaoClientSecretKey);
-        MultiValueMap<String , String> params = kakaoTokenRequestDto.toMultiValueMap();
+    public OAuthTokenResponseDto getOAuthToken(String authorizationCode, String domain) {
+        KakaoTokenRequestDto kakaoTokenRequestDto = new KakaoTokenRequestDto("authorization_code", kakaoClientId, getRedirectUri(domain), authorizationCode, kakaoClientSecretKey);
+        MultiValueMap<String, String> params = kakaoTokenRequestDto.toMultiValueMap();
 
         return webClient.post()
                 .uri(kakaoTokenRequestUri)
@@ -58,11 +58,15 @@ public class KakaoService implements OAuthService{
     public OAuthUserDto getOAuthUser(OAuthTokenResponseDto oAuthTokenResponseDto) {
         return webClient.get()
                 .uri(kakaoUserInfoRequestUri)
-                .header("Content-type","application/x-www-form-urlencoded;charset=utf-8" )
-                .header("Authorization","Bearer " + oAuthTokenResponseDto.getAccessToken())
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                .header("Authorization", "Bearer " + oAuthTokenResponseDto.getAccessToken())
                 .retrieve()
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new GlobalServerErrorException()))
                 .bodyToMono(KakaoUserDto.class)
                 .block();
+    }
+
+    public String getRedirectUri(String domain) {
+        return "http://" + domain + "/auth";
     }
 }

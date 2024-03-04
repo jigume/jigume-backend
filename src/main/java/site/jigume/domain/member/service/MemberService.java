@@ -37,11 +37,11 @@ public class MemberService {
     private String regex = "^[가-힣a-zA-Z0-9]*$";
 
     @Transactional
-    public LoginResponseDto login(LoginProvider loginProvider, String code) {
+    public LoginResponseDto login(LoginProvider loginProvider, String code, String domain) {
         OAuthService oAuthService =
                 oAuthServiceMap.get(StringUtils.uncapitalize(loginProvider.getServiceClass().getSimpleName()));
 
-        OAuthTokenResponseDto oAuthToken = oAuthService.getOAuthToken(code);
+        OAuthTokenResponseDto oAuthToken = oAuthService.getOAuthToken(code, domain);
         OAuthUserDto oAuthUser = oAuthService.getOAuthUser(oAuthToken);
 
         Member member = loginMember(oAuthUser.getId());
@@ -135,7 +135,7 @@ public class MemberService {
         Member member = getMember();
         Long fileId = memberImageService.update(multipartFile, member);
 
-        if(member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
+        if (member.getBaseRole() == BaseRole.GUEST) member.updateBaseRole(BaseRole.USER);
         return fileId;
     }
 

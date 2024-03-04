@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +47,10 @@ public class MemberController {
     })
     @PostMapping("/login")
     public ResponseEntity login(@RequestParam("login-provider") String provider,
-                                @RequestParam("authorization-code") String code) {
-
-        LoginResponseDto login = memberService.login(LoginProvider.toLoginProvider(provider), code);
+                                @RequestParam("authorization-code") String code,
+                                HttpServletRequest request) {
+        String domain = request.getHeader("X-Forwarded-For");
+        LoginResponseDto login = memberService.login(LoginProvider.toLoginProvider(provider), code, domain);
 
         return new ResponseEntity(login, OK);
     }

@@ -38,7 +38,7 @@ public class NaverService implements OAuthService{
     private final WebClient webClient;
 
     @Override
-    public OAuthTokenResponseDto getOAuthToken(String authorizationCode) {
+    public OAuthTokenResponseDto getOAuthToken(String authorizationCode, String domain) {
         NaverTokenRequestDto naverTokenRequestDto = new NaverTokenRequestDto("authorization_code", naverClientId, naverState, authorizationCode, naverClientSecretKey);
         MultiValueMap<String , String> params = naverTokenRequestDto.toMultiValueMap();
 

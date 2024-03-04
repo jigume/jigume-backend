@@ -5,7 +5,7 @@ import site.jigume.domain.member.dto.OAuthUserDto;
 
 public class AppleService implements OAuthService{
     @Override
-    public OAuthTokenResponseDto getOAuthToken(String authorizationCode) {
+    public OAuthTokenResponseDto getOAuthToken(String authorizationCode, String domain) {
         return null;
     }
 
