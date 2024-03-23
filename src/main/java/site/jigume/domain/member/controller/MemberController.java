@@ -49,7 +49,7 @@ public class MemberController {
     public ResponseEntity login(@RequestParam("login-provider") String provider,
                                 @RequestParam("authorization-code") String code,
                                 HttpServletRequest request) {
-        String domain = request.getHeader("X-Forwarded-For");
+        String domain = request.getHeader("Origin");
         LoginResponseDto login = memberService.login(LoginProvider.toLoginProvider(provider), code, domain);
 
         return new ResponseEntity(login, OK);

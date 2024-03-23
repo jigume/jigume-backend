@@ -67,6 +67,6 @@ public class KakaoService implements OAuthService {
     }
 
     public String getRedirectUri(String domain) {
-        return "http://" + domain + "/auth";
+        return domain + "/auth/";
     }
 }
