@@ -7,6 +7,9 @@ import site.jigume.domain.goods.entity.GoodsImage;
 import site.jigume.domain.goods.entity.GoodsStatus;
 import site.jigume.domain.member.entity.Member;
 import site.jigume.domain.order.dto.SellerInfoDto;
+import site.jigume.global.image.ImageUrl;
+
+import java.util.Optional;
 
 @NoArgsConstructor
 @Data
@@ -41,12 +44,15 @@ public class GoodsListDto {
                 (goods.getDeliveryFee() / goods.getCurrentOrderCount());
 
         //TODO
-        goodsListDto.repImgUrl = goods.getGoodsImageList()
+        Optional<GoodsImage> any = goods.getGoodsImageList()
                 .stream()
                 .filter(goodsImage -> goodsImage.isDelete() == false)
                 .filter(GoodsImage::isRepimgYn)
-                .findAny()
-                .get().getFile().getUrl();
+                .findAny();
+
+        any.ifPresent(goodsImage -> goodsListDto.repImgUrl = goodsImage.getFile().getUrl());
+        if (any.isEmpty()) goodsListDto.repImgUrl = ImageUrl.defaultImageUrl;
+
 
         goodsListDto.goodsStatus = goods.getGoodsStatus();
         goodsListDto.likesCount = goods.getLikesCount();
