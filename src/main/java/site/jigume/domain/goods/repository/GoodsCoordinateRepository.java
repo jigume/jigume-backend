@@ -29,6 +29,7 @@ public interface GoodsCoordinateRepository extends JpaRepository<GoodsCoordinate
 
     @Query("select co.goods from GoodsCoordinate co " +
             "join fetch co.goods.sell " +
+            "join fetch co.goods.sell.member " +
             "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status " +
             "and co.goods.isDelete = false")
@@ -38,6 +39,7 @@ public interface GoodsCoordinateRepository extends JpaRepository<GoodsCoordinate
 
     @Query("select co.goods from GoodsCoordinate co " +
             "join fetch co.goods.sell " +
+            "join fetch co.goods.sell.member " +
             "where ST_CONTAINS(:area, co.coordinate) " +
             "and co.goods.goodsStatus = :status " +
             "and co.goods.category.id = :categoryId " +

@@ -29,6 +29,8 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
     Optional<Goods> findGoodsByIdWithOrderListAndBoard(@Param("goodsId") Long goodsId);
 
     @Query("select g from Goods g " +
+            "join fetch g.sell " +
+            "join fetch g.sell.member " +
             "where g.id in :goodsIds")
     Slice<Goods> findGoodsByIdIn(@Param("goodsIds") List<Long> goodsIds, Pageable pageable);
 
