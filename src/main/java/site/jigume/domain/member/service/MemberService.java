@@ -140,7 +140,7 @@ public class MemberService {
     }
 
     public void checkDuplicateNickname(String nickname) {
-        if (nickname.length() < 2 && nickname.length() > 10) {
+        if (nickname.length() < 2 || nickname.length() > 10) {
             throw new MemberException(MEMBER_INVALID_NICKNAME);
         }
 
